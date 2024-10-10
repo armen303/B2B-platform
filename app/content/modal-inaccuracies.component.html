@@ -1,0 +1,24 @@
+﻿<div class="inaccuracies-modal modal-content__box animate_show_fadeIn">
+    <input hidden>
+    <div class="inaccuracies-modal__container">
+        <span class="icon icon-close icon-close__modal" (click)="activeModal.dismiss()"></span>
+        <div class="inaccuracies-modal__container--title">
+            <h2>СООБщить о неточности<br> в описании</h2>
+            <p>Опишите, какие неточности в описании<br> или характеристиках вы нашли</p>
+        </div>
+        <form class="inaccuracies-modal__container--form">
+            <div class="inaccuracies-modal__container--form-textarea" [class.required]="fieldIsEmpty(commentRef)">
+                <textarea #commentRef="ngModel" name="commentName" id="commentId" cols="30" rows="10" placeholder="Комментарий" [(ngModel)]="comment"></textarea>
+            </div>
+            <div class="inaccuracies-modal__container--form-input"
+                 [class.required]="fieldIsEmpty(emailRef) || (email && !emailIsValid)">
+                <input #emailRef="ngModel" name="email" (input)="emailChange($event.target)" type="text"  autocomplete="off" [disabled]="isUserLoggedIn"
+                       placeholder="Электронная почта" [(ngModel)]="email" />
+                <p class="required-tooltip d_none">{{emailValidationText}}</p>
+            </div>
+            <div class="inaccuracies-modal__container--form-btn">
+                <button (click)="send()" [disabled]="!emailIsValid || comment == '' || comment == 'undefined' || email == '' || email == 'undefined'">Отправить</button>
+            </div>
+        </form>
+    </div>
+</div>

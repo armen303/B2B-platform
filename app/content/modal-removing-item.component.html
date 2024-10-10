@@ -1,0 +1,21 @@
+﻿<div class="removing-modal modal-content__box animate_show_fadeIn">
+    <div class="removing-modal__container">
+        <span class="icon icon-close icon-close__modal" (click)="activeModal.dismiss()"></span>
+        <div class="removing-modal__container--title">
+            <h2><span class="global_color">Удаление товара</span></h2>
+        </div>
+
+        <div class="removing-modal__container--text">
+            <p>Удалить <span>{{productsQuantity}}</span> товаров из корзины?</p>
+        </div>
+
+        <div class="removing-modal__container--btn d-f j-c-e">
+            <div class="removing-modal__container--btn-border">
+                <button (click)="activeModal.close()">оставить</button>
+            </div>
+            <div class="btn-global">
+                <button class="btn-global__red" (click)="remove()">Удалить</button>
+            </div>
+        </div>
+    </div>
+</div>

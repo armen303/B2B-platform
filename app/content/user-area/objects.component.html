@@ -1,0 +1,89 @@
+<!-- crumb == start -->
+<div class="container animate_show_up">
+   <div class="crumb">
+      <ul class="crumb-list d-f f-w a-i-c">
+         <li class="crumb-list__item">
+            <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">Объекты</li>
+      </ul>
+   </div>
+
+   <div class="global-title">
+      <h1>Объекты строительства</h1>
+      <h2 class="global-title__sub">При оформлении заказа вы сможете выбрать на какой объект доставить товары.</h2>
+   </div>
+</div>
+<!-- crumb == end -->
+
+<div class="objects table" *ngIf="isLoaded">
+   <div class="container">
+      <div class="table-box bg-br">
+         <div class="objects-box__link d-f a-i-c j-c-b">
+            <a id="goToObjectAddingButton" *ngIf="canAddObject" (click)="goToObjects(1)" href="#"
+               class="objects-box__link--text d-f a-i-c">
+               <i class="icon icon-createPlus"></i>
+               <span>добавить объект</span>
+            </a>
+            <div class="table-box__area--input">
+               <input placeholder="Поиск" [(ngModel)]="textSearch" name="textSearch" (change)="textSearchValueChanged()"
+                  type="text">
+            </div>
+         </div>
+         <div class="table-box__info">
+            <table id="objectsTable">
+               <thead>
+                  <tr>
+                     <th>нАЗВАНИЕ</th>
+                     <th>Адрес</th>
+                     <th>Площадь</th>
+                     <th>Затраты</th>
+                     <th>Сотрудники</th>
+                     <th></th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr *ngFor="let object of objects">
+                     <td width="340">{{object.name}}</td>
+                     <td>
+                        <a href="#" (click)="goToObjects(2,object.id)">{{object.addressStartsWithCity}}</a>
+                     </td>
+                     <td>{{object.area}} м²</td>
+                     <td>{{object.expenses  | number: '.0' }} ₽</td>
+                     <td>
+                        <p *ngFor="let employeeName of object.employeesNames"> {{employeeName}}</p>
+                     </td>
+                     <td>
+                        <div class="table-box__info--icons d-f a-i-c j-c-c">
+                           <i class="icon icon-pen" *ngIf="isMaster()" (click)="goToEditing(object.id)"
+                              data-title="Редактировать"></i>
+                           <i class="icon icon-trash" *ngIf="isMaster()" (click)="remove(object.id)"
+                              data-title="Удалить"></i>
+                        </div>
+                     </td>
+                  </tr>
+                  <tr *ngIf="!objects.length">
+                     <td>Объекты не найдены</td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+
+         <!---Пейджирование -->
+         <div class="table-pagination d-f a-i-c j-c-b">
+            <div class="d-f a-i-c j-c-b">
+               <pagination (pageChanged)="goToPage($event)" [totalItems]="totalNumberOfObjects" previousText="&lsaquo;"
+                  [itemsPerPage]="pageSize" nextText="&rsaquo;"></pagination>
+            </div>
+
+            <div class="table-pagination__text">
+               <p>{{ objects.length ? skipNumberOfObjects + 1 : 0 }} - {{skipNumberOfObjects + objects.length}} из
+                  {{totalNumberOfObjects}}</p>
+            </div>
+         </div>
+         <!-- Пейджирование -->
+      </div>
+   </div>
+
+</div>

@@ -1,0 +1,660 @@
+<!--new header html-->
+
+<header class="header">
+
+    <nav class="header-nav d-f a-i-c" id="nav">
+        <div class="container">
+            <div class="header-nav__box d-f j-c-b">
+                <div class="header-nav__box--menu d-f a-i-c">
+                    <div class="header-nav__box--menu-logo">
+                        <a href="#" [routerLink]="['/faq']" class="header-nav__box--menu-link">МаксиПРО <span>B2B</span></a>
+                    </div>
+                    <ul class="header-nav__box--menu-list d-f a-i-c">
+                        <li class="header-nav__box--menu-list__item">
+                            <a id="supportLink" href="#" [routerLink]="['/support']"
+                               class="header-nav__box--menu-list__item--link header-nav__box--menu-link__learning header-nav__box--menu-link">
+                               Поддержка
+                            </a>
+                        </li>
+                        <li class="header-nav__box--menu-list__item">
+                            <a id="deliveryLink" href="#" [routerLink]="['/delivery/info']"
+                               class="header-nav__box--menu-list__item--link header-nav__box--menu-link">
+                                Доставка
+                            </a>
+                        </li>
+                        <li class="header-nav__box--menu-list__item">
+                            <a id="providedServicesLink" href="#" [routerLink]="['/provided-services']"
+                               class="header-nav__box--menu-list__item--link header-nav__box--menu-link">
+                                Сервисы
+                            </a>
+                        </li>
+                        <li class="header-nav__box--menu-list__item">
+                            <a id="newsLink" href="#" [routerLink]="['/news-list']"
+                               class="header-nav__box--menu-list__item--link header-nav__box--menu-link">
+                                Новости
+                            </a>
+                        </li>
+                        
+                        <li class="header-nav__box--menu-list__item" *ngIf="isUserLoggedIn">
+                            <a id="learningCenter" href="#" [routerLink]="['/user/learning-center']"
+                               class="header-nav__box--menu-list__item--link header-nav__box--menu-link ">
+                               Центр обучения
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="header-nav__box--menu-geolocation">
+                        <p>Москва</p>
+                    </div>
+                </div>
+
+                <div class="header-nav__box--info d-f" *ngIf="isLoaded">
+                    <div class="header-nav__box--info-manager d-f a-i-c"
+                         *ngIf="isUserLoggedIn && (managers.length >0 || firstManager)">
+                        <div class="header-nav__box--info-manager__title">
+                            <p>Персональный менеджер</p>
+                        </div>
+                        <div class="header-nav__box--info-manager__name">
+                            <p class="d-f a-i-c" id="managerName">
+                                <span>{{firstManager.name}}</span>
+                                <i class="new-icon new-icon-arrow__bottom"></i>
+                            </p>
+                            <div class="header-nav__box--info-manager__name--dropdown new-scrollbar" *ngIf="!searchResult">
+                                <div class="header-nav__box--info-manager__name--dropdown-content d-f a-i-c">
+                                    <div class="header-nav__box--info-manager__name--dropdown-content__img d-f a-i-c j-c-c">
+                                        <img *ngIf="firstManager.photoModel" [src]="getFileUrl(firstManager.photoModel.id)"
+                                             alt="{{ firstManager.name }}" title="{{ firstManager.name }}" class="nv-helper-img" />
+                                        <img *ngIf="!firstManager.photoModel" src="/assets/img/managers/default.png"
+                                             alt="manager-img">
+
+                                    </div>
+                                    <div class="header-nav__box--info-manager__name--dropdown-content__info">
+                                        <a href="#" (click)="openPhone(firstManager?.phoneNumber)"
+                                           class="header-nav__box--info-manager__name--dropdown-content__info--phone">{{firstManager.phoneNumber | phone : 'RU'}}</a>
+                                        <a href="#" (click)="openEmail(firstManager.email)"
+                                           class="header-nav__box--info-manager__name--dropdown-content__info--mail">{{firstManager.email}}</a>
+                                    </div>
+                                </div>
+
+                                <div class="header-nav__box--info-manager__name--dropdown-content__all d-f"
+                                     *ngFor="let manager of managers">
+                                    <div class="header-nav__box--info-manager__name--dropdown-content__img">
+                                        <img *ngIf="manager.photoModel" [src]="getFileUrl(manager.photoModel.id)"
+                                             alt="{{ manager.name }}" title="{{ manager.name }}" class="nv-helper-img" />
+                                        <img *ngIf="!manager.photoModel" src="/assets/img/managers/default.png" alt="manager-img">
+                                    </div>
+                                    <div class="header-nav__box--info-manager__name--dropdown-content__info">
+                                        <h3 class="header-nav__box--info-manager__name--dropdown-content__info--name">
+                                            {{ manager?.name }}
+                                        </h3>
+                                        <a href="#" (click)="openPhone(manager?.phoneNumber)"
+                                           class="header-nav__box--info-manager__name--dropdown-content__info--phone">{{manager?.phoneNumber | phone : 'RU'}}</a>
+                                        <a href="#" (click)="openEmail(manager?.email)"
+                                           class="header-nav__box--info-manager__name--dropdown-content__info--mail">{{manager?.email}}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="header-nav__box--info-support d-f a-i-c">
+                        <p>Поддержка 24/7</p>
+                        <a href="tel:84993914040">8 499 391 40 40</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="header-content">
+        <div class="container header-content__container">
+            <div class="header-content__box d-f j-c-b">
+                <div class="header-content__box--static d-f a-i-c">
+                    <a href="#" [routerLink]="['/home']" class="header-content__box--static-logo d-f j-c-c a-i-c">
+                        <img src="../../../assets/img/header/content/logo.svg" alt="logo">
+                    </a>
+                    <div class="header-content__box--static-catalog d-f a-i-c" [class.active-catalog]="catalogBtn">
+                        <i class="new-icon new-icon-arrow__left arrowBackToCategories d_none j-c-c a-i-c" *ngIf="catalogBtn"
+                           (mousedown)="$event.preventDefault()"></i>
+                        <button class="header-content__box--static-catalog__btn clickCatalogOpenClose"
+                                (click)="clickCatalog()" (blur)="clickCatalogBtn(false)">
+                            <span class="select-zone__nameCatalog">Весь каталог</span>
+                            <i class="new-icon new-icon-catalog" *ngIf="!catalogBtn"></i>
+                        </button>
+                        <i class="new-icon new-icon-close-remove d-f a-i-c j-c-c" *ngIf="catalogBtn"></i>
+                    </div>
+                    <div class="header-content__box--static-search d-f a-i-c" [class.active-search]="searchResult">
+                        <form class="header-content__box--static-search__form">
+                            <input class="headerSearch border-0" type="text" name="searchInput"
+                                   [(ngModel)]="searchService.searchQuery"
+                                   placeholder="Поиск по 8 значному артикулу, названию, категории"
+                                   (click)="clickSearchResult(true)" (keypress)="goToSearchResults($event)"
+                                   (blur)="clickSearchResult(false)" autocomplete="off">
+                            <i class="new-icon new-icon-search"></i>
+                            <i class="new-icon new-icon-close-remove" *ngIf="goToSearchValue"
+                               (click)="removeSearchValue()"></i>
+                            <button class="d_none" (click)="goToSearchResultsOnMobile()" (mousedown)="$event.preventDefault()">
+                                <i class="new-icon new-icon-search"></i>
+                            </button>
+                        </form>
+                        <p class="d_none" (click)="clickSearchResult(false)">Отменить</p>
+                    </div>
+                </div>
+
+                <div class="d-f j-c-e" style="height: 100%;">
+                    <div class="header-content__box--user d-f" *ngIf="isUserLoggedIn">
+                        <div class="header-content__box--user-money d-f a-i-c" *ngIf="canSeeCreditLimits">
+                            <!--<div class="header-content__box--user-money__balance" *ngIf="companyBalance">
+                               <p>Баланс</p>
+                               <span>{{ companyBalance | number: '.0' }} ₽</span>
+                            </div>-->
+                            <div *ngIf="availableCreditLimitSum || crediDebtSum"
+                                 class="header-content__box--user-money__credit d-f a-i-c j-c-b creditClick window-click"
+                                 [class.payment-active]="crediDebtSum" id="creditClick">
+                                <h3 *ngIf="!crediDebtSum">
+                                    <p>Кредитный лимит</p>
+                                    <span>{{ availableCreditLimitSum | number: '.0' }} ₽</span>
+                                </h3>
+                                <h3 *ngIf="crediDebtSum">
+                                    <p>Внесите платеж</p>
+                                    <span>{{ crediDebtSum | number: '.0' }} ₽</span>
+                                </h3>
+                                <i class="new-icon new-icon-arrow-triangle"></i>
+
+                                <div class="header-content__box--user-money__credit--dropdown creditDrop"
+                                     (mousedown)="$event.preventDefault()">
+                                    <ul class="header-content__box--user-money__credit--dropdown-list">
+                                        <li class="header-content__box--user-money__credit--dropdown-list__item" id="TotalDelays">
+                                            Всего отсрочек
+                                            <p>{{defferedPaymentsQuantity}}</p>
+                                        </li>
+                                        <li class="header-content__box--user-money__credit--dropdown-list__item" id="Available">
+                                            Доступно
+                                            <p>{{availableCreditLimitSum | number: '.0'}} ₽</p>
+                                        </li>
+                                        <li class="header-content__box--user-money__credit--dropdown-list__item" id="TotalDebt">
+                                            Общий долг
+                                            <p>{{ crediDebtSum| number: '.0'}} ₽</p>
+                                        </li>
+                                        <li class="header-content__box--user-money__credit--dropdown-list__item" id="Payment">
+                                            Платеж
+                                            <p>{{paymentSum | number: '.0'}} ₽</p>
+                                            <span>{{paymentDateTime | date}}</span>
+                                        </li>
+                                    </ul>
+                                    <a href="#" [routerLink]="['/user/finance']"
+                                       class="header-content__box--user-money__credit--dropdown-all d-f a-i-c">
+                                        <i class="new-icon new-icon-notification_payments" id="AllFinances"></i>
+                                        <span>Все финансы</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="header-content__box--user-account d-f a-i-s j-c-c f-d-c" name="logged_user_area_name"
+                             id="logged_user_area_id">
+                            <div class="header-content__box--user-account__avatar d-f a-i-c j-c-c">
+                                <span class="header-content__box--user-account__avatar--name firstshortusername">{{firstshortusername}}</span>
+                                <span class="header-content__box--user-account__avatar--name lastshortusername">{{lastshortusername}}</span>
+                                <i class="new-icon new-icon-arrow-triangle"></i>
+                            </div>
+                            <!-- <p class="header-content__box--user-account__faces">ООО Ромашка Десять </p> -->
+                            <div class="header-content__box--user-account__dropdown" *ngIf="!searchResult">
+                                <div class="header-content__box--user-account__dropdown--name d-f a-i-c f-w">
+                                    <p>{{firstusername}}</p>
+                                    <span>{{lastusername}}</span>
+                                </div>
+                                <!-- <div class="header-content__box--user-account__dropdown--faces">
+                                   <p class="header-content__box--user-account__dropdown--faces-title">Юридическое лицо:</p>
+                                   <div class="header-content__box--user-account__dropdown--faces-info">
+                                      <p class="header-content__box--user-account__dropdown--faces-info__text">ООО Ромашка</p>
+                                      <p class="header-content__box--user-account__dropdown--faces-info__text">ИНН 176272818</p>
+                                   </div>
+                                   <a href="#" class="header-content__box--user-account__dropdown--faces-link d-f a-i-c">
+                                      <span class="header-content__box--user-account__dropdown--faces-link__name">Сменить компанию</span>
+                                      <i class="icon icon-arrow__right header-content__box--user-account__dropdown--faces-link__icon"></i>
+                                   </a>
+                                </div> -->
+                                <ul>
+                                    <li>
+                                        <a href="#" [routerLink]="['/user/order-templates']" class="d-f a-i-c">
+                                            <i class="new-icon new-icon-patterns d-f a-i-c j-c-c"></i>
+                                            <p>Шаблоны <span *ngIf="orderTemplatesCount > 0">{{orderTemplatesCount}}</span></p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" [routerLink]="['/favorites']" class="d-f a-i-c">
+                                            <i class="new-icon new-icon-favorites d-f a-i-c j-c-c"></i>
+                                            <p>
+                                                Избранное <span *ngIf="favoriteProductsCount > 0">{{ favoriteProductsCount}}</span>
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" [routerLink]="['/compare']" class="d-f a-i-c">
+                                            <i class="new-icon new-icon-comparison d-f a-i-c j-c-c"></i>
+                                            <p>
+                                                Сравнение <span *ngIf="productsComparisonGroupsCount > 0">{{ productsComparisonGroupsCount }}</span>
+                                            </p>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="header-content__box--user-account__dropdown--profile">
+                                    <a [routerLink]="['/user/edit-profile']" href="#">Мой профиль</a>
+                                </div>
+
+                                <div class="header-content__box--user-account__dropdown--logout">
+                                    <a (click)="logout()" href="#">Выйти</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="header-content__box--user-notification d-f a-i-c"
+                             [class.active]="notificationsCount > 0 && !searchResult">
+                            <a href="#" class="header-content__box--user-notification__icon d-f a-i-c j-c-c">
+                                <i class="new-icon new-icon-notification">
+                                    <span class="header-info__count d-f a-i-c j-c-c"
+                                          *ngIf="notificationsCount>0 && notificationsCount<=9">{{notificationsCount}}</span>
+                                    <span class="header-info__count header-info__count--max d-f a-i-c j-c-c"
+                                          *ngIf="notificationsCount>0 && notificationsCount>9">9+</span>
+                                </i>
+                            </a>
+                            <div class="header-content__box--user-notification__dropdown" *ngIf="!searchResult">
+                                <div class="header-content__box--user-notification__dropdown--title d-f a-i-c j-c-b">
+                                    <p *ngIf="notificationsCount>0">Уведомления</p>
+                                    <span (click)="removeAllNotifications()" *ngIf="notificationsCount>0">Очистить все</span>
+                                    <h3 *ngIf="notificationsCount==0">У вас нет новых уведомлений</h3>
+                                </div>
+                                <div class="header-content__box--user-notification__dropdown--list new-scrollbar"
+                                     *ngIf="notificationsCount>0">
+                                    <ul>
+                                        <li *ngFor="let notification of notifications; let i = index" class="d-f a-i-s j-c-b">
+                                            <a href="#" (click)="goToElement(notification.url)" class="d-f a-i-s">
+                                                <i *ngIf="isOrderType(notification.notificationType)"
+                                                   class="new-icon new-icon-notification_order d-f a-i-c j-c-c"></i>
+                                                <i *ngIf="isDeliveryType(notification.notificationType)"
+                                                   class="new-icon new-icon-notification_delivery d-f a-i-c j-c-c"></i>
+                                                <i *ngIf="isCreditType(notification.notificationType)"
+                                                   class="new-icon new-icon-notification_payments d-f a-i-c j-c-c"></i>
+                                                <i *ngIf="isSupportType(notification.notificationType)"
+                                                   class="new-icon new-icon-notification_support d-f a-i-c j-c-c"></i>
+                                                <i *ngIf="isCommentType(notification.notificationType)"
+                                                   class="new-icon new-icon-notification_comments d-f a-i-c j-c-c"></i>
+                                                <i *ngIf="isScheduledNotification(notification.notificationType)"
+                                                   class="new-icon new-icon-warning d-f a-i-c j-c-c"></i>
+                                                <i *ngIf="isNewsItemType(notification.notificationType)"
+                                                   class="new-icon new-icon-shout d-f a-i-c j-c-c"></i>
+                                                <!--<i *ngIf="isDocumentType(notification.notificationType)" class="new-icon new-icon-notification_documents d-f a-i-c j-c-c"></i>-->
+                                                <h3>
+                                                    <p [innerHTML]="notification.description"></p>
+                                                    <span>{{getDateString(notification.date)}}</span>
+                                                </h3>
+                                            </a>
+                                            <i class="new-icon new-icon-delete"
+                                               *ngIf="!isScheduledNotification(notification.notificationType)"
+                                               (click)="removeNotification(notification.id)"></i>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="header-content__box--info d-f" *ngIf="!isUserLoggedIn">
+                        <div class="header-content__box--info-icons d-f">
+                            <a href="#" [routerLink]="['/compare']"
+                               class="header-content__box--info-icons__icon d-f a-i-c j-c-c"
+                               [class.active]="productsComparisonGroupsCount > 0">
+                                <i class="new-icon new-icon-comparison">
+                                    <span *ngIf="productsComparisonGroupsCount > 0" class="header-info__count d-f a-i-c j-c-c">
+                                        {{ productsComparisonGroupsCount }}
+                                    </span>
+                                </i>
+                            </a>
+                            <a href="#" [routerLink]="['/favorites']"
+                               class="header-content__box--info-icons__icon d-f a-i-c j-c-c"
+                               [class.active]="favoriteProductsCount > 0">
+                                <i class="new-icon new-icon-favorites">
+                                    <span *ngIf="favoriteProductsCount > 0"
+                                          class="header-info__count d-f a-i-c j-c-c">{{ favoriteProductsCount}}</span>
+                                </i>
+                            </a>
+                        </div>
+                        <div class="header-content__box--info-login d-f a-i-c">
+                            <button id="goToLoginButton" (click)="openModalLogin()">Вход</button>
+                        </div>
+                    </div>
+
+                    <div class="header-content__box--basket d-f a-i-c" [class.active]="!searchResult">
+                        <a id="activeBasketLink" href="#" [routerLink]="['/active-basket']"
+                           class="header-content__box--basket-icon d-f a-i-c j-c-c">
+                            <i class="new-icon new-icon-basket">
+                                <span *ngIf="basketItemsCount > 0 && basketItemsCount<=99"
+                                      class="header-info__count d-f a-i-c j-c-c">{{basketItemsCount}}</span>
+                                <span *ngIf="basketItemsCount > 0 && basketItemsCount>99"
+                                      class="header-info__count header-info__count--max d-f a-i-c j-c-c">99+</span>
+                            </i>
+                        </a>
+                        <div class="header-content__box--basket-dropdown" *ngIf="isLoaded && mainBasket && !searchResult">
+                            <div class="header-content__box--basket-dropdown__title" *ngIf="basketItemsCount > 0">
+                                <h3>Товары в корзине</h3>
+                                <p>
+                                    <span>{{basketItemsCount}}</span>
+                                    {{declensionMaker.getDeclension(basketItemsCount, "позиция", "позиции", "позиций")}} на
+                                    сумму <span *ngIf="isValueInteger(mainBasket.totalCost)">{{mainBasket.totalCost | fractionSizeSpace}} ₽</span>
+                                    <span *ngIf="!isValueInteger(mainBasket.totalCost)">{{mainBasket.totalCost.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                </p>
+                                <a href="#" [routerLink]="['/active-basket']" class="d-f a-i-c j-c-c">
+                                    Перейти в корзину
+                                </a>
+                            </div>
+                            <div class="header-content__box--basket-dropdown__title" *ngIf="basketItemsCount == 0">
+                                <br />
+                                <br />
+                                <h3>Добавьте товары в корзину</h3>
+                            </div>
+                            <div class="header-content__box--basket-dropdown__list new-scrollbar" *ngIf="basketItemsCount > 0">
+                                <ul>
+                                    <ng-container *ngIf="isLoaded && mainBasket">
+                                        <ng-container *ngFor="let item of mainBasket.items; let i = index">
+                                            <li>
+                                                <a href="#" [routerLink]="['/product', item.vendorCode]" class="d-f a-i-c">
+                                                    <div class="header-content__box--basket-dropdown__list--img">
+                                                        <img *ngIf="item.productMainImageUrl!=''" src="{{item.productMainImageUrl}}"
+                                                             (error)="setBrokenImage($event)" alt="basket-img">
+                                                        <img *ngIf="item.productMainImageUrl==''"
+                                                             src="/assets/img/product-default-image.jpg" alt="basket-img">
+                                                    </div>
+                                                    <h3>
+                                                        <p>{{getProductName(item.productName)}}</p>
+                                                        <span>
+                                                            <span *ngIf="isValueInteger(item.specialPrice)">
+                                                                {{item.specialPrice  | fractionSizeSpace}}
+                                                            </span>
+                                                            <span *ngIf="!isValueInteger(item.specialPrice)">
+                                                                {{item.specialPrice.toFixed(2)  | fractionSizeSpace}}
+                                                            </span>
+                                                            * {{item.quantity  | fractionSizeSpace}} =
+                                                            <span *ngIf="isValueInteger(item.specialPrice*item.quantity)">
+                                                                {{item.specialPrice * item.quantity  | fractionSizeSpace}}
+                                                            </span>
+                                                            <span *ngIf="!isValueInteger(item.specialPrice*item.quantity)">
+                                                                {{(item.specialPrice.toFixed(2) * item.quantity).toFixed(2)  | fractionSizeSpace}}
+                                                            </span>
+                                                            ₽
+                                                        </span>
+                                                    </h3>
+                                                </a>
+                                                <i class="new-icon new-icon-delete" (click)="removeBasketItem(item.id)"></i>
+                                            </li>
+                                        </ng-container>
+                                    </ng-container>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="headerCatalog animate_show_fadeIn" *ngIf="catalogBtn">
+            <div class="header-catalog" (mousedown)="$event.preventDefault()">
+                <div class="container">
+                    <ul class="header-catalog__list">
+                        <li class="header-catalog__list--item catalogItem d-f a-i-c j-c-b"
+                            *ngFor="let group of groups; let i = index">
+                            <div class="header-catalog__list--item-name d-f j-c-b clickCatalogName change_activeCatalog select-itemCatalog">
+                                <a href="#" (click)="goTo(group.id); clickCatalogBtn(false)"
+                                   class="header-catalog__list--item-name__link d-f a-i-c">
+                                    <i class="new-icon new-icon-catalog{{i}} d-f a-i-c j-c-c"></i>
+                                    <span>{{ group.name }}</span>
+                                </a>
+                                <i class="new-icon new-icon-arrow__right d-f a-i-c"></i>
+                            </div>
+                            <ul class="header-catalog__list--item-sub catalogSubMenu">
+                                <li class="header-catalog__list--item-sub__categories new-scrollbar d-f j-c-s a-i-s">
+                                    <div class="header-catalog__list--item-sub__categories--box">
+                                        <p class="header-catalog__list--item-sub__categories--box-title">
+                                            {{ group.name }}
+                                        </p>
+                                        <ul class="header-catalog__list--item-sub__categories--box-links d-f f-w">
+                                            <li *ngFor="let category of group.categories">
+                                                <a href="#" [routerLink]="['/catalog', category.id]"
+                                                   (click)="clickCatalogBtn(false)">
+                                                    {{ category.name }}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="header-catalog__list--item-sub__categories--img d-f f-w">
+                                        <a href="#" *ngFor="let logo of group.brandLogos; let i = index"
+                                           (click)="goToSearch(logo.brandName); clickSearchResult(false)">
+                                            <img [src]="getFileUrl(logo.logoImageId)" alt="{{logo.brandName}}">
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="header-catalog__bg"></div>
+        </div>
+
+        <div class="searchResultDropdown animate_show_fadeIn" *ngIf="searchResult">
+            <div class="search-result" (mousedown)="$event.preventDefault()">
+                <div class="container">
+                    <div class="search-result__box d-f">
+                        <div class="search-result__box--list-name search-result__box--list">
+                            <div class="search-result__box--info"
+                                 *ngIf="searchService && searchService.searchSuggestions && searchService.searchSuggestions.historyItems.length>0 && !searchService.searchQuery">
+                                <div class="search-result__box--list-title search-result__box--info-title">
+                                    <p>история поиска</p>
+                                </div>
+                                <div class="search-result__box--info-list">
+                                    <ul>
+                                        <li *ngFor="let searchHistoryItem of searchService.searchSuggestions.historyItems">
+                                            <a href="#"
+                                               (click)="goToSearch(searchHistoryItem.searchQuery); clickSearchResult(false)">
+                                                {{searchHistoryItem.searchQuery}}
+                                            </a>
+                                            <i class="icon icon-close" (click)="removeSearchHistoryItem(searchHistoryItem.id)"></i>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="search-result__box--info"
+                                 *ngIf="searchService.searchSuggestions.correctedSearchQuery">
+                                <div class="search-result__box--list-title search-result__box--info-title">
+                                    <p>возможно, вы имели ввиду</p>
+                                </div>
+                                <div class="search-result__box--info-list">
+                                    <ul>
+                                        <li>
+                                            <a href="#"
+                                               (click)="goToSearch(searchService.searchSuggestions.correctedSearchQuery); clickSearchResult(false)">
+                                                {{searchService.searchSuggestions.correctedSearchQuery}}
+                                            </a>
+
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="search-result__box--info"
+                                 *ngIf="searchService.searchSuggestions.queryClarifications.length>0">
+                                <div class="search-result__box--list-title search-result__box--info-title">
+                                    <p>часто ищут</p>
+                                </div>
+                                <div class="search-result__box--info-list">
+                                    <ul>
+                                        <li *ngFor="let queryClarification of searchService.searchSuggestions.queryClarifications">
+                                            <a href="#"
+                                               (click)="goToSearch(queryClarification); clickSearchResult(false)">{{queryClarification}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="search-result__box--info"
+                                 *ngIf="searchService.searchSuggestions.subcategories.length>0">
+                                <div class="search-result__box--list-title search-result__box--info-title">
+                                    <p>категории</p>
+                                </div>
+                                <div class="search-result__box--info-list">
+                                    <ul>
+                                        <li *ngFor="let subcategory of searchService.searchSuggestions.subcategories">
+                                            <a href="#"
+                                               (click)="goToProductSubcategory(subcategory.categoryId,subcategory.id); clickSearchResult(false)">{{subcategory.name}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="search-result__box--list-products search-result__box--list"
+                             *ngIf="searchService.searchSuggestions.recommendedProducts.length>0">
+                            <div class="search-result__box--list-title">
+                                <p>популярные товары</p>
+                            </div>
+                            <ng-container *ngFor="let recommendedProduct of searchService.searchSuggestions.recommendedProducts">
+                                <div class="search-result__box--product">
+                                    <div class="search-result__box--product-info d-f">
+                                        <a href="#" class="search-result__box--product-info__img d-f a-i-c j-c-c"
+                                           (click)="goToProduct(recommendedProduct.vendorCode); clickSearchResult(false)">
+                                            <img *ngIf="recommendedProduct.imageUrl!=null"
+                                                 [src]="cloudinaryHelper.getImageUrl(recommendedProduct.imageUrl, 150, 150)">
+                                            <img *ngIf="recommendedProduct.imageUrl==null"
+                                                 src="/assets/img/product-default-image.jpg" />
+                                        </a>
+                                        <div class="search-result__box--product-info__text">
+                                            <div class="search-result__box--product-info__text--content d-f a-i-c j-c-b">
+                                                <div class="search-result__box--product-info__text--content-vendor">
+                                                    <p>артикул</p>
+                                                    <span>{{recommendedProduct.vendorCode}}</span>
+                                                </div>
+                                                <button *ngIf="recommendedProduct.quantity==0" (click)="addToBasket(recommendedProduct, recommendedProduct.shipmentMultiplicity)" class="search-result__box--product-info__text--content-btn search-result__box--product-info__text--content-add a-i-c j-c-c">
+                                                    В
+                                                    корзину
+                                                </button>
+                                                <app-product-counter *ngIf="recommendedProduct.quantity>0"
+                                                                     class="search-result__box--product-info__text--content-counter search-result__box--product-info__text--content-add"
+                                                                     productCounterMax="{{recommendedProduct.amountInStock}}"
+                                                                     productCounterMin="0"
+                                                                     productCounterStep="{{recommendedProduct.shipmentMultiplicity}}"
+                                                                     productCounterQuantity="{{recommendedProduct.quantity}}"
+                                                                     (increment)="increment(recommendedProduct, recommendedProduct.quantity)"
+                                                                     (decrement)="decrement(recommendedProduct, recommendedProduct.quantity)"
+                                                                     (changeNumber)="changeNumber($event, recommendedProduct)"
+                                                                     (error)="errorMethod()">
+                                                </app-product-counter>
+                                                <div class="search-result__box--product-info__text--content-price">
+                                                    <p>
+                                                        {{recommendedProduct.productPrice.toFixed(2) | fractionSizeSpace}} ₽
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <a href="#" class="search-result__box--product-info__text--name"
+                                               (click)="goToProduct(recommendedProduct.vendorCode); clickSearchResult(false)">
+                                                <p>{{recommendedProduct.name}}</p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <div class="search-result__box--list-link">
+                                <a href="#" *ngIf="goToSearchValue"
+                                   (click)="goToSearch(searchService.searchQuery); clickSearchResult(false)">
+                                    все результаты
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="search-result__bg"></div>
+        </div>
+    </div>
+
+    <div class="header-navbar" *ngIf="isUserLoggedIn" id="navBar">
+        <div class="container">
+            <div class="header-navbar__box d-f a-i-c j-c-b">
+                <div class="header-navbar__box--menu">
+                    <div class="header-navbar__box--menu-list d-f">
+                        <div class="header-navbar__box--menu-list__item navbarItem">
+                            <a id="companyLink" class="header-navbar__box--menu-list__item--link d-f a-i-c">
+                                <span>Компания</span>
+                                <i class="new-icon new-icon-arrow__bottom"></i>
+                            </a>
+                            <ul class="header-navbar__box--menu-list__item--dropdown submenuDropdown">
+                                <li class="header-navbar__box--menu-list__item--dropdown-item">
+                                    <a id="companyProfileLink" [routerLink]="['/user/company-profile']" href="#"
+                                       class="header-navbar__box--menu-list__item--dropdown-item__link">
+                                        Профиль
+                                        компании
+                                    </a>
+                                </li>
+                                <li class="header-navbar__box--menu-list__item--dropdown-item" *ngIf="isMasterUser">
+                                    <a id="employeesLink" [routerLink]="['/user/employees']" href="#"
+                                       class="header-navbar__box--menu-list__item--dropdown-item__link">
+                                        Сотрудники
+                                    </a>
+                                </li>
+                                <li class="header-navbar__box--menu-list__item--dropdown-item" *ngIf="isMasterUser">
+                                    <a id="financeLink" [routerLink]="['/user/finance']" href="#"
+                                       class="header-navbar__box--menu-list__item--dropdown-item__link">
+                                        Финансы
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="header-navbar__box--menu-list__item navbarItem">
+                            <a class="header-navbar__box--menu-list__item--link d-f a-i-c" id="Orders">
+                                <span>Заказы</span>
+                                <i class="new-icon new-icon-arrow__bottom"></i>
+                            </a>
+                            <ul class="header-navbar__box--menu-list__item--dropdown submenuDropdown">
+                                <li class="header-navbar__box--menu-list__item--dropdown-item">
+                                    <a id="currentOrdersLink" [routerLink]="['/user/current-orders']" href="#"
+                                       class="header-navbar__box--menu-list__item--dropdown-item__link">
+                                        Текущие заказы
+                                    </a>
+                                </li>
+                                <li class="header-navbar__box--menu-list__item--dropdown-item">
+                                    <a id="ordersHistory" [routerLink]="['/user/orders-history']" href="#"
+                                       class="header-navbar__box--menu-list__item--dropdown-item__link">
+                                        История заказов
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="header-navbar__box--menu-list__item">
+                            <a id="objectsLink" [routerLink]="['/user/objects']" href="#"
+                               class="header-navbar__box--menu-list__item--link d-f a-i-c">
+                                <span>Объекты</span>
+                            </a>
+                        </div>
+                        <div class="header-navbar__box--menu-list__item navbarItem">
+                            <a *ngIf="isMasterUser" id="docsLink" class="header-navbar__box--menu-list__item--link d-f a-i-c">
+                                <span>Документы</span>
+                                <i class="new-icon new-icon-arrow__bottom"></i>
+                            </a>
+                            <ul class="header-navbar__box--menu-list__item--dropdown submenuDropdown">
+                                <li class="header-navbar__box--menu-list__item--dropdown-item">
+                                    <a id="reconActsLink" [routerLink]="['/user/documents']" href="#"
+                                       class="header-navbar__box--menu-list__item--dropdown-item__link">
+                                        Акты сверки
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-navbar__box--deferred">
+                    <ul class="header-navbar__box--menu-list">
+                        <li class="header-navbar__box--menu-list__item">
+                            <a id="savedBasketsLink" [routerLink]="['/user/saved-baskets']" href="#"
+                               class="header-navbar__box--menu-list__item--link d-f a-i-c">
+                                <span>Отложенные Корзины</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,22 @@
+.crumb {
+    padding: 16px 0;
+
+    &-list {
+        margin: 0 -4px;
+
+        &__item {
+            padding: 5px 4px;
+            font: 13px/16px $Regular;
+            color: #828282;
+
+            &--link {
+                color: #828282;
+                transition: $transition;
+
+                &:hover {
+                    color: var(--global_color);
+                }
+            }
+        }
+    }
+}

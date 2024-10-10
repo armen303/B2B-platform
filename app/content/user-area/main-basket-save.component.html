@@ -1,0 +1,24 @@
+<div class="modal-container">
+   <span class="icon icon-close icon-close__modal" (click)="dialogRef.close()"></span>
+   <div class="modal-title">
+      <h2>Отложить корзину</h2>
+      <p>Вы можете сохранить заказ в
+         <a [routerLink]="['/user/saved-baskets']" (click)="closeAndRedirect()">Отложенных корзинах</a> и оформить в
+         любое удобное время</p>
+   </div>
+   <div class="modal-box">
+      <form #saveBusketeForm="ngForm" (keydown.enter)="save()">
+         <div class="modal-box__area">
+            <div class="modal-box__area--input">
+               <input [(ngModel)]="mainBasketName" placeholder="Введите название корзины" name="nameInput" type="text"
+                  required>
+            </div>
+         </div>
+         <div class="modal-box__btn btn-global">
+            <button type="button" class="btn-global__red" (click)="save()" [disabled]="!mainBasketName || isSaving">
+               СОХРАНИТЬ В ОТЛОЖЕННЫХ КОРЗИНАХ
+            </button>
+         </div>
+      </form>
+   </div>
+</div>

@@ -1,0 +1,43 @@
+@import '../../../styles/base/shared';
+
+app-product-counter {
+    @include wh(88px, 40px);
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+
+    .icon {
+        @include wh(20px, 100%);
+        font-size: 7px;
+        color: var(--grey_color);
+        background-color: #F0F1F2;
+        transition: $transition;
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--grey_color);
+            color: white;
+        }
+    }
+
+    .counter-input {
+        width: calc(100% - 40px);
+        height: 100%;
+        font: 15px $monoRegular;
+        color: var(--black_color);
+        text-align: center;
+        border-top: 2px solid transparent;
+        border-bottom: 2px solid transparent;
+
+
+        font-feature-settings: 'ss04';
+
+        &:focus {
+            border-top: 2px solid #4B7396;
+            border-bottom: 2px solid #4B7396;
+        }
+    }
+
+}

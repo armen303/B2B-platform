@@ -1,0 +1,18 @@
+﻿@import '../styles/base/shared';
+
+.modal-delivery-map {
+    width: 100vw;
+    height: 100vh;
+    margin: -15px;
+    position: relative;
+
+    .icon-close {
+        @include wh(40px);
+        top: 40px;
+        right: 40px;
+        color: #3C444B;
+        font-size: 21px;
+        font-weight: bold;
+        background: rgba(255, 255, 255, 0.5);
+    }
+}

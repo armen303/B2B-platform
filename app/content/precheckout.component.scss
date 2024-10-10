@@ -1,0 +1,145 @@
+@import '../styles/base/shared';
+
+.precheckout {
+    max-width: 845px;
+    width: 100%;
+    margin: auto;
+    background-color: #fff;
+    padding: 24px;
+    
+    @include sm{
+        padding: 15px;
+    }
+
+    &-title {
+        margin-bottom: 15px;
+        text-align: center;
+
+        h2 {
+            font: 29px $Regular;
+            color: $second_color;
+        }
+
+        p {
+            font: 17px/1.2 $Regular;
+            color: $second_color;
+        }
+    }
+
+    &-btn {
+        max-width: 195px;
+        margin-left: auto;
+        margin-bottom: 20px;
+
+        button {
+            padding: 5px 25px;
+        }
+    }
+
+    &-box {
+        margin: 0 -24px;
+        overflow: auto;
+
+        @include sm{
+            margin: 0 -15px;
+        }
+
+        &__content {
+            width: 797px;
+            margin: auto;
+            padding-bottom: 10px;
+        }
+
+        &__names {
+            padding: 10px 24px;
+            margin: 0 -24px 15px;
+            border-bottom: 1px solid rgba(#7c7c7c, .5);
+
+            li {
+                font: 11px $Bold;
+                color: $second_color;
+                padding: 0 10px;
+                text-transform: uppercase;
+            }
+        }
+
+        &__list {
+
+            li+li {
+                margin-top: 25px;
+            }
+
+            &--title {
+                font: 12px $Bold;
+                color: $second_color;
+                margin-bottom: 15px;
+                padding: 0 10px;
+                text-transform: uppercase;
+            }
+
+            &--info {
+                &+& {
+                    margin-top: 10px;
+                }
+
+                &-item {
+                    padding: 0 10px;
+                }
+
+                &-name {
+                    width: 320px;
+
+                    &__img {
+                        @include wh(45px);
+                        margin-right: 10px;
+                    }
+
+                    &__text {
+                        width: calc(100% - 45px);
+                        font: 14px $Regular;
+                        color: #7c7c7c;
+                    }
+                }
+
+                &-count {
+                    width: 110px;
+                    font: 14px $Regular;
+                    color: #7c7c7c;
+                    text-align: center;
+                }
+
+                &-btn {
+                    @include wh(110px, 35px);
+                }
+
+                &-counter {
+                    .cards-product__item--counter-increment {
+                        width: 88px;
+                        margin-right: 0;
+                    }
+                }
+
+                &-trash {
+                    .icon-trash {
+                        font-size: 18px;
+                        color: $second_color;
+                        cursor: pointer;
+                        transition: $transition;
+
+                        &:hover{
+                            color: var(--global_color);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &-save{
+        margin-top: 30px;
+        &__btn{
+            @include wh(145px, 40px);
+            padding: 0 10px;
+        }
+    }
+}

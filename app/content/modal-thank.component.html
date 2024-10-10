@@ -1,0 +1,19 @@
+﻿<div class="thank-modal modal-content__box animate_show_fadeIn">
+    <div class="thank-modal__container">
+        <span class="icon icon-close icon-close__modal" (click)="activeModal.dismiss()"></span>
+        <div class="thank-modal__container--title">
+            <h2 *ngIf="!support"><span class="green_color">Спасибо!</span></h2>
+            <h2 *ngIf="support"><span class="green_color">Заявка принята</span></h2>
+        </div>
+
+        <div class="thank-modal__container--text">
+            <p>{{name}}, ваша заявка принята.</p>
+            <p *ngIf="!support">Наш менеджер позвонит вам <br>в ближайшее время</p>
+            <p *ngIf="support">Номер вашего обращения в техподдержку <br>№{{number}}</p>
+        </div>
+
+        <div class="thank-modal__container--btn d-f j-c-e">
+            <button (click)="activeModal.close()">закрыть</button>
+        </div>
+    </div>
+</div>

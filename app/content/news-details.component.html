@@ -1,0 +1,84 @@
+   <!-- crumb == start -->
+   <div class="container animate_show_up">
+      <div class="back">
+         <div class="crumb">
+            <ul class="crumb-list d-f f-w a-i-c">
+               <li class="crumb-list__item">
+                  <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+               </li>
+               <li class="crumb-list__item">−</li>
+               <li class="crumb-list__item">
+                  <a href="#" class="crumb-list__item--link" routerLink="/news-list">Новости</a>
+               </li>
+            </ul>
+         </div>
+      </div>
+
+      <div class="global-title" *ngIf="isLoaded">
+         <h1>{{newsItem.title}} </h1>
+      </div>
+   </div>
+   <!-- crumb == end -->
+   <div class="news-details">
+      <div class="container">
+         <div class="news-details__box d-f">
+
+            <div class="news-details__box--info">
+               <div class="news-details__box--info-time">
+                  <p>{{ newsItemCreationDateTime | date: "d MMMM yyyy - hh:mm" }}</p>
+               </div>
+
+               <!-- pending changes ... -->
+               <div *ngIf="isLoaded" class="news-details__box--info-img d-f a-i-c j-c-c">
+                  <img [src]="getFileUrl(newsItem.imagesIds[0])" alt="img" />
+               </div>
+               <!-- pending changes ... -->
+
+               <div class="news-details__box--info-text" *ngIf="isLoaded" [innerHTML]="newsItem.fullText | safeHtml">
+               </div>
+
+               <!-- <div class="news-details__box--info-img__slider" *ngIf="isLoaded">
+                  <ngx-slick-carousel class="slick-carousel d_block" [config]="newsDetailsSlider">
+                     <div ngxSlickItem>
+                        <div class="news-details__box--info-img__slider--item d-f a-i-c j-c-c">
+                           <img [src]="getFileUrl(newsItem.imagesIds[0])" alt="img" />
+                        </div>
+                     </div>
+                     <div ngxSlickItem>
+                        <div class="news-details__box--info-img__slider--item d-f a-i-c j-c-c">
+                           <img [src]="getFileUrl(newsItem.imagesIds[0])" alt="img" />
+                        </div>
+                     </div>
+                  </ngx-slick-carousel>
+               </div>
+
+               <div class="news-details__box--info-text" *ngIf="isLoaded" [innerHTML]="newsItem.fullText | safeHtml">
+               </div> -->
+            </div>
+
+            <div class="news-details__box--other">
+               <div class="news-details__box--other-title">
+                  <p>Другие новости</p>
+               </div>
+               <div class="news-details__box--other-list">
+                  <ul>
+                     <li *ngFor="let otherNewsItem of otherNews">
+                        <a href="#" [routerLink]="['/news', otherNewsItem.id]">{{otherNewsItem.title}}</a>
+                        <time>{{ otherNewsItem.creationDateTime | date: "d MMMM yyyy" }}</time>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+         <div class="news-details__tab d-f f-n-w">
+            <div class="news-details__tab--link" *ngIf="hasPreviousNewsItem">
+               <a href="#" (click)="goToPreviousNewsItem()" class="d-f a-i-c j-c-c">ПРЕДЫДУЩАЯ
+                  НОВОСТЬ</a>
+            </div>
+            <div class="news-details__tab--link" *ngIf="hasNextNewsItem">
+               <a href="#" (click)="goToNextNewsItem()" class="d-f a-i-c j-c-c">СЛЕДУЮЩАЯ
+                  НОВОСТЬ</a>
+            </div>
+         </div>
+      </div>
+   </div>

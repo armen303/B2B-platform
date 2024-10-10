@@ -1,0 +1,334 @@
+@import '../../styles/base/shared';
+
+app-footer {
+    margin-top: auto;
+}
+
+.footer {
+    padding: 32px 0;
+
+    @include xl {
+        padding: 24px 0;
+    }
+
+    &.style{
+        background-color: #F7F8F9;
+    }
+
+    &.style-home{
+        background-color: var(--black_color);
+    }
+
+    &-box {
+
+        @include xs {
+            display: block;
+        }
+
+        &__logo {
+            margin-right: 16px;
+
+            @include xs {
+                margin-right: 0;
+                margin-bottom: 24px;
+            }
+
+            &--img {
+                @include wh(128px, 40px);
+                margin-right: 28px;
+
+                @include xl {
+                    margin-right: 16px;
+                }
+
+                @include sm {
+                    margin-right: 28px;
+                }
+            }
+
+            &--text {
+                width: 87px;
+                font: 13px/16px $Regular;
+
+                &.style {
+                    color: #797F83;
+                }
+
+                &.style-home {
+                    color: #AFB6BD;
+                }
+            }
+        }
+
+        &__content {
+            margin-right: 16px;
+
+            @include xs {
+                margin-right: 0;
+            }
+
+            &--nav {
+                margin-bottom: 11px;
+
+                @include lg {
+                    flex-wrap: wrap;
+                    margin-bottom: 0;
+                }
+
+
+
+                &-menu {
+                    margin-right: 60px;
+
+                    @include sm {
+                        width: 100%;
+                        margin-right: 0;
+                    }
+
+                    @include xs {
+                        width: auto;
+                    }
+
+                    ul {
+                        margin: 0 -7px;
+
+                        @include xs {
+                            display: block;
+                            margin: -5px 0;
+                        }
+
+                        li {
+                            padding: 0 7px;
+
+                            @include xs {
+                                padding: 5px 0;
+                            }
+
+                            a {
+                                font: 15px/20px $Regular;
+
+                                &:hover {
+                                    text-decoration: underline;
+                                }
+
+                                &.style {
+                                    color: var(--black_color);
+                                }
+
+                                &.style-home {
+                                    color: white;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                &-callcenter {
+                    margin-right: 60px;
+
+                    @include xl {
+                        margin-right: 30px;
+                    }
+
+                    @include lg {
+                        width: 100%;
+                        order: 1;
+                        margin-top: 11px;
+                    }
+
+                    @include sm {
+                        width: auto;
+                        order: 0;
+                        margin-right: 40px;
+                    }
+
+                    @include xs {
+                        display: block;
+                        margin-right: 0;
+                        align-self: flex-start;
+                        margin-top: 0;
+                        margin-left: 50px;
+                    }
+
+                    a {
+                        display: block;
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
+
+                        &.style {
+                            color: var(--global_color);
+                        }
+
+                        &.style-home {
+                            color: white;
+                        }
+                    }
+
+                    &__mail {
+                        font: 15px/20px $Regular;
+                    }
+
+                    &__phone {
+                        font: 15px/20px $Semibold;
+                        margin-left: 40px;
+
+                        @include xl {
+                            margin-left: 16px;
+                        }
+
+                        @include sm {
+                            margin-left: 40px;
+                        }
+
+                        @include xs {
+                            margin-left: 0;
+                            margin-top: 12px;
+                        }
+                    }
+                }
+
+                &-socialicons {
+
+                    @include sm {
+                        margin-top: 11px;
+                    }
+
+                    @include xs {
+                        &__desktop {
+                            display: none;
+                        }
+
+                        &__mobile {
+                            display: block;
+                        }
+                    }
+
+                    ul {
+                        margin: 0 -5px;
+
+                        li {
+                            padding: 0 5px;
+
+                            a {
+
+                                &.style {
+                                    color: #797F83;
+                                }
+
+                                &.style-home {
+                                    color: #F0F1F2;
+                                }
+
+                                &.new-icon__socialVk {
+                                    font-size: 21px;
+                                }
+
+                                &.new-icon__socialFb {
+                                    font-size: 19px;
+                                }
+
+                                &.new-icon__socialIn {
+                                    font-size: 21px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            &--info {
+                @include sm {
+                    flex-wrap: wrap;
+                    justify-content: space-between;
+                    margin-top: 16px;
+                }
+
+                p {
+                    font: 13px/16px $Regular;
+
+                    &.style {
+                        color: #797F83;
+                    }
+
+                    &.style-home {
+                        color: #AFB6BD;
+                    }
+
+                    @include sm {
+                        width: 100%;
+                    }
+
+
+                }
+
+                a {
+                    font: 13px/16px $Regular;
+                    color: #797F83;
+                    margin-left: 60px;
+
+                    &.style {
+                        color: #797F83;
+                    }
+
+                    &.style-home {
+                        color: #AFB6BD;
+                    }
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+
+                    @include sm {
+                        margin-left: 0;
+                    }
+
+                    @include xs {
+                        display: block;
+                        margin-top: 12px;
+                    }
+
+                }
+
+                @include lg {
+                    &-desktop {
+                        display: none;
+                    }
+
+                    &-mobile {
+                        display: flex;
+
+                        @include xs {
+                            display: block;
+                        }
+                    }
+                }
+            }
+        }
+
+        &__partners {
+
+            @include xl {
+                flex-direction: column;
+            }
+
+            @include sm {
+                &--desktop {
+                    display: none;
+                }
+
+                &--mobile {
+                    display: flex;
+                    flex-direction: row;
+                    margin: 0 -10px;
+                }
+            }
+
+            &--img {
+                padding: 0 10px;
+            }
+
+        }
+    }
+}

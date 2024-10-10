@@ -1,0 +1,416 @@
+@import './shared',
+'./icons',
+'./new-icons',
+'./flex-box',
+'./normalize',
+'./root',
+'./loading',
+// import modules -- version-1
+'../modules/cards',
+'../modules/orders',
+'../modules/radio-checkbox',
+'../modules/empty',
+'../modules/owl-slider',
+'../modules/modal',
+'../modules/contractor-add-create',
+'../modules/all-modals',
+'../modules/tooltips',
+'../modules/buttons',
+'../modules/animtion',
+'../modules/bread-crumb',
+'../modules/select-dropdown',
+'../modules/scrollbar',
+'../modules/slick-slider',
+'../modules/table',
+'../modules/required-disabled',
+'../modules/ngb-datepicker',
+'../modules/toastr',
+'../modules/pagination',
+'../modules/product-slider',
+'../modules/input-textarea',
+'../modules/login',
+'../modules/fancybox',
+'../modules/downloaded';
+
+
+// body
+body {
+    font: 100% $Regular;
+    background-color: #F7F8F9;
+
+    // onscroll
+
+    @media (min-width: 768px) {
+        padding-top: 105px;
+
+        &.navbar {
+            padding-top: 155px;
+
+        }
+    }
+}
+
+
+
+// container  -- START
+.container {
+    max-width: 1580px;
+    width: 100%;
+    padding: 0 40px;
+    margin: 0 auto;
+
+    @include lg {
+        padding: 0 16px;
+    }
+}
+
+// container  -- END
+
+// сделано так, чтобы footer всегда был прикреплен к нижней части , не смотря  на размер контента  -- START
+
+app-root {
+    height: 100%;
+}
+
+app-user-area,
+app-portal {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+// сделано так, чтобы footer всегда был прикреплен к нижней части , не смотря  на размер контента  -- END
+
+// create-template -- START
+.create-template {
+    margin: 26px 0;
+    padding: 0 10px;
+    color: var(--global_color);
+    cursor: pointer;
+
+    &__icon {
+        font-size: 18px;
+    }
+
+    span {
+        font: 12px $Bold;
+        text-transform: uppercase;
+        letter-spacing: 1.8px;
+        margin-left: 8px;
+        line-height: 1;
+        transition: $transition;
+    }
+}
+
+// create-template -- END
+
+// zero  -- START
+
+.zero {
+    font-feature-settings: 'ss04';
+}
+
+// zero  -- END
+
+
+// title  -- START
+.global-title {
+
+    @include sm {
+        display: block;
+    }
+
+    h1 {
+        font: 24px/36px $Bold;
+        color: var(--black_color);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+
+        @include sm {
+            font: 20px/24px $Bold;
+        }
+    }
+
+    &__sub {
+        max-width: 820px;
+        padding-right: 10px;
+        margin-top: 20px;
+        font: 16px/22px $Regular;
+        color: #AFB6BD;
+
+        a {
+            color: var(--global_color);
+            text-decoration: underline;
+            transition: $transition;
+
+            &:hover {
+                color: $green_color;
+            }
+        }
+    }
+
+    .add-object__link {
+        font: 12px $Bold;
+        color: $green_color;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+
+        .icon-createPlus {
+            font-size: 18px;
+            color: $green_color;
+            margin-right: 9px;
+        }
+    }
+}
+
+
+.second-title {
+    margin-bottom: 28px;
+
+    h2 {
+        font: 20px/24px $Bold;
+        color: var(--black_color);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+
+        @include sm {
+            font: 15px/20px $Bold;
+            letter-spacing: 0.08em;
+        }
+    }
+}
+
+// title  -- END
+
+
+// треугольник   -- START
+.triangle {
+
+    &::before {
+        content: "";
+        width: 0;
+        height: 0;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: auto;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+    }
+
+    &-down::before {
+        bottom: -4px;
+        border-top: 5px solid #3C444B;
+    }
+
+    &-up::before {
+        border-bottom: 10px solid #3C444B;
+    }
+
+}
+
+// треугольник   -- END
+
+
+// icon close  -- START
+.icon-close {
+    position: absolute;
+    cursor: pointer;
+    z-index: 9;
+    transition: $transition;
+
+    &:hover {
+        color: var(--global_color);
+    }
+}
+
+// icon close  -- END
+
+
+// bg-color br-radius  -- START
+.bg-br {
+    background-color: white;
+    border-radius: 10px;
+
+    @include sm {
+        border-radius: 0;
+    }
+}
+
+// bg-color br-radius  -- END
+
+
+// bg-cover bg-contain  -- START
+.bg-cover {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bg-contain {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+// bg-cover bg-contain  -- END
+
+
+// colors  -- START
+.global_color {
+    color: var(--global_color);
+}
+
+.new_global_color {
+    color: var(--global_color);
+}
+
+.second_color {
+    color: $second_color;
+}
+
+.third_color {
+    color: $third_color;
+}
+
+.green_color {
+    color: $green_color;
+}
+
+// colors  -- END
+
+
+// display-none-block -- START
+.d_none {
+    display: none;
+}
+
+.d_block {
+    display: block;
+}
+
+// display-none-block -- END
+
+
+// overflow-hidden -- START
+.overflow-hidden {
+    overflow: hidden;
+}
+
+// overflow-hidden -- END
+
+// line-clamp -- START
+.line-clamp {
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /*! autoprefixer: off */
+    -webkit-box-orient: vertical;
+
+    /*! autoprefixer: off */
+
+    &_2 {
+        -webkit-line-clamp: 2;
+    }
+
+    &_3 {
+
+        -webkit-line-clamp: 3;
+    }
+}
+
+// line-clamp -- END
+
+
+
+// line-clamp -- START
+.download-file {
+    padding: 2px 8px;
+    background-color: #F0F1F2;
+    transition: $transition;
+
+    .new-icon {
+        font-size: 24px;
+        color: var(--grey_color);
+        margin-right: 2px;
+        transition: $transition;
+    }
+
+    span {
+        font: 15px $Regular;
+        color: var(--grey_color);
+        transition: $transition;
+    }
+
+    &:hover {
+        background-color: var(--grey_color);
+
+        .new-icon,
+        span {
+            color: white;
+        }
+    }
+
+    &:active {
+        background-color: var(--black_color);
+    }
+}
+
+// line-clamp -- END
+
+
+.white-s-nowrap {
+    white-space: nowrap;
+}
+
+
+
+// pending-changes...
+
+.icon-reset-calendar {
+    width: 17px;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 33px;
+    cursor: pointer;
+    z-index: 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.px-sidebar-menu__a .icon-arrow {
+    font-size: 7px;
+}
+
+.swal2-container.swal2-shown {
+    z-index: 9999999999999999999;
+}
+
+#toast-container {
+    z-index: 9999999999999999999;
+}
+
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input,
+.ng-has-value .ng-placeholder {
+    display: none;
+}
+
+.ng-select .ng-select-searchable .ng-select-container .ng-value-container .ng-input {
+    opacity: 1;
+}
+
+ng-select .ng-input input {
+    z-index: 100;
+    padding: 5px;
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.custom-select {
+    background-color: white;
+    background: none !important;
+}

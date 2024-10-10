@@ -1,0 +1,32 @@
+﻿<div class="coloring modal-content__box animate_show_fadeIn">
+   <div class="coloring-box d-f">
+
+      <div class="coloring-box__content">
+         <div class="coloring-box__content--text d-f j-c-c a-i-e" style="background-color: #3C444B">
+            <p>База 1</p>
+         </div>
+         <div class="coloring-box__content--img">
+            <img src="../../../assets/img/coloring/1.jpg" alt="img">
+         </div>
+      </div>
+
+      <div class="coloring-box__info d-f f-d-c j-c-c">
+         <span class="icon icon-close icon-close__modal" (click)="activeModal.dismiss()"></span>
+
+         <div class="coloring-box__title">
+            <h2>каталоги цветов</h2>
+            <p>Подберите номер цвета, с помощью каталогов цветов</p>
+         </div>
+
+         <div class="coloring-box__info--text">
+             <ng-container *ngFor="let tintCatalog of tintCatalogs">
+                 <a href="#" class="d-f a-i-c coloring-box__info--text-link">
+                     <span (click)="openTintCatalog(tintCatalog.catalogUrl)">Коллекция цветов {{tintCatalog.name}}</span>
+                     <i (click)="openTintCatalog(tintCatalog.catalogUrl)" class="new-icon new-icon-newTab"></i>
+                 </a>
+             </ng-container>
+            <p>Закажите колерованную в цвет краску, указав понравившийся номер цвета</p>
+         </div>
+      </div>
+   </div>
+</div>

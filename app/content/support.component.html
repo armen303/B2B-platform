@@ -1,0 +1,133 @@
+<!-- crumb == start -->
+<div class="container animate_show_up">
+   <div class="crumb">
+      <ul class="crumb-list d-f f-w a-i-c">
+         <li class="crumb-list__item">
+            <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">Поддержка</li>
+      </ul>
+   </div>
+
+   <div class="global-title">
+      <h1>Поддержка клиентов</h1>
+   </div>
+</div>
+<!-- crumb == end -->
+<div class="support animate_show_up">
+   <div class="container">
+      <div class="bg-br">
+         <div class="support-box">
+            <form #supportForm="ngForm" (ngSubmit)="createTechSupportTicket()">
+                <div class="support-box__list d-f">
+                    <div class="support-box__list--item">
+                        <div class="support-box__list--item-title">
+                            <p>Ваше имя*</p>
+                        </div>
+                        <div class="support-box__list--item-items" [class.required]="fieldIsEmpty(firstNameRef)">
+                            <input #firstNameRef="ngModel" type="text" placeholder="Введите ваше имя*"
+                                   [(ngModel)]="firstName" name="firstNameInput" (focus)="focusName()"
+                                   [disabled]="isUserLoggedIn" required />
+                            <p class="required-tooltip d_none">заполнение обязательно</p>
+                        </div>
+                        <div class="support-box__list--item-items" [class.required]="fieldIsEmpty(lastNameRef)">
+                            <input #lastNameRef="ngModel" (focus)="focusName()" type="text"
+                                   placeholder="Введите вашу фамилию*" [(ngModel)]="lastName" name="lastNameInput"
+                                   [disabled]="isUserLoggedIn" required />
+                            <p class="required-tooltip d_none">заполнение обязательно</p>
+                        </div>
+                        <div class="support-box__list--item-items select-filter sort-select__filter"
+                             [class.required]="fieldIsEmpty(subjectSelectModel)">
+                            <ng-select #subjectSelectModel="ngModel" [searchable]="false" [clearable]="false"
+                                       name="customSеlectBoxSubject" [(ngModel)]="selectedSubjectId" placeholder="Тема обращения*"
+                                       [notFoundText]="'Темы отсутствуют'" #customSelectBoxSubject required>
+                                <ng-option *ngFor="let subject of allSubjects" [value]="subject.id">
+                                    {{subject.name}}
+                                </ng-option>
+                            </ng-select>
+                            <p class="required-tooltip d_none">выбор обязателен</p>
+                        </div>
+                    </div>
+
+                    <div *ngIf="phoneNumberIsCorrect" class="support-box__list--item">
+                        <div class="support-box__list--item-title">
+                            <p>КОНТАКТЫ ДЛЯ СВЯЗИ*</p>
+                        </div>
+                        <div class="support-box__list--item-items"
+                             [class.required]="fieldIsEmpty(phoneNumberRef) && fieldIsEmpty(emailRef) || (phoneNumber && !phoneNumberAndEmailIsValid)">
+                            <input #phoneNumberRef="ngModel" prefix="+7" mask="(000) 000 00 00"  name="phoneNumber" type="text"
+                                   placeholder="Введите ваш номер телефона" [(ngModel)]="phoneNumber"/>
+                            <p class="required-tooltip d_none">{{phoneNumberValidationText}}</p>
+                        </div>
+                        <div class="support-box__list--item-items"
+                             [class.required]="fieldIsEmpty(phoneNumberRef) && fieldIsEmpty(emailRef) || (email && !emailIsValid)">
+                            <input #emailRef="ngModel" name="email" (input)="emailChange($event.target)" type="text"
+                                   placeholder="Введите вашу электронную почту" [(ngModel)]="email" />
+                            <p class="required-tooltip d_none">{{emailValidationText}}</p>
+                        </div>
+                    </div>
+                    <div *ngIf="!phoneNumberIsCorrect" class="support-box__list--item">
+                        <div class="support-box__list--item-title">
+                            <p>КОНТАКТЫ ДЛЯ СВЯЗИ*</p>
+                        </div>
+                        <div class="support-box__list--item-items"
+                             [class.required]="fieldIsEmpty(phoneNumberRef) && fieldIsEmpty(emailRef) || (phoneNumber && !phoneNumberAndEmailIsValidOld)">
+                            <input #phoneNumberRef="ngModel" name="phoneNumber" type="text"
+                                   placeholder="Введите ваш номер телефона" [(ngModel)]="phoneNumber"
+                                   (input)="setCorrectPhoneNumber($event.target, phoneNumberRef)" />
+                            <p class="required-tooltip d_none">{{phoneNumberValidationText}}</p>
+                        </div>
+                        <div class="support-box__list--item-items"
+                             [class.required]="fieldIsEmpty(phoneNumberRef) && fieldIsEmpty(emailRef) || (email && !emailIsValid)">
+                            <input #emailRef="ngModel" name="email" (input)="emailChange($event.target)" type="text"
+                                   placeholder="Введите вашу электронную почту" [(ngModel)]="email" />
+                            <p class="required-tooltip d_none">{{emailValidationText}}</p>
+                        </div>
+                    </div>
+                </div>
+               <div class="support-box__textarea">
+                  <div class="support-box__list--item-items" [class.required]="fieldIsEmpty(textRef)">
+                     <textarea #textRef=ngModel [(ngModel)]="text" name="textInput"
+                        required></textarea>
+                     <p class="required-tooltip d_none">заполнение обязательно</p>
+                  </div>
+                  <div class="support-box__files">
+                     <div class="support-box__files--list d-f f-w">
+                        <div class="support-box__files--list-add support-box__files--list-item">
+                           <label class="d-f a-i-c"> <i class="icon icon-file"></i>
+                              <p>Добавить файл</p>
+                              <input (click)="fileUploader.click()" hidden />
+                           </label>
+                        </div>
+                        <div *ngFor="let file of files"
+                           class="support-box__files--list-added support-box__files--list-item">
+                           <label class="d-f a-i-c"> <i class="icon icon-file_added"></i>
+                              <p>{{file.fileName}}.{{file.extension}}</p>
+                              <i class="icon icon-close" (click)="removeFile(file)"></i>
+                           </label>
+                        </div>
+                        <div class="support-box__files--list-info support-box__files--list-item d-f a-i-c">
+                           <p>Максимальный размер файла 5 мб</p>
+                        </div>
+                     </div>
+                     <input #fileUploader type="file" (change)="updateFile()" name="fileUploader" hidden multiple />
+                  </div>
+
+                  <div class="support-box__btn btn-global">
+                     <button class="btn-global__red" type="submit">ОТПРАВИТЬ</button>
+                  </div>
+
+                  <div class="support-box__text">
+                     <p>
+                        Рекомендуем так же ознакомиться с нашим разделом
+                        <a href="#" [routerLink]="['/faq']" class="global_color">часто задаваемых вопросов</a>,
+                        возможно там уже есть ответ.
+                     </p>
+                  </div>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>

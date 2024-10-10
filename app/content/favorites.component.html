@@ -1,0 +1,221 @@
+<!-- crumb == start -->
+<div class="container animate_show_up">
+   <div class="crumb">
+      <ul class="crumb-list d-f f-w a-i-c">
+         <li class="crumb-list__item">
+            <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">Избранное</li>
+      </ul>
+   </div>
+
+   <div class="global-title">
+      <h1>Избранное</h1>
+   </div>
+</div>
+<!-- crumb == end -->
+
+<div *ngIf="isLoaded">
+
+   <!-- Если нет ни одного продукта то вырисовывает блок пустышку-->
+   <div *ngIf="(!favoriteProducts || favoriteProducts.length===0) && !filtersChecked">
+      <div class="container">
+         <div class="empty">
+            <div class="empty__content d-f a-i-c j-c-b f-w">
+               <div class="empty__text">
+                  <div class="empty__text--title">
+                     <h2>Список избранных товаров пуст</h2>
+                     <p>
+                        Перейдите в <a href="#" [routerLink]="['/catalog']">каталог</a>, выбирайте товары и
+                        добавляйте
+                        в
+                        список избранного.
+                     </p>
+                  </div>
+                  <div class="empty__text--btn btn-global">
+                     <a href="#" [routerLink]="['/catalog']" class="btn-global__red">Перейти в каталог</a>
+                  </div>
+               </div>
+               <div class="empty__img d-f j-c-c a-i-c">
+                  <img src="/assets/img/favorite-not-found.jpg" alt="img">
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- /Если нет ни одного продукта то вырисовывает блок пустышку-->
+   <!-- Если есть продукт то вырисовывает етот блок -->
+   <div class="favorites" *ngIf="(favoriteProducts && favoriteProducts.length>0) || filtersChecked">
+      <div class="container">
+         <!-- favorites-filter == start -->
+         <div class="favorites-filter d-f">
+            <div class="favorites-filter__item">
+               <div class="favorites-filter__item--list  select-filter d-f a-i-c">
+                  <div class="favorites-filter__select--title">
+                     <p>Сортировать:</p>
+                  </div>
+                  <div class="favorites-filter__select">
+                     <ng-select [(ngModel)]="sortingType" (change)="sortTypeChange()" [searchable]="false"
+                        [clearable]="false">
+                        <ng-option *ngFor="let sortType of allProductSortingTypes" [value]="sortType.key">
+                           {{sortType.name}}
+                        </ng-option>
+                     </ng-select>
+                  </div>
+               </div>
+            </div>
+
+            <div class="favorites-filter__item">
+               <div class="favorites-filter__item--list favorites-filter__search d-f a-i-c">
+                  <i class="icon icon-search favorites-filter__search--icon"></i>
+                  <input class="border-0" type="text" [(ngModel)]="name" (change)="valueChanged()"
+                     placeholder="Найти в избранном:" />
+               </div>
+            </div>
+         </div>
+         <!-- favorites-filter == end -->
+         <!-- favorites-cards == start -->
+         <div class="favorites-cards cards d-f f-w">
+            <div class="cards-product favorites-cards__product d-f f-d-c j-c-b"
+               *ngFor="let item of favoriteProducts; let idx = index">
+               <div class="cards-product__item d-f f-d-c j-c-b">
+                  <div class="cards-product__item--img">
+                     <a class="d-f a-i-c j-c-c" [routerLink]="['/product', item.vendorCode]">
+                        <img *ngIf="item.mainImage || !item.mainImage === undefined"
+                           src="{{cloudinaryHelper.getImageUrl(item.mainImage.imageURL, 266, 266)}}"
+                           (error)="setBrokenImage($event)" title="{{ item.name }}" alt="{{ item.name }}" />
+                        <img *ngIf="item.mainImage === null" src="/assets/img/product-default-image.jpg" />
+                     </a>
+                  </div>
+                  <div class="cards-product__item--name">
+                     <a href="#" [routerLink]="['/product', item.vendorCode]"
+                        title="{{ item.name }}">{{ item.name }}</a>
+                  </div>
+
+                  <!-- cards-product__item--select == start -->
+                  <!-- <div class="cards-product__item--select">
+       <div class="cards-product__item--select-title">
+          <p>Фасовка:</p>
+       </div>
+       <div class="select-filter sort-select__filter">
+          <ng-select>
+             <ng-option>Фасовка</ng-option>
+          </ng-select>
+       </div>
+    </div> -->
+                  <!-- cards-product__item--select == end -->
+                  <!--<div class="cards-product__item--vendorcode">
+       <p>Артикул:<span> {{ item.vendorCode }}</span></p>
+    </div>-->
+                  <ul class="cards-product__item--remainder">
+                     <li class="d-f a-i-c">
+                        <i *ngIf="item.amountInStock>0" class="new-icon new-icon-added"></i>
+                        <i *ngIf="item.amountInStock==0" class="new-icon new-icon-pending"></i>
+                        <h3 class="d-f a-i-c">
+
+                           <div class="tooltip" *ngIf="item.amountInStock>0">
+                              <h3>
+                                 В наличии <span>
+                                    <i
+                                       class="green_color">{{isValueInteger(item.amountInStock / item.unitOfMeasurementCoefficient) ?item.amountInStock / item.unitOfMeasurementCoefficient : (item.amountInStock / item.unitOfMeasurementCoefficient).toFixed(2) }}</i>
+                                 </span><span>{{item.unitOfMeasurementName}}</span>
+                              </h3>
+                              <div class="tooltip-content">
+                                 <ul class="tooltip-content__list triangle triangle-down">
+                                    <li *ngFor="let productDepot of item.productDepos">{{productDepot.depotName}}
+                                       {{productDepot.amountInStock}}</li>
+                                 </ul>
+                              </div>
+                           </div>
+                           <p *ngIf="item.amountInStock==0">Под заказ</p>
+
+
+                        </h3>
+                     </li>
+                  </ul>
+                  <div class="cards-product__item--price">
+                      <p class="cards-product__item--price-main">
+                          <span *ngIf="isValueInteger(item.price)">{{item.price | fractionSizeSpace}} ₽</span>
+                          <span *ngIf="!isValueInteger(item.price)">{{item.price.toFixed(2) | fractionSizeSpace}} ₽</span>
+                      </p>
+                  </div>
+                  <div>
+
+                  </div>
+                  <div class="cards-product__item--counter d-f">
+                     <div class="cards-product__item--counter-increment">
+                        <app-product-counter productCounterMax="{{item.amountInStock}}"
+                           productCounterMin="{{item.shipmentMultiplicity}}"
+                           productCounterStep="{{item.shipmentMultiplicity}}" productCounterQuantity="{{item.quantity}}"
+                           (increment)="increment(item)" (decrement)="decrement(item)"
+                           (changeNumber)="changeNumber($event, item)" (error)="errorMethod()">
+                        </app-product-counter>
+                     </div>
+                     <div class="cards-product__item--counter-btn btn-global">
+                        <button class="btn-global__red"
+                           (click)="addToBasket(item.productId, item.quantity, item.canSelectOffer)"
+                           [disabled]="item.price == 0 || item.status == 2">
+                           <ng-container *ngIf="item.price != 0 && item.status != 2 && item.amountInStock>0">
+                              В
+                              КОРЗИНУ
+                           </ng-container>
+                           <ng-container *ngIf="item.price != 0 && item.status != 2 && item.amountInStock ==0">
+                              ПОД
+                              ЗАКАЗ
+                           </ng-container>
+                           <ng-container *ngIf="item.price == 0 || item.status == 2">СНЯТ С ПРОДАЖИ
+                           </ng-container>
+                        </button>
+                     </div>
+                  </div>
+               </div>
+
+
+               <div class="cards-product__election">
+                  <div class="cards-product__election--btn">
+                     <button class="icon icon-compare icon-favorite__active d-f a-i-c j-c-c"
+                        *ngIf="!canAddToComparison(item.productId)" data-title="Удалить из сравнения"
+                        [disabled]="productRemoveFromComparisonListClicked[idx]"
+                        (click)="removeProductFromComparison(item.productId, idx)"></button>
+
+                     <button class="icon icon-compare d-f a-i-c j-c-c" *ngIf="canAddToComparison(item.productId)"
+                        data-title="Добавить в сравнение" [disabled]="productAddToComparisonListClicked[idx]"
+                        (click)="addToComparison(item.productId, idx)"></button>
+                  </div>
+
+                  <div class="cards-product__election--btn">
+                     <button class="icon icon-favorite icon-favorite__active d-f a-i-c j-c-c"
+                        data-title="Удалить из списка избранных" (click)="removeFromFavorite(item.productId)"></button>
+                  </div>
+
+                  <div class="cards-product__election--btn">
+                     <button *ngIf="!isProductInTemplate(item.productId)" class="icon icon-template d-f a-i-c j-c-c"
+                        data-title="Добавить в шаблон"
+                        (click)="addOrderTemplate(item.productId,item.shipmentMultiplicity,item.name,item.amountInStock)"></button>
+                     <button *ngIf="isProductInTemplate(item.productId)"
+                        class="icon icon-template icon-favorite__active d-f a-i-c j-c-c" data-title="Добавить в шаблон"
+                        (click)="addOrderTemplate(item.productId,item.shipmentMultiplicity,item.name,item.amountInStock)"></button>
+                  </div>
+               </div>
+
+
+               <!-- product__new icon == start -->
+               <div class="cards-product__new">
+                  <span class="d-f a-i-c j-c-c newProductTooltip"
+                     *ngFor="let marketingTag of sortMarketingTags(item.productMarketingTags)"
+                     [style.background]="marketingTag.backgroundColor" [style.color]="marketingTag.foregroundColor">
+                     {{ marketingTag.name }}
+                     <p class="newProductTooltipContentDescription" hidden>{{marketingTag.description}}</p>
+                  </span>
+               </div>
+               <!-- product__new icon == end -->
+
+            </div>
+         </div>
+         <!-- favorites-cards == end -->
+
+      </div>
+   </div>
+   <!-- Если есть продукт то вырисовывает етот блок -->
+</div>

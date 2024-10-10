@@ -1,0 +1,186 @@
+@import '../../styles/base/shared';
+
+
+.order-templates {
+    margin: 25px 0;
+
+    &__box {
+
+        &--list {
+            margin: 0 -8px;
+
+            &-item {
+                width: 33.333%;
+                padding: 8px;
+
+                @include lg {
+                    width: 50%;
+                }
+
+                @include sm {
+                    width: 100%;
+                }
+
+                &__info {
+                    border-radius: 10px;
+                    height: 100%;
+                    min-height: 230px;
+                    padding: 20px;
+                }
+
+                &__add {
+                    border: 2px dashed rgba(#8fa2a7, .32);
+                    position: relative;
+                    transition: $transition;
+
+                    &--screen {
+                        background: rgba(0, 0, 0, 0.65);
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        z-index: 99999999;
+                    }
+
+                    &--create {
+                        border-radius: 10px;
+                        border: 1px solid var(--global_color);
+                        padding: 38px 20px 20px;
+                        background-color: white;
+                        position: absolute;
+                        top: -37px;
+                        left: -2px;
+                        right: -2px;
+                        bottom: -37px;
+                        z-index: 999999999;
+
+                        &-title {
+                            margin-bottom: 25px;
+                            font: 23px $Regular;
+                            color: $second_color;
+                            text-align: center;
+                        }
+
+                        &-input {
+                            margin-bottom: 23px;
+
+                            p {
+                                font: 13px $Regular;
+                                color: rgba(47, 64, 69, 0.5);
+                                margin-bottom: 12px;
+                            }
+
+                            input {
+                                @include wh(100%, 40px);
+                                padding: 0 10px;
+                                font: 14px $Regular;
+                                color: $second_color;
+                            }
+                        }
+
+                        &-description {
+                            margin-bottom: 25px;
+
+                            p {
+                                font: 14px/1.14 $Regular;
+                                color: $second_color;
+
+                                a {
+                                    color: var(--global_color);
+                                    text-decoration: underline;
+                                    transition: $transition;
+
+                                    &:hover {
+                                        color: $green_color;
+                                    }
+                                }
+                            }
+                        }
+
+                        &-btn {
+                            height: 40px;
+                        }
+                    }
+
+                    &--btn {
+                        @include wh(100%);
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        cursor: pointer;
+
+                        .icon-createPlus {
+                            font-size: 44px;
+                            color: #c7d0d3;
+                        }
+
+                        span {
+                            font: 20.5px $Regular;
+                            color: #c7d0d3;
+                            margin-top: 15px;
+                            display: block;
+                        }
+                    }
+                }
+
+                &__block {
+                    border: 1px solid #ebebeb;
+                    background-color: white;
+
+                    &--icons {
+                        margin-bottom: 16px;
+
+                        .icon {
+                            padding: 0 8px;
+                            color: #8fa2a7;
+                            font-size: 17px;
+                            cursor: pointer;
+                            transition: $transition;
+
+                            &:hover {
+                                color: var(--global_color);
+                            }
+                        }
+                    }
+
+                    &--name {
+                        min-height: 45px;
+                        margin-bottom: 38px;
+
+                        a {
+                            font: 23px $Regular;
+                            color: $second_color;
+                            transition: $transition;
+
+                            &:hover {
+                                color: var(--global_color);
+                            }
+                        }
+                    }
+
+                    &--price {
+                        margin-bottom: 21px;
+                        color: $second_color;
+
+                        p {
+                            font: 23px $Semibold;
+                            margin-right: 4px;
+                        }
+
+                        .icon-rub {
+                            font-size: 16px;
+                        }
+                    }
+
+                    &--btn {
+                        height: 40px;
+                        margin-top: auto;
+                    }
+                }
+
+                
+            }
+        }
+    }
+}

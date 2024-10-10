@@ -1,0 +1,208 @@
+@import '../styles/base/shared';
+
+.faq {
+    // margin-top: 3px;
+
+    &-box {
+        &__sidebar {
+            max-width: 382px;
+            width: 100%;
+            box-shadow: 6.1px 5.1px 16px 0 rgba(0, 0, 0, 0.15);
+            margin-right: 30px;
+            padding-top: 40px;
+            padding-bottom: 25px;
+        }
+
+        &__navbar {
+            background-color: white;
+
+            &--desctop {
+                &-title {
+                    font: 15px $Bold;
+                    letter-spacing: .75px;
+                    color: $third_color;
+                    text-transform: uppercase;
+                    padding-left: 43px;
+                    margin-bottom: 20px;
+                }
+
+                @include lg{
+                    display: none;
+                }
+            }
+
+            &--mobile {
+                margin-top: 38px;
+                margin-bottom: 8px;
+
+                &-title {
+                    padding: 12px;
+                    cursor: pointer;
+
+                    &__icon{
+                        @include wh(37px);
+                        font: 25px $Regular;
+                        color: white;
+                        border-radius: 4px;
+                        background-color: var(--global_color);
+                    }
+
+                    h3 {
+                        font: 17px $Bold;
+                        letter-spacing: 2.55px;
+                        color: var(--global_color);
+                        text-transform: uppercase;
+                    }
+
+                    .icon-arrow{
+                        font-size: 8px;
+                        color: var(--global_color);
+                    }
+                }
+                @include lg{
+                    display: block;
+                }
+            }
+
+            &--list {
+                ul {
+                    li {
+                        a {
+                            min-height: 54px;
+                            font: 15.5px $Regular;
+                            color: $second_color;
+                            padding: 5px 5px 5px 43px;
+                            transition: $transition;
+
+                            &.active,
+                            &:hover {
+                                background-color: #f1f3f3;
+                                color: var(--global_color);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        &__content {
+            width: calc(100% - 412px);
+
+            &--info {
+                padding: 34px;
+                margin-top: 37px;
+
+                &-title {
+                    font: 15px $Bold;
+                    letter-spacing: .75px;
+                    color: $third_color;
+                    margin-bottom: 30px;
+                    text-transform: uppercase;
+                }
+
+                &-text {
+                    border-radius: 4px;
+                    background-color: rgba(#f1f3f3, .6);
+                    padding: 23px;
+
+                    &+& {
+                        margin-top: 17px;
+                    }
+
+                    &__title {
+                        font: 18.5px $Regular;
+                        letter-spacing: -.21px;
+                        color: $third_color;
+                        cursor: pointer;
+                        transition: $transition;
+
+                        p{
+                            width: calc(100% - 18px);
+                            padding-right: 10px;
+                        }
+
+                        &--icon {
+                            @include wh(18px);
+                            display: block;
+                            position: relative;
+
+                            &::before,
+                            &::after {
+                                content: "";
+                                position: absolute;
+                                top: 50%;
+                                transform: translateY(-50%);
+                                left: 0;
+                                right: 0;
+                                margin: auto;
+                                background-color: #4f565a;
+                                transition: $transition;
+                            }
+
+                            &::before {
+                                width: 100%;
+                                height: 2px;
+                            }
+
+                            &::after {
+                                width: 2px;
+                                height: 100%;
+                            }
+                        }
+
+                        &:hover {
+                            color: var(--global_color);
+                        }
+
+                        &:hover .faq-box__content--info-text__title--icon {
+
+                            &::before,
+                            &::after {
+                                background-color: var(--global_color);
+                            }
+                        }
+
+                        &[data-expand="true"] {
+                            color: var(--global_color);
+
+                            .faq-box__content--info-text__title--icon::before {
+                                background-color: var(--global_color);
+                            }
+
+                            .faq-box__content--info-text__title--icon::after {
+                                content: none;
+                            }
+                        }
+
+                        @include lg{
+                            font-size: 15.5px;
+                        }
+                    }
+
+                    &__description {
+                        font: 15px/1.33 $Regular;
+                        color: #33444e;
+                        margin-top: 22px;
+
+                        a {
+                            color: var(--global_color);
+                            text-decoration: underline;
+                        }
+                    }
+
+                    @include lg{
+                        padding: 15px;
+                    }
+                }
+
+                @include lg{
+                    padding: 23px 15px;
+                }
+            }
+
+            @include lg{
+                width: 100%;
+            }
+        }
+    }
+}

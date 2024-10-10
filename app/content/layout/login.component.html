@@ -1,0 +1,59 @@
+<div class="login modal-content__box animate_show_fadeIn">
+
+   <div class="login-box d-f">
+      <div class="login-box__logo">
+         <div class="login-box__logo--img">
+            <img src="../../../assets/img/login/logo.png" alt="img">
+         </div>
+      </div>
+
+      <div class="login-box__form d-f f-d-c j-c-c">
+         <span class="icon icon-close icon-close__modal" (click)="activeModal.dismiss()"></span>
+
+         <div class="login-box__title">
+            <h2>Вход</h2>
+            <p>Войдите, чтобы пользоваться всеми функциями портала</p>
+         </div>
+
+         <form #loginForm="ngForm" (keydown.enter)="login()">
+            <div class="login-box__form--area">
+               <div class="login-box__form--area-input {{email === '' ? 'required' : ''}}">
+                  <p class="required-tooltip d_none">заполнение обязательно</p>
+                  <input type="text" name="emailInput" id="emailInput" [(ngModel)]="email"
+                     placeholder="Электронная почта или телефон" required />
+               </div>
+
+               <div class="login-box__form--area-input {{password === '' ? 'required' : ''}}">
+                  <p class="required-tooltip d_none">заполнение обязательно</p>
+                  <input type="password" name="passwordInput" id="passwordInput" [(ngModel)]="password"
+                     placeholder="Пароль" required />
+               </div>
+
+               <div class="login-box__form--area-input login-box__form--captcha" *ngIf="!isFirstAttempt">
+                  <re-captcha style="display: block; transform: scale(0.81) translateX(-28px);" (resolved)="captchaResolved($event)"></re-captcha>
+                  <div *ngIf="captchaResolvingSeconds != undefined" class="login-box__form--captcha-expiration">
+                     <span class="login-box__form--captcha-expiration--expiring-text"
+                        *ngIf="captchaResponse; else expiredCaptchaSpan">
+                        Время окончания проверки капчи: {{captchaResolvingSeconds}}с
+                     </span>
+                     <ng-template #expiredCaptchaSpan>
+                        <span class="login-box__form--captcha-expiration--expired-text">
+                           Время проверки истекло. <br />
+                           Установите флажок и повторите попытку.</span>
+                     </ng-template>
+                  </div>
+               </div>
+            </div>
+
+            <div class="login-box__btn d-f j-c-b a-i-c">
+               <div class="btn-global">
+                  <button class="btn-global__red" type="button" name="enter"
+                     [disabled]="!isFirstAttempt && !captchaResponse || !email || !password"
+                     (click)="login()">ВОЙТИ</button>
+               </div>
+               <a href="#" (click)="openModalRecovery(); activeModal.dismiss()">Забыли пароль?</a>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,68 @@
+﻿<!-- crumb == start -->
+<div class="container animate_show_up">
+   <div class="crumb">
+      <ul class="crumb-list d-f f-w a-i-c">
+         <li class="crumb-list__item">
+            <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">Каталог</li>
+      </ul>
+   </div>
+
+   <div class="global-title">
+      <h1>Каталог товаров</h1>
+   </div>
+</div>
+<!-- crumb == end -->
+
+
+<div class="catalog-main" *ngIf="isLoaded">
+   <div class="container">
+      <div class="catalog-main__list d-f f-w">
+         <div class="catalog-main__list--item" *ngFor="let group of groups">
+            <div class="catalog-main__list--item-box d-f a-i-c">
+               <a href="#" (click)="goTo(group.id)">{{group.name}}</a>
+               <img src="{{group.imageUrl}}" alt="img">
+            </div>
+            <div class="catalog-main__list--item-name">
+               <a href="#" *ngFor="let category of group.categories" [routerLink]="['/catalog', category.id]"
+                  class="catalog-main__list--item-name__link">{{category.name}}</a>
+            </div>
+         </div>
+      </div>
+
+      <!-- services -->
+      <div class="catalog-main__services">
+         <div class="catalog-main__services--title">
+            <h2>Дополнительные сервисы МаксиПРО</h2>
+         </div>
+         <div class="catalog-main__services--list d-f f-w">
+            <div class="catalog-main__services--list-item">
+               <div class="catalog-main__services--list-item__box d-f a-i-e">
+                  <p>Аренда<br> инструмента</p>
+                  <img src="../../../assets/img/home/services/1.png" alt="img">
+               </div>
+            </div>
+            <div class="catalog-main__services--list-item">
+               <div class="catalog-main__services--list-item__box d-f a-i-e">
+                  <p>Технические<br> консультации</p>
+                  <img src="../../../assets/img/home/services/2.png" alt="img">
+               </div>
+            </div>
+            <div class="catalog-main__services--list-item">
+               <div class="catalog-main__services--list-item__box d-f a-i-e">
+                  <p>Распил по металлу <br> и дереву</p>
+                  <img src="../../../assets/img/home/services/3.png" alt="img">
+               </div>
+            </div>
+            <div class="catalog-main__services--list-item">
+               <div class="catalog-main__services--list-item__box d-f a-i-e">
+                  <p>Колеровка</p>
+                  <img src="../../../assets/img/home/services/4.png" alt="img">
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

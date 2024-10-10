@@ -1,0 +1,87 @@
+﻿@import '../../styles/base/shared';
+
+.create-archive {
+    max-width: 441px;
+    width: 100%;
+    margin: auto;
+    border-radius: 20px;
+    background-color: white;
+    padding: 36px 78px;
+
+    @include sm{
+        padding: 25px 15px;
+    }
+
+    &__title {
+        font: 34px $Regular;
+        color: #3B474E;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    &__info {
+        text-align: center;
+
+        &--loading {
+            width: 32px;
+            margin: 0 auto 12px;
+            transform: rotate(45deg);
+
+            &-item {
+                @include wh(10px);
+                background-color: var(--global_color);
+                margin: 1px;
+                animation-name: loading;
+                animation-duration: 1s;
+                animation-timing-function: ease-out;
+                animation-iteration-count: infinite;
+                animation-direction: alternate;
+                animation-fill-mode: forwards;
+                opacity: 0;
+
+                &__1 {
+                    animation-delay: .4s;
+                }
+
+                &__2 {
+                    animation-delay: 1s;
+                }
+
+                &__3 {
+                    animation-delay: .6s;
+                }
+
+                &__4 {
+                    animation-delay: .8s;
+                }
+            }
+
+            @keyframes loading {
+                0% {
+                    opacity: 0;
+                }
+
+                50% {
+                    opacity: 0;
+                }
+
+                100% {
+                    opacity: 1;
+                }
+            }
+        }
+
+        &--text {
+            h3 {
+                font: 16px $Regular;
+                color: #232C31;
+                margin-bottom: 5px;
+            }
+
+            p {
+                font: 16px/22px $Regular;
+                color: #797F83;
+            }
+        }
+    }
+}

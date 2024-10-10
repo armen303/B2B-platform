@@ -1,0 +1,96 @@
+<div class="bread-crumb-and-title animate_show_up transparent-bg">
+ <div class="container remove-horisontal-spacer">
+  <div class="row">
+   <div class="col-xl-12">
+    <!-- bread-crumb -->
+    <div class="bread-crumb">
+     <div class="bread-crumb__list">
+      <a href="#" class="bread-crumb__home-link" [routerLink]="['/home']"></a>
+      <a href="#" class="bread-crumb__link">Спецпредложения</a>
+     </div>
+    </div>
+    <!-- /bread-crumb -->
+    <h1 class="main-title">Спецпредложения</h1>
+   </div>
+  </div>
+ </div>
+</div>
+
+<!-- nv-special-offer -->
+<div class="nv-special-offer animate_show_up">
+ <div class="container">
+  <div class="row">
+   <div class="col-xl-12 col-lg-12 col-md-6 col-sm-12 nv-no-spacer">
+    <article class="nv-special-offer-article nv-special-offer-article--more">
+     <div class="nv-special-offer-article__info">
+
+      <h2 class="nv-special-offer-article__title">
+       <a href="#" class="nv-special-offer-article__title-link">
+        Подарочная карта каждому второму зарегистрировавшемуся
+       </a>
+      </h2>
+
+      <div class="nv-special-offer-article__description nv-special-offer-article__description--more">
+       It is a long established fact that a reader will be distracted by the readable content of a page when looking at
+       its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as
+       opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing
+       packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum'
+       will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by
+       accident, sometimes on purpose (injected humour and the like).
+      </div>
+
+      <div class="nv-special-offer-article__read-more-cell">
+       <a href="#" [routerLink]="['/special-offers']" class="nv-special-offer-article__read-more">ПЕРЕЙТИ К СПИСКУ
+        СПЕЦПРЕДЛОЖЕНИЙ</a>
+      </div>
+
+     </div>
+     <div class="nv-special-offer-article__img-cell temp-flex-end">
+      <a href="#">
+       <picture>
+        <source media="(max-width: 1510px)" srcset="/assets/img/img2.jpg" class="g-resize" />
+        <img src="/assets/img/img.jpg" alt="" title="" class="g-resize" />
+       </picture>
+      </a>
+     </div>
+    </article>
+   </div>
+  </div>
+ </div>
+</div>
+<!-- nv-special-offer -->
+
+<div *ngIf="isLoaded" class="animate_show_up">
+ <div class="container">
+  <div class="row no-gutter">
+   <div class="col-xl-3 col-lg-3">
+   </div>
+   <div class="row no-gutter">
+    <div class="col-xl-3 col-lg-3">
+     <div *ngIf="specialOffers.length > 0 ">
+
+      <div>
+       <br />
+       <div *ngFor="let specialOffer of specialOffers" class="serviceBlock">
+        <div class="element">
+         <span class="font information"><b>{{specialOffer.name}}</b></span>
+         <br />
+         <br />
+         <span class="font information">{{specialOffer.description}}</span>
+         <br />
+         <br />
+         <button class="detailed font" (click)="goTo(specialOffer.url)">Подробнее</button>
+         <br />
+         <br />
+         <img class="right" [src]="getImageUrl(specialOffer.imageId, 197, 181)" />
+         <br />
+         <br />
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>

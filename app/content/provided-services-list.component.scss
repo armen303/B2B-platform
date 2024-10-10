@@ -1,0 +1,259 @@
+@import '../styles/base/shared';
+
+.services {
+    margin-top: 48px;
+
+    &-tab {
+        margin-bottom: 45px;
+
+        @include lg {
+            margin-bottom: 0;
+        }
+
+        &__select {
+            @include lg {
+                display: flex;
+                padding: 20px 15px;
+                background-color: white;
+                margin-bottom: 1.5px;
+            }
+
+            &--text {
+                padding-right: 10px;
+
+                p {
+                    font: 15.5px $Semibold;
+                    color: rgba(59, 71, 78, 0.4);
+                    margin-right: 8px;
+                }
+
+                span {
+                    font: 15.5px $Semibold;
+                    color: var(--global_color);
+                }
+            }
+
+            .icon {
+                font-size: 8px;
+                color: $third_color;
+
+                &-arrow__top {
+                    color: var(--global_color);
+                }
+            }
+        }
+
+        &__list {
+
+            @include lg {
+                display: none;
+                background-color: white;
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            &--item {
+                padding: 5px 20px;
+
+                @include lg {
+                    padding: 10px 0;
+                }
+
+                span {
+                    display: block;
+                    font: 20px/1 $Regular;
+                    color: $third_color;
+                    letter-spacing: -.2px;
+                    border-bottom: 1px solid transparent;
+                    cursor: pointer;
+                    transition: $transition;
+
+                    @include lg {
+                        display: inline-block;
+                    }
+
+                    &:hover,
+                    &.active {
+                        color: var(--global_color);
+                        border-bottom: 1px solid var(--global_color);
+                    }
+                }
+            }
+        }
+    }
+
+    &-info {
+        margin-bottom: 57px;
+
+        &__list {
+            margin: 0 -2.5px;
+
+            @include lg {
+                display: block;
+                margin: 0;
+            }
+
+
+            &--long {
+                width: 40%;
+            }
+
+            &--mini {
+                width: 60%;
+            }
+
+
+            &--item {
+                padding: 2.5px;
+
+                @include lg {
+                    width: 100%;
+                    padding: 1.5px 0;
+                }
+
+                &-box {
+                    background-color: white;
+                    padding: 55px 30px 45px;
+                    transition: $transition;
+
+                    &:hover {
+                        background-color: #d6eaf5;
+                    }
+
+                    &+& {
+                        margin-top: 5px;
+                    }
+
+                    @include lg {
+                        padding: 55px 60px 45px;
+
+                        &+& {
+                            margin-top: 3px;
+                        }
+                    }
+
+                    @include sm{
+                        padding: 25px 15px;
+                    }
+
+                    &__img {
+                        padding: 5px;
+                        text-align: center;
+                    }
+
+                    &__text {
+                        max-width: 480px;
+                        width: 100%;
+
+                        @include lg {
+                            max-width: 100%;
+                        }
+
+                        @include sm{
+                            text-align: center;
+                        }
+
+                        &--title {
+                            font: 25px/1.2 $Extrabold;
+                            color: $third_color;
+                            letter-spacing: -.25px;
+                            margin-bottom: 18px;
+                        }
+
+                        &--description {
+                            font: 18px/1.39 $Regular;
+                            color: $third_color;
+                            letter-spacing: -.18px;
+                            margin-bottom: 34px;
+                        }
+
+                        &--btn {
+                            @include wh(179px, 45px);
+
+                            button {
+                                @include wh(100%);
+                                font: 12px $Bold;
+                                color: $third_color;
+                                letter-spacing: 1.8px;
+                                text-transform: uppercase;
+                                border: 2px solid $third_color;
+                                background-color: transparent;
+                                transition: $transition;
+
+                                &:hover {
+                                    color: var(--global_color);
+                                    border: 2px solid var(--global_color);
+                                }
+                            }
+
+                            @include sm{
+                                margin: auto;
+                            }
+                        }
+                    }
+                }
+
+                &-long {
+                    height: 100%;
+                    min-height: 591px;
+                    display: block;
+
+                    @include lg {
+                        height: auto;
+                        min-height: auto;
+                        display: flex;
+                        align-items: center;
+                    }
+
+                    @include sm {
+                        display: block;
+                    }
+
+                    &__img {
+                        @include wh(295px);
+                        margin: auto;
+                        margin-bottom: 38px;
+
+                        @include lg {
+                            @include wh(203px);
+                            margin: 0 50px 0 0;
+                        }
+
+                        @include sm {
+                            margin: 0 auto 30px;
+                        }
+                    }
+
+                }
+
+                &-mini {
+                    min-height: 294px;
+                    height: 50%;
+
+                    @include lg{
+                        height: auto;
+                        min-height: auto;
+                    }
+
+                    @include sm{
+                        display: block;
+                    }
+
+                    &__img {
+                        @include wh(197px, 181px);
+                        margin-right: 58px;
+
+                        @include lg {
+                            @include wh(203px);
+                            margin: 0 50px 0 0;
+                        }
+
+                        @include sm {
+                            margin: 0 auto 30px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

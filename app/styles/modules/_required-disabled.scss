@@ -1,0 +1,21 @@
+// required -- START
+.required {
+    position: relative;
+
+    &.sort-select__filter .ng-select-container,
+    input,
+    textarea {
+        border: 1px solid #F02626;
+    }
+
+    .required-tooltip {
+        width: 100%;
+        display: block;
+        font: 13px $Regular;
+        color: #F02626;
+        text-align: right;
+        margin: 5px 0;
+    }
+}
+
+// required -- END

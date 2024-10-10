@@ -1,0 +1,95 @@
+<!-- crumb == start -->
+<div class="container animate_show_up">
+   <div class="crumb">
+      <ul class="crumb-list d-f f-w a-i-c">
+         <li class="crumb-list__item">
+            <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">
+            <a href="#" class="crumb-list__item--link" [routerLink]="['/user/company-profile']">Компания</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">Сотрудники</li>
+      </ul>
+   </div>
+
+   <div class="global-title d-f j-c-b a-i-c">
+      <h1>Сотрудники и права доступа</h1>
+      <a id="goToAddingButton" class="add-object__link d-f a-i-c" href="#" (click)="createEmployee()">
+         <i class="icon icon-createPlus"></i>
+         <span>Добавить сотрудника</span>
+      </a>
+   </div>
+</div>
+<!-- crumb == end -->
+
+
+<div class="table" *ngIf="isLoaded">
+   <div class="container">
+      <div class="table-box bg-br">
+         <div class="table-box__area d-f a-i-c j-c-b">
+            <div class="d-f a-i-c">
+               <div class="select-filter sort-select__filter sort-select__order" style="width: 260px">
+                  <ng-select [searchable]="false" [clearable]="false" [(ngModel)]="sortBy" (change)="resetPage()"
+                     id="employees-sort-select">
+                     <ng-option *ngFor="let sortItem of allEmployeesSortByValues" [value]="sortItem.key">
+                        {{sortItem.name}}
+                     </ng-option>
+                  </ng-select>
+               </div>
+            </div>
+
+            <div class="table-box__area--input">
+               <input type="text" [(ngModel)]="textSearch" (input)="resetPage()" placeholder="Поиск" />
+            </div>
+         </div>
+
+         <div class="table-box__info">
+            <table>
+               <thead>
+                  <tr>
+                     <th>ФИО</th>
+                     <th>E-MAIL</th>
+                     <th>ТЕЛЕФОН</th>
+                     <th>ПРАВА</th>
+                     <th></th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr *ngFor="let employee of employees">
+                     <td>{{employee.lastName}} {{employee.firstName}} {{employee.patronymic}}</td>
+                     <td>{{employee.email}}</td>
+                     <td>{{employee.phoneNumber | phone}}</td>
+                     <td>{{employee.isHead ? 'Руководитель' : 'Менеджер'}}</td>
+                     <td>
+                        <div class="table-box__info--icons d-f a-i-c j-c-c">
+                           <i class="icon icon-pen" data-title="Редактировать" (click)="goToEditing(employee.id)"></i>
+                           <!--<i class="icon icon-setting" data-title="Настройка доступа" (click)="goToSettings(employee.id)"></i>-->
+                           <i class="icon icon-trash" data-title="Удалить" (click)=" remove(employee.id)"></i>
+                        </div>
+                     </td>
+                  </tr>
+                  <tr *ngIf="!employees.length">
+                     <td>Сотрудников не найдено</td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+
+         <!---Пейджирование -->
+         <div class="table-pagination d-f a-i-c j-c-b">
+            <div class="d-f a-i-c j-c-b">
+               <pagination #paginationComponent (pageChanged)="goToPage($event)" [totalItems]="totalNumberOfEmployees"
+                  previousText="&lsaquo;" [itemsPerPage]="pageSize" nextText="&rsaquo;"></pagination>
+            </div>
+
+            <div class="table-pagination__text">
+               <p>{{ employees.length ? skipNumberOfEmployees + 1 : 0 }} - {{skipNumberOfEmployees + employees.length}}
+                  из {{totalNumberOfEmployees}}</p>
+            </div>
+         </div>
+         <!---Пейджирование -->
+      </div>
+   </div>
+</div>

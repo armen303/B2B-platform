@@ -1,0 +1,39 @@
+<div class="act-modal modal-container">
+   <div class="act-modal__title">
+      <h2>СФОРМИРОВАТЬ</h2>
+      <h3>АКТ СВЕРКИ ВЗАИМНЫХ РАСЧЕТОВ</h3>
+   </div>
+
+
+   <div class="act-modal__date ngb-datepicker-range">
+       <div class="act-modal__date--area d-f a-i-c">
+           <p>Выберите дату начала</p>
+           <input class="border-0" #dpFromDate placeholder="дд.мм.гггг" name="dpFromDate" [value]="formatter.format(fromDate)"
+                  (input)="fromDate = validateInput(fromDate, dpFromDate.value)" (change)="fromDateChanged()" (focus)="datepicker.toggle()">
+           <p>Выберите дату окончания</p>
+           <input class="border-0" #dpToDate placeholder="дд.мм.гггг" name="dpToDate" [value]="formatter.format(toDate)"
+                  (input)="toDate = validateInput(toDate, dpToDate.value)" (focus)="datepicker.toggle()" (change)="toDateChanged()">
+           <i class="icon icon-calendar"></i>
+       </div>
+       <input class="border-0 act-modal__date--fromto" name="datepicker" ngbDatepicker #datepicker="ngbDatepicker" 
+              [autoClose]="false" (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
+              outsideDays="hidden" [startDate]="fromDate!" [maxDate]="maxDate">
+       <ng-template #t let-date let-focused="focused" >
+           <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                 [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                 (mouseleave)="hoveredDate = null">
+               {{ date.day }}
+           </span>
+       </ng-template>
+   </div>
+
+   <div class="act-modal__btn d-f a-i-c j-c-b">
+      <div class="act-modal__btn--item btn-global btn-global__gray">
+         <button  (click)="close()">Отмена</button>
+      </div>
+      <div class="act-modal__btn--item btn-global">
+         <button type="button" class="btn-global__red" [disabled]="!toDateIsValid || isSaving || !isPickerValid"
+            (click)="create()">Сохранить</button>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,101 @@
+@import '../styles/base/shared';
+
+.news {
+    margin-top: 32px;
+    margin-bottom: 40px;
+
+    &-list {
+        margin: 0 -7.5px;
+
+        &__item {
+            width: 25%;
+            padding: 7.5px;
+
+            &--box {
+                height: 100%;
+                background-color: white;
+                transition: $transition;
+                display: block;
+
+                &-img {
+                    height: 260px;
+                    overflow: hidden;
+
+                    img {
+                        object-fit: cover;
+                        transition: $transition;
+                    }
+                }
+
+                &-text {
+                    padding: 30px 26px;
+
+                    &__time {
+                        font: 14px $Semibold;
+                        color: rgba(59, 71, 78, .5);
+                        letter-spacing: .14px;
+                        margin-bottom: 33px;
+
+                        @include sm{
+                            margin-bottom: 20px;
+                        }
+                    }
+
+                    &__title {
+                        height: 90px;
+                        overflow: hidden;
+                        font: 24px/1.25 $Bold;
+                        color: $third_color;
+                        letter-spacing: .24px;
+                        margin-bottom: 20px;
+                        transition: $transition;
+
+                        @include sm{
+                            height: auto;
+                            font-size: 20px;
+                        }
+                    }
+
+                    &__description {
+                        font: 18px/1.39 $Regular;
+                        color: $third_color;
+                        letter-spacing: .18px;
+
+                        @include sm{
+                            font-size: 16px;;
+                        }
+                    }
+
+                    @include lg{
+                        padding: 30px 15px;
+                    }
+                }
+
+                &:hover {
+                    box-shadow: 0px 5px 8px 0 rgba(0, 0, 0, 0.08);
+
+                    .news-list__item--box-img img {
+                        transform: scale(1.1) rotate(1.5deg);
+                    }
+
+                    .news-list__item--box-text__title{
+                        color: var(--global_color);
+                    }
+                }
+            }
+
+            @include xl{
+                width: 33.333%;
+            }
+
+            @include lg{
+                width: 50%;
+            }
+
+            @include sm{
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+    }
+}

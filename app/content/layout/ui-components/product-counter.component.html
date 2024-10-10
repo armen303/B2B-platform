@@ -1,0 +1,6 @@
+   <i id="decrementButton" class="icon icon-minus d-f a-i-c j-c-c"
+      (click)="counter('decrement', $event)"></i>
+   <input type="number" class="counter-input border-0" id="counterArea" min="{{productCounterMin}}" max="{{productCounterMax}}"
+      step="{{productCounterStep}}" (keyup)="numberChanged()" (change)="check()" [(ngModel)]="productCounterQuantity" />
+   <i id="incrementButton" class="icon icon-plus d-f a-i-c j-c-c"
+      (click)="counter('increment', $event)"></i>

@@ -1,0 +1,109 @@
+.checkbox {
+    cursor: pointer;
+
+    &-checkmark {
+        @include wh(18px);
+        border-radius: 4px;
+        border: solid 1px #e0e0e0;
+        background-color: #ffffff;
+        color: white;
+        font-size: 10px;
+        color: white;
+    }
+
+    input:checked~&-checkmark {
+        background-color: var(--global_color);
+        border: solid 1px var(--global_color);
+    }
+
+
+    &-radio {
+        @include wh(16px);
+        border: solid 1px #3C444B;
+        border-radius: 50%;
+        position: relative;
+    }
+
+    input:checked~&-radio {
+        border: solid 1px var(--global_color);
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            right: 3px;
+            bottom: 3px;
+            border-radius: 50%;
+            background-color: var(--global_color);
+        }
+    }
+
+    &-name {
+        width: calc(100% - 18px);
+        font: 15px $Regular;
+        color: var(--black_color);
+        margin-left: 8px;
+    }
+
+    &-switch {
+        @include wh(40px, 20px);
+        min-width: 40px;
+
+        &__slider {
+            @include wh(100%);
+            min-width: 40px;
+            background-color: #AFB6BD;
+            border: 1px solid #AFB6BD;
+            font: 13px/13px $Regular;
+            color: white;
+            padding: 2px 3px;
+            position: relative;
+            transition: $transition;
+
+            &::before {
+                content: "";
+                @include wh(16px);
+                position: absolute;
+                top: 50%;
+                left: 2px;
+                transform: translateY(-50%);
+                background: #FFFFFF;
+                box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.15);
+                z-index: 9;
+            }
+
+            &:hover {
+                background-color: var(--grey_color);
+                border: 1px solid var(--grey_color);
+            }
+        }
+
+        &__text {
+            font: 15px $Regular;
+            color: #797F83;
+            margin-left: 12px;
+            white-space: nowrap;
+            user-select: none;
+
+            &:hover {
+                color: var(--global_color);
+            }
+        }
+
+        input:checked~&__slider {
+            background-color: var(--green_color);
+            border: 1px solid var(--green_color);
+
+            &::before {
+                left: auto;
+                right: 2px;
+                background: #F7F8F9;
+            }
+        }
+
+        input:checked~&__text {
+            color: var(--black_color);
+        }
+    }
+}

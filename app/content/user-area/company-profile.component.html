@@ -1,0 +1,90 @@
+<!-- crumb == start -->
+<div class="container animate_show_up">
+   <div class="crumb">
+      <ul class="crumb-list d-f f-w a-i-c">
+         <li class="crumb-list__item">
+            <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">Профиль компании</li>
+      </ul>
+   </div>
+
+   <div class="global-title d-f j-c-b a-i-c">
+      <h1>Профиль компании</h1>
+   </div>
+</div>
+<!-- crumb == end -->
+
+<div class="company">
+   <div class="container">
+      <div class="company-profile d-f f-w">
+
+         <div class="company-profile__info" *ngIf="isLoaded">
+            <div class="company-profile__info--box bg-br">
+               <div class="company-profile__info--box-title d-f a-i-c j-c-b">
+                  <h2>Информация о компании</h2>
+                  <!-- <button>Войти</button> -->
+               </div>
+               <ul class="company-profile__info--box-list" *ngIf="company">
+                  <li class="company-profile__info--box-list__item">
+                     <span>Полное наименование организации</span>
+                     <p>{{company.fullName}}</p>
+                  </li>
+                  <li class="company-profile__info--box-list__item">
+                     <span>Краткое наименование организации</span>
+                     <p>{{company.shortName}}</p>
+                  </li>
+                  <li class="company-profile__info--box-list__item">
+                     <span>ИНН</span>
+                     <p>{{company.inn}}</p>
+                  </li>
+                  <li class="company-profile__info--box-list__item">
+                     <span>КПП</span>
+                     <p>{{company.kpp}}</p>
+                  </li>
+                  <li class="company-profile__info--box-list__item">
+                     <span>Юридический адрес</span>
+                     <p>{{company.legalAddress}}</p>
+                  </li>
+                  <li class="company-profile__info--box-list__item">
+                     <span>ОКПО</span>
+                     <p>{{company.okpo}}</p>
+                  </li>
+                  <li class="company-profile__info--box-list__item">
+                     <span>Фактический адрес</span>
+                     <p>{{company.actualAddress}}</p>
+                  </li>
+               </ul>
+            </div>
+         </div>
+         <div class="company-profile__info" *ngIf="isLoaded">
+            <div class="company-profile__info--box bg-br">
+               <div class="company-profile__info--box-title">
+                  <h2>Банковские реквизиты</h2>
+               </div>
+               <ng-container *ngFor="let accountInfoModel of company.accountInfoModels">
+                  <ul class="company-profile__info--box-list" *ngIf="company">
+                     <li class="company-profile__info--box-list__item">
+                        <span>БИК</span>
+                        <p>{{accountInfoModel.bic}}</p>
+                     </li>
+                     <li class="company-profile__info--box-list__item">
+                        <span>Наименование банка</span>
+                        <p>{{accountInfoModel.bankName}}</p>
+                     </li>
+                     <li class="company-profile__info--box-list__item">
+                        <span>Корренспондентский счет</span>
+                        <p>{{accountInfoModel.correspondentAccount}}</p>
+                     </li>
+                     <li class="company-profile__info--box-list__item">
+                        <span>Расчетный счёт</span>
+                        <p>{{accountInfoModel.settlementAccount}}</p>
+                     </li>
+                  </ul>
+               </ng-container>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

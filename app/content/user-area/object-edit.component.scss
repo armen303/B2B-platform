@@ -1,0 +1,107 @@
+﻿@import '../../styles/base/shared';
+
+.object-edit {
+    &__data {
+        &--area {
+            @include lg {
+                flex-wrap: wrap;
+            }
+
+            &-item {
+                @include lg {
+                    margin: 10px 0;
+                }
+
+                p {
+                    font: 16px $Regular;
+                    color: #797F83;
+                    margin-bottom: 10px;
+                }
+
+                input {
+                    @include wh(100%, 42px);
+                    font: 16px $Regular;
+                    color: #232C31;
+                    padding: 0 16px;
+                    display: block;
+
+                    &::placeholder {
+                        color: #AFB6BD;
+                    }
+
+                    &[disabled] {
+                        background: #AFB6BD;
+                        color: #F0F1F2;
+                    }
+                }
+            }
+
+            &-name {
+                max-width: 450px;
+                width: 100%;
+                margin-right: 32px;
+
+                @include lg {
+                    margin-right: 0;
+                }
+            }
+
+            &-value {
+                max-width: 108px;
+                width: 100%;
+                margin-right: 32px;
+
+                @include lg {
+                    margin-right: 0;
+                }
+            }
+
+            &-description {
+                width: 100%;
+            }
+        }
+    }
+
+    &__building {
+
+        @include lg {
+            display: block;
+        }
+
+        &--select {
+            width: 50%;
+            padding-right: 15px;
+            margin-bottom: 41px;
+
+            @include lg {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+                padding-right: 0;
+                flex-direction: column-reverse;
+                align-items: flex-start;
+            }
+
+            &-dropdown {
+                max-width: 383px;
+                width: 100%;
+                margin-right: 20px;
+
+                @include lg {
+                    max-width: 100%;
+                    margin-right: 0;
+                    margin-top: 10px;
+                }
+            }
+        }
+
+        &--selected {
+            max-width: 493px;
+            width: 100%;
+
+            @include lg {
+                max-width: 100%;
+            }
+        }
+    }
+}

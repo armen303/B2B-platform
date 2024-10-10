@@ -1,0 +1,59 @@
+﻿<div class="delivey-modal modal-content__box animate_show_fadeIn">
+   <div class="delivey-modal__container">
+      <span class="icon icon-close icon-close__modal" (click)="closeWithoutCorrection()"></span>
+      <div class="delivey-modal__container--title">
+         <h2>Увеличенный срок поставки</h2>
+         <p>Товары, которых нет на складе в Депо Мытищи будут поставлены не ранее чем {{date | date: "shortDate"}}</p>
+      </div>
+
+      <div class="delivey-modal__container--table">
+         <table>
+            <thead>
+               <tr>
+                  <th>Артикул</th>
+                  <th style="width: 340px; padding-left: 110px;">Товары</th>
+                  <th style="text-align: center;">Количество<br /> на складе</th>
+                  <th style="text-align: center;">Количество<br /> в заказе</th>
+                  <th></th>
+               </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let group of discrepantItemsGroups  | orderBy : 'subcategoryName' | discrepantGroupsFilter">
+                    <tr *ngFor="let item of group.items  | orderBy : 'productName' | discrepantItemFilter">
+                        
+                        <td class="delivey-modal__container--table-vendorcode">{{item.vendorCode}}</td>
+                        <td>
+                            <div class="delivey-modal__container--table-product d-f a-i-c">
+                                <div class="delivey-modal__container--table-product__img">
+                                    <img *ngIf="item.productMainImageUrl" alt="product image"
+                                         [src]="cloudinaryHelper.getImageUrl(item.productMainImageUrl, 45, 45)">
+                                    <img *ngIf="item.productMainImageUrl == null" src="/assets/img/product-default-image.jpg"
+                                         width="45" height="45" />
+                                </div>
+                                <div class="delivey-modal__container--table-product__name">{{ item.productName }}</div>
+                            </div>
+                        </td>
+                        <td class="delivey-modal__container--table-count">{{ item.amountInStock.toFixed(2) }}</td>
+                        <td>
+                            <app-product-counter productCounterMin="{{1}}"
+                                                 productCounterMax="{{10}}" productCounterStep="{{1}}"
+                                                 productCounterQuantity="{{item.amountInBasket}}"
+                                                 productCounterClassName="px-counter--precheckout" (decrement)="decrementamountInBasket(item)"
+                                                 (increment)="incrementamountInBasket(item)" (error)="errorMethod()" (changeNumber)="changeNumber($event, item)">
+                            </app-product-counter>
+                        </td>
+                        <td class="delivey-modal__container--table-remove">
+                            <i class="new-icon new-icon-delete" (click)="removeOrderItem(item)"></i>
+                        </td>
+                    </tr>
+                </ng-container>
+               
+            </tbody>
+         </table>
+      </div>
+
+      <div class="delivey-modal__container--btn btn-global">
+         <button class="btn-global__red" (click)="closeWithCorrection()">Хорошо</button>
+      </div>
+   </div>
+</div>

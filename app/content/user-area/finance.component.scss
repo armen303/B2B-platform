@@ -1,0 +1,128 @@
+﻿@import '../../styles/base/shared';
+
+.finance {
+
+    &-balance {
+        margin-bottom: 23px;
+    }
+
+    &-info {
+        color: #2F4045;
+
+        p {
+            font: 15px/18px $Semibold;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        span {
+            font: 16px/16px $Regular;
+        }
+
+        &__balance {
+            p {
+                margin-right: 28px;
+
+            }
+        }
+
+        &__credit {
+            p {
+                margin-bottom: 23px;
+            }
+        }
+    }
+
+    &-table {
+        border: 1px solid #EAEAEA;
+        padding: 0 30px 18px;
+        border-radius: 4px 4px 0px 0px;
+
+        &+& {
+            margin-top: 21px;
+        }
+
+        &__title {
+            margin: 0 -30px;
+            padding: 14px 30px;
+            background: #F6F6F6;
+            border: 1px solid #F2F2F2;
+            font: 15px/18px $Semibold;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #2F4045;
+        }
+
+        &__parent {
+            margin: 0 -30px;
+            overflow-x: auto;
+
+            table {
+                thead {
+                    tr {
+                        border-bottom: 1px solid #F0F0F0;
+
+                        th {
+                            font: 13px/18px $Regular;
+                            text-transform: uppercase;
+                            color: #797F83;
+                            padding: 17px 30px 12px;
+                        }
+                    }
+                }
+
+                tbody {
+                    tr {
+                        td {
+                            font: 16px/16px $Regular;
+                            color: #2F4045;
+                            padding: 10px 30px 15px;
+
+                            &.purpose {
+                                width: 242px;
+                                font: 16px/16px $Semibold;
+
+                            }
+
+                            &.agreement {
+                                color: #797F83;
+                            }
+
+                            &.count {
+                                font: 16px/16px $Semibold;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    &-expand {
+        text-transform: lowercase;
+        font: 14px/17px $Regular;
+        letter-spacing: normal;
+
+        p {
+            cursor: pointer;
+            color: #C30E2E;
+
+            &.active {
+                color: #828282;
+            }
+
+            span {
+                &::first-letter {
+                    text-transform: uppercase;
+                }
+            }
+
+            .icon {
+                font-size: 6px;
+                margin-left: 6px;
+            }
+        }
+
+    }
+}

@@ -1,0 +1,91 @@
+﻿<!-- crumb == start -->
+<div class="container animate_show_up">
+   <div class="crumb">
+      <ul class="crumb-list d-f f-w a-i-c">
+         <li class="crumb-list__item">
+            <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">
+            <a href="#" class="crumb-list__item--link" [routerLink]="['/user/company-profile']">Компания</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">Сотрудники</li>
+      </ul>
+   </div>
+
+   <div class="global-title d-f j-c-b a-i-c">
+      <h1>Мои компании</h1>
+   </div>
+</div>
+<!-- crumb == end -->
+
+
+<div class="table">
+   <div class="container">
+      <div class="table-box bg-br">
+         <div class="table-box__area d-f a-i-c j-c-b">
+            <div class="d-f a-i-c">
+               <div class="select-filter sort-select__filter sort-select__order" style="width: 260px">
+                  <ng-select >
+                     <ng-option >
+                        1
+                     </ng-option>
+                  </ng-select>
+               </div>
+            </div>
+
+            <div class="table-box__area--input">
+               <input type="text"  placeholder="Поиск" />
+            </div>
+         </div>
+
+         <div class="table-box__info">
+            <table>
+               <thead>
+                  <tr>
+                     <th>КРАТКОЕ НАИМЕНОВАНИЕ</th>
+                     <th>ИНН</th>
+                     <th>КПП</th>
+                     <th>ФАКТИЧЕСКИЙ АДРЕС</th>
+                     <th>СТАТУС</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><a href="#">ООО Тест 1</a> </td>
+                     <td>777716238179</td>
+                     <td>16238179</td>
+                     <td>125315, Новгородский административный округ </td>
+                     <td>
+                        <button class="btn selected-btn">Выбрано</button>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td><a href="#">ООО Тест 1</a> </td>
+                     <td>777716238179</td>
+                     <td>16238179</td>
+                     <td>125315, Новгородский административный округ </td>
+                     <td>
+                        <button class="btn login-btn">Войти</button>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+
+         <!---Пейджирование -->
+         <div class="table-pagination d-f a-i-c j-c-b">
+            <div class="d-f a-i-c j-c-b">
+               <pagination ></pagination>
+            </div>
+
+            <div class="table-pagination__text">
+               <p>1 - 3
+                  из 3</p>
+            </div>
+         </div>
+         <!---Пейджирование -->
+      </div>
+   </div>
+</div>

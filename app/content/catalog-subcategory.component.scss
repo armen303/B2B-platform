@@ -1,0 +1,75 @@
+﻿@import '../styles/base/shared';
+
+.catalog-subcategory {
+    margin-top: 24px;
+    margin-bottom: 68px;
+
+    &__box {
+        background-color: white;
+        padding: 24px 21px;
+
+        &+& {
+            margin-top: 40px;
+        }
+
+        &--title {
+            font: 15px $Bold;
+            color: var(--black_color);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+
+            &:hover{
+                color: var(--global_color_hover);
+            }
+        }
+
+        &--list {
+            margin: 0 -6px;
+
+            &-item {
+                padding: 6px;
+
+                &__link {
+                    padding: 8px 20px;
+                    font: 15px $Regular;
+                    background-color: #F7F8F9;
+                    border: 1px solid transparent;
+
+                    &:hover {
+                        border: 1px solid #3C444B;
+                        background-color: white;
+                    }
+
+                    &--name {
+                        color: var(--black_color);
+                    }
+
+                    &--count {
+                        margin-left: 8px;
+                        color: var(--global_color);
+                    }
+                }
+            }
+        }
+    }
+
+    &__popular {
+        margin-top: 80px;
+
+        &--title {
+            margin-bottom: 28px;
+
+            h2 {
+                font: 20px/24px $Bold;
+                color: var(--black_color);
+                letter-spacing: .04em;
+                text-transform: uppercase;
+
+                @include xs {
+                    font: 15px/20px $Bold;
+                }
+            }
+        }
+    }
+}

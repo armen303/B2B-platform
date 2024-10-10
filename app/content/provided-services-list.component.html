@@ -1,0 +1,111 @@
+   <!-- crumb == start -->
+   <div class="container animate_show_up">
+      <div class="crumb">
+         <ul class="crumb-list d-f f-w a-i-c">
+            <li class="crumb-list__item">
+               <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+            </li>
+            <li class="crumb-list__item">−</li>
+            <li class="crumb-list__item">Сервисы</li>
+         </ul>
+      </div>
+
+      <div class="global-title">
+         <h1>Все сервисы </h1>
+      </div>
+   </div>
+   <!-- crumb == end -->
+
+   <div class="services animate_show_up" *ngIf="isLoaded">
+      <div class="container">
+         <div class="services-tab" *ngIf="providedServiceCategories.length>0">
+            <div class="services-tab__select dropdown-click__open d_none a-i-c j-c-b">
+               <div class="services-tab__select--text d-f a-i-c">
+                  <p>Категория:</p>
+                  <span class="select-zone__name">Все</span>
+               </div>
+               <i class="icon icon-arrow icon-arrow__bottom"></i>
+            </div>
+            <ul class="services-tab__list dropdown-modal d-f j-c-c f-w">
+               <li class="services-tab__list--item">
+                  <span class="select-item change_active active" (click)="showAllServices()">Все</span>
+               </li>
+               <li class="services-tab__list--item" *ngFor="let providedServiceCategory of providedServiceCategories">
+                  <span class="select-item change_active"
+                     (click)="getServicesByCategories(providedServiceCategory.id)">{{ providedServiceCategory.name }}</span>
+               </li>
+            </ul>
+         </div>
+
+         <div class="services-info">
+            <ng-container *ngFor="let providedServiceGroup of providedServiceGroups; let j = index">
+               <div class="services-info__list d-f">
+                  <ng-container *ngFor="let providedService of providedServiceGroup; let i = index">
+
+                     <div class="services-info__list--item services-info__list--long" *ngIf="i === 0">
+                        <a class="services-info__list--item-box services-info__list--item-long animate_show_up"
+                           href="#">
+                           <div class="services-info__list--item-box__img services-info__list--item-long__img">
+                              <img [src]="getImageUrl(providedServiceGroup[i].imageId, 295, 294)" />
+                           </div>
+
+                           <div class="services-info__list--item-box__text">
+                              <div class="services-info__list--item-box__text--title">
+                                 <h3>{{ providedServiceGroup[i].name }}</h3>
+                              </div>
+                              <div class="services-info__list--item-box__text--description">
+                                 <p>{{ providedServiceGroup[i].description  | slice:0:95 }}</p>
+                              </div>
+                              <div class="services-info__list--item-box__text--btn">
+                                 <button (click)="goTo(providedServiceGroup[i].url)">ПОДРОБНЕЕ</button>
+                              </div>
+                           </div>
+                        </a>
+                     </div>
+
+                     <div class="services-info__list--item services-info__list--mini d-f f-d-c"
+                        *ngIf="i === 1">
+                        <a class="services-info__list--item-box services-info__list--item-mini d-f a-i-c animate_show_up"
+                           href="#" *ngIf="providedServiceGroup[i]">
+                           <div class="services-info__list--item-box__img services-info__list--item-mini__img">
+                              <img [src]="getImageUrl(providedServiceGroup[i].imageId, 295, 294)" />
+                           </div>
+
+                           <div class="services-info__list--item-box__text">
+                              <div class="services-info__list--item-box__text--title">
+                                 <h3>{{ providedServiceGroup[i].name }}</h3>
+                              </div>
+                              <div class="services-info__list--item-box__text--description">
+                                 <p>{{ providedServiceGroup[i].description  | slice:0:95 }}</p>
+                              </div>
+                              <div class="services-info__list--item-box__text--btn">
+                                 <button (click)="goTo(providedServiceGroup[i].url)">ПОДРОБНЕЕ</button>
+                              </div>
+                           </div>
+                        </a>
+
+                        <a class="services-info__list--item-box services-info__list--item-mini d-f a-i-c animate_show_up"
+                           href="#" *ngIf="providedServiceGroup[i+1]">
+                           <div class="services-info__list--item-box__img services-info__list--item-mini__img">
+                              <img [src]="getImageUrl(providedServiceGroup[i+1].imageId, 295, 294)" />
+                           </div>
+
+                           <div class="services-info__list--item-box__text">
+                              <div class="services-info__list--item-box__text--title">
+                                 <h3>{{ providedServiceGroup[i+1].name}}</h3>
+                              </div>
+                              <div class="services-info__list--item-box__text--description">
+                                 <p>{{ providedServiceGroup[i+1].description  | slice:0:95 }}</p>
+                              </div>
+                              <div class="services-info__list--item-box__text--btn">
+                                 <button (click)="goTo(providedServiceGroup[i+1].url)">ПОДРОБНЕЕ</button>
+                              </div>
+                           </div>
+                        </a>
+                     </div>
+                  </ng-container>
+               </div>
+            </ng-container>
+         </div>
+      </div>
+   </div>

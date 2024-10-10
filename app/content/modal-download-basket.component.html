@@ -1,0 +1,38 @@
+﻿<div class="basket-modal modal-content__box animate_show_fadeIn">
+    <div class="basket-modal__container">
+        <span class="icon icon-close icon-close__modal" (click)="activeModal.dismiss()"></span>
+        <div class="basket-modal__container--title">
+            <h2>Скачивание корзины!</h2>
+        </div>
+
+        <div class="basket-modal__container--info d-f">
+            <div class="basket-modal__container--info-text d-f">
+                <i class="icon icon-file_download"></i>
+                <div class="basket-modal__container--info-text__title">
+                    <h3>Список товаров в корзине</h3>
+                    <p>Без дополнительной информации о товарах</p>
+                </div>
+            </div>
+            <div class="basket-modal__container--info-btn btn-global">
+                <a href="#" class="btn-global__red">СКАЧАТЬ</a>
+            </div>
+        </div>
+
+        <div class="basket-modal__container--info d-f">
+            <div class="basket-modal__container--info-text d-f">
+                <i class="new-icon new-icon-doc"></i>
+                <div class="basket-modal__container--info-text__title">
+                    <h3>Список товаров в корзине, со спецификацией товаров</h3>
+                    <p>Дополнительно содержит информацию о товарах, НДС, колеровках</p>
+                </div>
+            </div>
+            <div class="basket-modal__container--info-btn btn-global">
+                <a href="#" class="btn-global__red">СКАЧАТЬ</a>
+            </div>
+        </div>
+
+        <div class="basket-modal__container--btn d-f j-c-e">
+            <button (click)="activeModal.close()">закрыть</button>
+        </div>
+    </div>
+</div>

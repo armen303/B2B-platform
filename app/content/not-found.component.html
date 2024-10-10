@@ -1,0 +1,47 @@
+<app-header class="d_block"></app-header>
+
+<main class="main-content">
+   <!-- crumb == start -->
+   <div class="container animate_show_up">
+      <div class="crumb">
+         <ul class="crumb-list d-f f-w a-i-c">
+            <li class="crumb-list__item">
+               <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+            </li>
+            <li class="crumb-list__item">−</li>
+            <li class="crumb-list__item">404</li>
+         </ul>
+      </div>
+
+      <div class="global-title">
+         <h1>404</h1>
+      </div>
+   </div>
+   <!-- crumb == end -->
+
+   <div class="container">
+      <div class="empty">
+         <div class="empty__content d-f a-i-c j-c-b f-w">
+            <div class="empty__text">
+               <div class="empty__text--title">
+                  <h2>Страница не найдена</h2>
+                  <p>
+                     К сожалению, эта страница недоступна. Возможно, вы воспользовались недействительной ссылкой
+                     или страница была удалена.
+                  </p>
+               </div>
+               <div class="empty__text--btn btn-global">
+                  <a href="#" [routerLink]="['/home']" class="btn-global__red">На главную</a>
+               </div>
+            </div>
+
+            <div class="empty__img d-f j-c-c a-i-c">
+               <img src="./assets/img/e404.jpg" alt="img">
+            </div>
+         </div>
+      </div>
+   </div>
+   <router-outlet class="d_block"></router-outlet>
+</main>
+
+<app-footer class="d_block"></app-footer>

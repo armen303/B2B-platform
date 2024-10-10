@@ -1,0 +1,99 @@
+@import '../../styles/base/shared';
+
+.act-modal {
+    max-width: 810px;
+    height: 625px;
+
+    &__title {
+        color: var(--global_color);
+        text-align: center;
+        margin-bottom: 70px;
+
+        h2 {
+            font: 24px $Regular;
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            font: 20px $Regular;
+        }
+    }
+
+    &__date {
+        max-width: 620px;
+        height: 35px;
+        margin: 0 auto 70px;
+        position: relative;
+
+        &--area {
+            height: 100%;
+
+            p {
+                font: 17px $Regular;
+                color: #4F565A;
+                white-space: nowrap;
+
+                @include sm{
+                    display: none;
+                }
+            }
+
+            input {
+                width: 120px;
+                font: 16px $Regular;
+                color: $second_color;
+                padding: 0 10px;
+                z-index: 9;
+
+                &::placeholder {
+                    font: 16px $Regular;
+                    color: #C9D0D3;
+                }
+
+                @include sm {
+                    width: 100%;
+                }
+            }
+
+            .icon {
+                font-size: 20px;
+                color: #38454D;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                right: 0;
+                z-index: 9;
+
+                @include lg {
+                    display: none;
+                }
+
+                @include sm{
+                    display: inline-block;
+                }
+            }
+        }
+
+        ngb-datepicker{
+            right: 0;
+        }
+
+        &--fromto {
+            @include wh(100%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+    }
+
+    &__btn {
+        margin-top: 325px;
+
+        &--item {
+            @include wh(197px, 40px);
+            padding: 0 10px;
+        }
+    }
+}

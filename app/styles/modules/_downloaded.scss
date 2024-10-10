@@ -1,0 +1,58 @@
+.downloaded {
+   @include wh(299px, 71px);
+   position: fixed;
+   bottom: 16px;
+   right: 14px;
+   padding: 7px 22px;
+   background: white;
+   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
+   border-radius: 3px;
+   z-index: 99999999999999;
+
+   @include xs {
+      @include wh(264px, 51px)
+   }
+
+   &-box {
+      @include wh(34px);
+      position: relative;
+
+      &__load {
+         @include wh(100%);
+         transform: rotate(-90deg);
+         border-radius: 50%;
+         box-shadow: inset 0px 0px 0px 2px #E5E5E5;
+
+         &--circle {
+            stroke: #46B021;
+            stroke-width: 4;
+            fill: none;
+            stroke-dasharray: 107;
+         }
+      }
+
+      &__icon {
+         position: absolute;
+         top: 50%;
+         left: 50%;
+         transform: translate(-50%, -50%);
+
+         &.new-icon-downloaded {
+            font-size: 16px;
+            color: #46B021;
+         }
+
+         &.new-icon-added {
+            font-size: 19px;
+            color: #46B021;
+         }
+      }
+   }
+
+   &-text {
+      width: calc(100% - 34px);
+      font: 16px $Regular;
+      color: #3D474D;
+      padding-left: 16px;
+   }
+}

@@ -1,0 +1,179 @@
+@import '../styles/base/shared';
+
+.news-details {
+    margin-top: 32px;
+
+    &__box {
+        margin-bottom: 18px;
+
+        &--info {
+            max-width: 1071px;
+            width: 100%;
+            background-color: white;
+            margin-right: 3px;
+            padding: 35px 0;
+
+            &-time {
+                font: 16px $Semibold;
+                letter-spacing: -.16px;
+                color: rgba(59, 71, 78, 0.5);
+                padding-left: 32px;
+                padding-right: 15px;
+                margin-bottom: 37px;
+
+                @include lg {
+                    padding-left: 15px;
+                }
+            }
+
+            &-img {
+                height: 532px;
+                margin-bottom: 35px;
+
+                @include sm {
+                    height: 210px;
+                }
+
+                &__slider {
+                    margin-bottom: 52px;
+
+                    &--item {
+                        height: 532px;
+
+                        @include sm {
+                            height: 210px;
+                        }
+                    }
+
+                    .slick {
+
+                        &-arrow {
+                            @include wh(46px);
+                            top: 50%;
+                            transform: translateY(-50%);
+                        }
+
+                        &-prev {
+                            border-top-right-radius: 4px;
+                            border-bottom-right-radius: 4px;
+                        }
+
+                        &-next {
+                            border-top-left-radius: 4px;
+                            border-bottom-left-radius: 4px;
+                        }
+                    }
+                }
+            }
+
+            &-text {
+                font: 18px/1.39 $Regular;
+                color: $third_color;
+                letter-spacing: -.18px;
+                padding-left: 32px;
+                padding-right: 55px;
+                margin-bottom: 37px;
+
+                @include lg {
+                    padding: 0 15px;
+                }
+            }
+
+            @include lg {
+                max-width: 100%;
+                margin-bottom: 35px;
+            }
+        }
+
+        &--other {
+            max-width: 435px;
+            width: 100%;
+            background-color: white;
+            padding: 32px 41px 15px 20px;
+
+            &-title {
+                font: 22px $Bold;
+                color: $third_color;
+                letter-spacing: -.22px;
+                margin-bottom: 34px;
+            }
+
+            &-list ul li {
+                padding-bottom: 9px;
+                border-bottom: 1px solid #f8f8f8;
+
+                &+li {
+                    margin-top: 22px;
+                }
+
+                a {
+                    font: 16px $Regular;
+                    color: $third_color;
+                    letter-spacing: -.16px;
+                    transition: $transition;
+
+                    &:hover {
+                        color: var(--global_color);
+                        text-decoration: underline;
+                    }
+                }
+
+                time {
+                    display: block;
+                    font: 12px $Regular;
+                    color: rgba(59, 71, 78, 0.5);
+                    letter-spacing: -.12px;
+                    margin-top: 10px;
+                }
+            }
+
+            @include lg {
+                max-width: 100%;
+                width: 100%;
+            }
+
+        }
+
+        @include lg {
+            display: block;
+        }
+    }
+
+    &__tab {
+        margin-bottom: 51px;
+
+        &--link {
+            height: 132px;
+            flex: 1;
+
+            a {
+                @include wh(100%);
+                font: 11.5px/1 $Bold;
+                color: #8fa2a7;
+                letter-spacing: 0.58px;
+                padding: 10px;
+                background-color: white;
+                transition: $transition;
+
+                &:hover {
+                    color: var(--global_color);
+                    background-color: #f1f3f3;
+                    text-decoration: underline;
+                }
+
+                @include lg {
+                    font-size: 8.5px;
+                }
+
+            }
+
+            @include lg {
+                height: 75px;
+            }
+        }
+
+        @include lg {
+            margin-bottom: 35px;
+        }
+    }
+}

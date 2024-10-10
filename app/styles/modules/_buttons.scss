@@ -1,0 +1,41 @@
+// global button  -- START
+.btn-global {
+    &__red {
+        background-color: var(--global_color);
+
+        &:hover{
+            background-color: var(--global_color_hover);
+        }
+    }
+
+    &__gray * {
+        background-color: #AFB6BD;
+    }
+
+    &__green * {
+        background-color: $green_color;
+    }
+
+    * {
+        @include wh(100%);
+        font: 12px $Bold;
+        color: white;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 12.5px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: $transition;
+    }
+}
+
+
+button[disabled] {
+    background-color: #F0F1F2 !important;
+    color: #AFB6BD !important;
+    pointer-events: none !important;
+    cursor: default !important;
+}
+
+// global button  -- END    

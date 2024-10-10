@@ -1,0 +1,70 @@
+<div class="faq">
+   <div class="container">
+      <div class="faq-box d-f">
+         <!-- sidebar faq desctop strat -->
+         <div class="faq-box__sidebar faq-box__navbar faq-box__navbar--desctop">
+            <div class="faq-box__navbar--desctop-title">
+               <h3>Выберите тему</h3>
+            </div>
+            <div class="faq-box__navbar--list">
+               <ul>
+                  <li *ngFor="let category of frequentlyAskedQuestionCategories">
+                     <a class="d-f a-i-c" [routerLink]="['/faq', category.id]"
+                        [routerLinkActive]="'active'">{{category.name}}</a>
+                  </li>
+               </ul>
+            </div>
+         </div>
+         <!-- sidebar faq desctop end -->
+
+         <div class="faq-box__content animate_show_up" *ngIf="isLoaded">
+            <!-- crumb == start -->
+            <div class="crumb">
+               <ul class="crumb-list d-f f-w a-i-c">
+                  <li class="crumb-list__item">
+                     <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+                  </li>
+                  <li class="crumb-list__item">−</li>
+                  <li class="crumb-list__item">МаксиПРО B2B</li>
+               </ul>
+            </div>
+
+            <div class="global-title">
+               <h1>FAQ </h1>
+            </div>
+            <!-- crumb == end -->
+
+            <div class="faq-box__navbar faq-box__navbar--mobile bg-br d_none">
+               <div class="faq-box__navbar--mobile-title d-f j-c-b a-i-c click-expand"
+                  data-expand="false">
+                  <i class="faq-box__navbar--mobile-title__icon d-f a-i-c j-c-c">?</i>
+                  <h3>Выберите тему</h3>
+                  <i class="icon icon-arrow icon-arrow__bottom"></i>
+               </div>
+               <div class="faq-box__navbar--list expand-block d_none">
+                  <ul>
+                     <li *ngFor="let category of frequentlyAskedQuestionCategories">
+                        <a class="d-f a-i-c" [routerLink]="['/faq', category.id]"
+                           [routerLinkActive]="'active'">{{category.name}}</a>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+            <div class="faq-box__content--info bg-br">
+               <div class="faq-box__content--info-title">
+                  <h3>{{showFaqCategoryTitle}}</h3>
+               </div>
+               <div class="faq-box__content--info-text" *ngFor="let faq of frequentlyAskedQuestions; let index = index">
+                  <div class="faq-box__content--info-text__title d-f a-i-c j-c-b click-expand"
+                     data-expand="false">
+                     <p>{{faq.question}}</p>
+                     <i class="faq-box__content--info-text__title--icon"></i>
+                  </div>
+                  <div class="faq-box__content--info-text__description expand-block d_none" [innerHTML]="faq.answer">
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

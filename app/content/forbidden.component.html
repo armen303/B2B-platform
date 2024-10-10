@@ -1,0 +1,59 @@
+<div class="hd-wrapper hd-wrapper--inner">
+ <app-header [showHideCategory]="showHideCategory" (catalogListShowHide)="catalogListShowHide($event)"></app-header>
+ <main class="main-container main-container--inner">
+  <!-- MAIN-SECTIONS -->
+  <div class="main-sections info-section-animate_show_up">
+   <div class="container remove-horisontal-spacer">
+    <!-- bread-crumb -->
+    <div class="bread-crumb">
+     <div class="bread-crumb__list">
+      <a href="#" class="bread-crumb__home-link" [routerLink]="['/home']"></a>
+      <a href="#" class="bread-crumb__link">403</a>
+     </div>
+    </div>
+    <!-- /bread-crumb -->
+    <h1 class="main-title">403</h1>
+
+    <!-- empty 403-->
+    <div class="empty empty--403">
+     <div class="container">
+      <div class="row no-gutter">
+       <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 order-sm-to-2">
+
+        <div class="empty__col-1">
+         <h1 class="empty__title empty__title--search-empty">
+          Извините, что то пошло не так
+         </h1>
+         <div class="empty__descr">
+          К сожалению у вас нет доступа к данной странице.
+          Вы можете обратиться в техническую поддержку
+          МаксиПРО для получения более полной информации.
+         </div>
+
+         <div class="empty__btn-cell">
+          <button class="btn btn--red btn--corner btn--profile-btns">На главную</button>
+         </div>
+
+        </div>
+       </div>
+       <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 order-sm-to-1">
+
+        <div class="empty__col-2">
+         <img src="/assets/img/e403.jpg" class="empty__img empty__img--product-not-founde" width="425" height="437">
+        </div>
+
+       </div>
+      </div>
+     </div>
+    </div>
+    <!-- /empty 403-->
+
+
+   </div>
+  </div>
+  <!-- /MAIN-SECTIONS -->
+
+  <router-outlet></router-outlet>
+ </main>
+</div>
+<app-footer></app-footer>

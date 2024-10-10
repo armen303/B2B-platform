@@ -1,0 +1,76 @@
+﻿@import '../styles/base/shared';
+
+.thank-modal {
+    max-width: 400px;
+    width: 100%;
+    margin: auto;
+    padding: 32px 40px;
+    background-color: white;
+    position: relative;
+
+    @include xs {
+        padding: 32px 24px;
+    }
+
+    &__container {
+        position: relative;
+
+        .icon-close__modal {
+            top: 10px;
+            right: 0;
+        }
+
+        &--title {
+            margin-bottom: 16px;
+            padding-right: 16px;
+
+            h2 {
+                font: 24px/36px $Bold;
+                color: var(--black_color);
+                margin-bottom: 12px;
+            }
+        }
+
+        &--text {
+            margin-bottom: 28px;
+
+            p {
+                font: 15px $Regular;
+                color: var(--black_color);
+
+                &+p {
+                    margin-top: 12px;
+                }
+            }
+        }
+
+        &--btn {
+            margin: 0 -40px -32px;
+            padding: 32px;
+            background-color: #F0F1F2;
+
+            @include xs {
+                margin: 0 -24px;
+            }
+
+            button {
+                @include wh(107px, 40px);
+                font: 13px $Bold;
+                color: #3C444B;
+                border: 1px solid #3C444B;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+
+                &:hover {
+                    background-color: var(--grey_color);
+                    color: white;
+                }
+
+                &:active {
+                    background-color: var(--black_color);
+                    color: white;
+                }
+            }
+        }
+    }
+}

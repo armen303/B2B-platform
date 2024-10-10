@@ -1,0 +1,132 @@
+@import '../../styles/base/shared';
+
+.act {
+    &-btn {
+        max-width: 256px;
+        width: 100%;
+        height: 40px;
+
+        @include sm {
+            margin-top: 20px;
+        }
+    }
+
+    &-info {
+        position: relative;
+        border-bottom: 0;
+        border-radius: 4px 4px 0 0;
+        margin-top: 20px;
+
+        @include xl {
+            overflow-x: auto;
+        }
+
+        table thead tr {
+            background-color: #F6F6F6;
+
+            th {
+                vertical-align: middle;
+                padding: 0 5px;
+                border: 1px solid #F6F6F6;
+            }
+        }
+
+
+        table tbody tr td {
+            font: 14px $Regular;
+            color: #2f4045;
+            padding: 20px;
+            vertical-align: middle;
+            text-align: center;
+
+            p {
+                font: 14px $Bold;
+            }
+        }
+
+
+        &__date {
+            position: relative;
+
+            &--area {
+                padding: 0 5px;
+                position: relative;
+
+                p {
+                    font: 15px $Regular;
+                    color: $second_color;
+                    margin-right: 10px;
+                    white-space: nowrap;
+                }
+
+                input {
+                    width: 100%;
+                    font: 15px $Regular;
+                    color: $second_color;
+                    padding: 8px 0;
+                    z-index: 9;
+                    background-color: transparent;
+
+                    @include lg {
+                        width: max-content;
+                    }
+
+                    &::placeholder {
+                        color: #C9D0D3;
+                    }
+                }
+
+                .icon {
+                    font-size: 24px;
+                    color: #C9D0D3;
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    right: 10px;
+                    z-index: 1;
+
+                    @include sm {
+                        display: none;
+                    }
+                }
+            }
+
+            &--number {
+                background-color: white;
+            }
+
+            &--fromto {
+                @include wh(100%);
+                position: absolute;
+                top: 0;
+                left: 0;
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+
+
+
+        &__download {
+            color: var(--global_color);
+            transition: $transition;
+
+            .icon {
+                font-size: 16px;
+                margin-right: 9px;
+            }
+
+            span {
+                text-decoration: underline;
+            }
+
+            &:hover {
+                color: $green_color;
+            }
+        }
+
+        &__null {
+            padding: 20px 0;
+        }
+    }
+}

@@ -1,0 +1,105 @@
+﻿@import '../styles/base/shared';
+
+.coloring {
+    max-width: 540px;
+    width: 100%;
+    margin: auto;
+    position: relative;
+    background-color: white;
+
+    &-box {
+        min-height: 360px;
+
+        @include xs {
+            min-height: auto;
+            display: block;
+        }
+
+        &__content {
+            width: 176px;
+            position: relative;
+
+            &--text {
+                @include wh(108px, 74px);
+                position: absolute;
+                top: 0;
+                right: 0;
+                padding: 0 16px 16px;
+                font: 15px $Bold;
+                color: white;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                text-align: center;
+
+                @include xs{
+                    height: 48px;
+                    left: 0;
+                }
+            }
+
+            &--img {
+                @include wh(100%);
+
+                img {
+                    object-fit: cover;
+                }
+
+                @include xs {
+                    display: none;
+                }
+            }
+        }
+
+        &__info {
+            width: calc(100% - 176px);
+            padding: 32px;
+            position: relative;
+
+            @include xs {
+                width: 100%;
+                padding: 54px 24px;
+            }
+
+            &--text {
+                &-link {
+                    color: var(--global_color);
+
+                    &+& {
+                        margin-top: 8px;
+                    }
+
+                    span {
+                        font: 15px/20px $Regular;
+                        margin-right: 4px;
+                    }
+
+                    .new-icon {
+                        font-size: 16px;
+                    }
+                }
+
+                p {
+                    font: 15px/20px $Regular;
+                    color: #797F83;
+                    margin-top: 16px;
+                }
+            }
+        }
+
+        &__title {
+            margin-bottom: 20px;
+            color: var(--grey_color);
+
+            h2 {
+                font: 20px/24px $Bold;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+                margin-bottom: 20px;
+            }
+
+            p {
+                font: 15px/20px $Regular;
+            }
+        }
+    }
+}

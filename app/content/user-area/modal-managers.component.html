@@ -1,0 +1,24 @@
+﻿<div class="managers-modal modal-content__box animate_show_fadeIn">
+   <div class="managers-modal__container">
+      <span class="icon icon-close icon-close__modal" (click)="activeModal.dismiss()"></span>
+      <div class="managers-modal__container--title">
+         <h2>Персональные<br> менеджеры</h2>
+      </div>
+      <ul class="managers-modal__container--content new-scrollbar">
+         <li class="managers-modal__container--content-item d-f" *ngFor="let manager of managers">
+            <div class="managers-modal__container--content-item__img">
+               <img *ngIf="manager.photoModel" [src]="getFileUrl(manager.photoModel.id)" alt="{{manager.name}}"
+                  title="{{manager.name}}" />
+               <img *ngIf="!manager.photoModel" src="../assets/img/managers/default.png" alt="manager-img">
+            </div>
+            <div class="managers-modal__container--content-item__info">
+               <h3 class="managers-modal__container--content-item__info--name">{{ manager?.name }}</h3>
+               <a [attr.href]="'tel:' + manager?.phoneNumber"
+                  class="managers-modal__container--content-item__info--phone">{{manager?.phoneNumber | phone : 'RU'}}</a>
+               <a [attr.href]="'mailto:' + manager?.email"
+                  class="managers-modal__container--content-item__info--mail">{{manager?.email}}</a>
+            </div>
+         </li>
+      </ul>
+   </div>
+</div>

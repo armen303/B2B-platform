@@ -1,0 +1,157 @@
+﻿@import '../../styles/base/shared';
+
+.learning {
+   margin-top: 32px;
+   margin-bottom: 40px;
+
+   &-list {
+      background-color: white;
+      padding: 40px 50px;
+
+      @include sm {
+         padding: 20px 16px;
+      }
+
+      &__item {
+
+         &--box {
+            height: 100%;
+            transition: $transition;
+
+            @include lg {
+               display: block;
+            }
+
+            &-img {
+               width: 50%;
+               max-height: 565px;
+               padding-right: 40px;
+
+               @include lg {
+                  @include wh(100%, 323px);
+                  max-height: auto;
+                  padding-right: 0;
+                  margin-bottom: 28px;
+               }
+
+               @include xs {
+                  height: auto;
+               }
+            }
+
+            &-info {
+               width: 50%;
+
+               @include lg {
+                  width: 100%;
+               }
+
+               &__tag {
+                  font: 16px $Bold;
+                  color: #8CAE3B;
+                  margin-bottom: 10px;
+               }
+
+               &__title {
+                  overflow: hidden;
+                  font: 32px/39px $Bold;
+                  color: $third_color;
+                  margin-bottom: 20px;
+                  transition: $transition;
+
+                  @include sm {
+                     font: 24px/29px $Bold;
+                  }
+               }
+
+               &__description {
+                  margin-bottom: 24px;
+                  font: 22px/27px $Regular;
+                  color: $third_color;
+
+                  @include xs {
+                     font: 16px/19px $Regular;
+                  }
+               }
+
+               &__btn {
+                  max-width: 282px;
+                  width: 100%;
+                  font: 16px $Bold;
+                  letter-spacing: 0.07em;
+                  padding: 14px 8px;
+                  border-radius: 3px;
+                  text-align: center;
+
+                  &--go {
+                     color: white;
+                     border: 2px solid #8CAE3B;
+                     background-color: #8CAE3B;
+                  }
+
+                  &--undo {
+                     color: var(--global_color);
+                     border: 2px solid #98223F;
+                  }
+               }
+            }
+         }
+      }
+
+      &__info {
+         width: 100%;
+         border-top: 1px solid rgba(0, 0, 0, 0.1);
+         margin-top: 52px;
+         padding-top: 30px;
+
+         @include lg {
+            display: block;
+            border-top: 0;
+         }
+
+         &--item {
+
+            &+& {
+               margin-left: 50px;
+
+               @include lg {
+                  margin-left: 0;
+                  margin-top: 30px
+               }
+            }
+
+            &-img {
+               @include wh(96px);
+               background-color: #F7F8F9;
+               padding: 18px;
+               border-radius: 50%;
+            }
+
+            &-text {
+               width: calc(100% - 96px);
+               padding-left: 20px;
+
+               &__title {
+                  font: 14px $Regular;
+                  color: var(--black_color);
+                  margin-bottom: 8px;
+               }
+
+               &__date {
+                  font: 18px $Bold;
+                  color: var(--black_color);
+               }
+
+               &__description {
+                  font: 14px $Regular;
+                  color: var(--black_color);
+
+                  &--link {
+                     color: var(--global_color);
+                  }
+               }
+            }
+         }
+      }
+   }
+}

@@ -1,0 +1,120 @@
+<!-- crumb == start -->
+<div class="container animate_show_up">
+   <div class="crumb">
+      <ul class="crumb-list d-f f-w a-i-c">
+         <li class="crumb-list__item">
+            <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">
+            <a href="#" class="crumb-list__item--link" [routerLink]="['/user/company-profile']">Компания</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">Финансы</li>
+      </ul>
+   </div>
+
+   <div class="global-title">
+      <h1>Финансы</h1>
+   </div>
+</div>
+<!-- crumb == end -->
+
+
+<div class="finance table" *ngIf="isLoaded">
+   <div class="container">
+      <div class="table-box bg-br">
+         <div class="finance-balance">
+            <div class="finance-info finance-info__balance d-f a-i-c">
+               <p>Баланс</p>
+               <span>{{company.balance | number: '.0'}} ₽</span>
+            </div>
+         </div>
+
+         <div class="finance-info finance-info__credit" *ngIf="!company.creditLimits || !company.creditLimits.length">
+            <p>Кредитный лимит</p>
+            <span>Лимиты отсутствуют. Для уточнения деталей свяжитесь с Вашим менеджером</span>
+         </div>
+
+         <div class="finance-table" *ngFor="let creditLimit of company.creditLimits; let i = index">
+            <div class="finance-table__title">
+               <h3>Кредитный лимит</h3>
+            </div>
+            <div class="finance-table__parent">
+               <table>
+                  <thead>
+                     <tr id="tableCredit">
+                        <th>НАЗНАЧЕНИЕ</th>
+                        <th>ДОп. соглашение</th>
+                        <th>Сумма</th>
+                        <th>ДОступно</th>
+                        <th>задолженность</th>
+                        <th>Доступен до</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td class="purpose" id="purpose">{{creditLimit.purpose}}</td>
+                        <td class="agreement" id="agreement">{{creditLimit.documentNumber}}</td>
+                        <td class="count" id="count">{{creditLimit.sum | number: '.0'}} ₽</td>
+                        <td id="availableFunds">{{creditLimit.availableFunds | number: '.0'}} ₽</td>
+                        <td id="totalDebt">{{creditLimit.totalDebt | number: '.0'}} ₽</td>
+                        <td id="AvailableUntil"><span *ngIf="!creditLimit.isRenewable">{{creditLimit.validTill | date}}</span>
+                           <span *ngIf="creditLimit.isRenewable">Возобновляемый</span></td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+            <div class="table-box__info" *ngIf="creditLimit.deferredPayments.length>0">
+               <table>
+                  <thead>
+                     <tr id="tableOrderCredit">
+                        <th>Номер заказа</th>
+                        <th>Номер заказа, отсутствующего в системе</th>
+                        <th>Общая сумма связанного заказа</th>
+                        <th>Оплачено</th>
+                        <th>Задолженность</th>
+                        <th>оплатить до</th>
+                        <th class="finance-expand" id="FinanceExpand">
+                           <p class="d-f a-i-c" (click)="clickOrderBtn(creditLimit.id)"
+                              [class.active]="showPayments(creditLimit.id)">
+                              <span>Все заказы</span>
+                              <i class="icon"
+                                 [ngClass]="showPayments(creditLimit.id) ? 'icon-arrow__top' : 'icon-arrow__bottom'"></i>
+                           </p>
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody *ngIf="showPayments(creditLimit.id)">
+                     <tr *ngFor="let deferredPayment of creditLimit.deferredPayments; let i = index">
+                        <td>
+                           <span *ngIf="deferredPayment.orderNumberInMaxiProAPI">
+                              <a class="count" id ="NumberOrder" href="#" [routerLink]="['/user/order-info/' + deferredPayment.orderId]">
+                                 Заказ
+                                 №{{deferredPayment.orderNumberInMaxiProAPI}}
+                              </a>
+                           </span>
+                        </td>
+                        <td>
+                           <span *ngIf="!deferredPayment.orderNumberInMaxiProAPI">
+                              Заказ №{{deferredPayment.absentOrderNumber}}
+                           </span>
+                        </td>
+                        <td>
+                           <span *ngIf="deferredPayment.orderNumberInMaxiProAPI">
+                              {{deferredPayment.totalCost | number: '.0'}} ₽
+                           </span>
+                        </td>
+                        <td>{{deferredPayment.paid | number: '.0'}} ₽</td>
+                        <td>{{deferredPayment.debt | number: '.0'}} ₽</td>
+                        <td colspan="2">
+                           <span *ngIf="deferredPayment.payBefore">{{deferredPayment.payBefore | date}}</span>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

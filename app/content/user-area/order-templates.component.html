@@ -1,0 +1,97 @@
+   <!-- crumb == start -->
+   <div class="container animate_show_up">
+      <div class="crumb">
+         <ul class="crumb-list d-f f-w a-i-c">
+            <li class="crumb-list__item">
+               <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+            </li>
+            <li class="crumb-list__item">−</li>
+            <li class="crumb-list__item">Мои шаблоны</li>
+         </ul>
+      </div>
+
+      <div class="global-title">
+         <h1>Мои шаблоны</h1>
+         <h2 class="global-title__sub">Шаблоны позволяют добавить группы часто используемых товаров в корзину.
+            Для добавления товаров в шаблон воспользуйтесь <a href="#" [routerLink]="['/catalog']">каталогом</a>.</h2>
+      </div>
+   </div>
+   <!-- crumb == end -->
+
+   <div class="container" *ngIf="isLoaded">
+
+      <div class="order-templates">
+         <div class="order-templates__box">
+            <div class="order-templates__box--list d-f f-w">
+               <div class="order-templates__box--list-item">
+                  <div class="order-templates__box--list-item__info order-templates__box--list-item__add">
+
+                     <div #fillAllScreen class="order-templates__box--list-item__add--screen d_none"
+                        (click)="popupAddTemplateClose()"></div>
+
+                     <div #popupAddTemplate class="order-templates__box--list-item__add--create d_none">
+                        <span class="icon icon-close icon-close__modal" (click)="popupAddTemplateClose()"></span>
+                        <div class="order-templates__box--list-item__add--create-title">
+                           <h2>Создать шаблон</h2>
+                        </div>
+                        <form #createForm="ngForm">
+
+                           <div class="order-templates__box--list-item__add--create-input">
+                              <p>Введите название шаблона</p>
+                              <input type="text" id="template-name" [(ngModel)]="name" name="nameInput" required />
+                           </div>
+
+                           <div class="order-templates__box--list-item__add--create-description">
+                              <p>Для добавления товаров в шаблон воспользуйтесь <a
+                                    [routerLink]="['/catalog']">каталогом</a>.
+                              </p>
+                           </div>
+
+                           <div class="order-templates__box--list-item__add--create-btn btn-global">
+                              <button class="btn-global__red" (click)="save()"
+                                 [disabled]="!createForm.form.valid || isSaving">СОХРАНИТЬ ШАБЛОН</button>
+                           </div>
+                        </form>
+                     </div>
+
+                     <div
+                        class="order-templates__box--list-item__add--btn d-f a-i-c j-c-c f-d-c"
+                        (click)="goToAdding()">
+                        <i class="icon icon-createPlus"></i>
+                        <span>Создать шаблон</span>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="order-templates__box--list-item" *ngFor="let orderTemplate of orderTemplates">
+                  <div
+                     class="order-templates__box--list-item__info order-templates__box--list-item__block d-f f-d-c">
+
+                     <div class="order-templates__box--list-item__block--icons d-f a-i-c j-c-e">
+                        <i class="icon icon-pen" (click)="goToEditingMode(orderTemplate.id)"></i>
+                        <i class="icon icon-trash" (click)="removeOrderTemplate(orderTemplate.id)"></i>
+                     </div>
+
+                     <div class="order-templates__box--list-item__block--name">
+                        <a (click)="showDetails(orderTemplate.id)" href="#">{{ orderTemplate.name }}</a>
+                     </div>
+
+                     <div class="order-templates__box--list-item__block--price d-f a-i-c">
+                         <p>
+                             <span *ngIf="isValueInteger(orderTemplate.totalCost)">{{orderTemplate.totalCost | fractionSizeSpace}}</span>
+                             <span *ngIf="!isValueInteger(orderTemplate.totalCost)">{{orderTemplate.totalCost.toFixed(2) | fractionSizeSpace}}</span>
+                         </p>
+                        <i class="icon icon-rub"></i>
+                     </div>
+
+                     <div class="order-templates__box--list-item__block--btn btn-global">
+                        <button class="btn-global__red" (click)="addToBasket(orderTemplate.id)">ПОЛОЖИТЬ В
+                           КОРЗИНУ</button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+
+   </div>

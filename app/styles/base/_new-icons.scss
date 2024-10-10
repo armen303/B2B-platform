@@ -1,0 +1,279 @@
+@import '../fonts/new-icons/new-icons';
+
+.new-icon-close-remove {
+    cursor: pointer;
+
+    &::before {
+        content: '\e90e';
+    }
+}
+
+.new-icon-delete {
+    cursor: pointer;
+
+    &::before {
+        content: '\e918';
+    }
+}
+
+.new-icon-catalog::before {
+    content: '\e919';
+}
+
+.new-icon-search::before {
+    content: '\e90f';
+}
+
+.new-icon-user::before {
+    content: '\e916';
+}
+
+.new-icon-notification::before {
+    content: '\e914';
+}
+
+.new-icon-comparison::before {
+    content: '\e910';
+}
+
+.new-icon-favorites::before {
+    content: '\e911';
+}
+
+.new-icon-basket::before {
+    content: '\e915';
+}
+
+.new-icon-basket-check::before {
+    content: '\e937';
+}
+
+.new-icon-patterns::before {
+    content: "\e90d";
+}
+
+.new-icon-filePluse::before {
+    content: "\e921";
+}
+
+.new-icon-fileDownload::before {
+    content: "\e922";
+}
+
+.new-icon-saveBasket::before {
+    content: "\e923";
+}
+
+.new-icon-added::before {
+    content: "\e92c";
+}
+
+.new-icon-notFound::before {
+    content: "\e924";
+}
+
+.new-icon-warning::before {
+    content: "\e92e";
+}
+
+.new-icon-info::before {
+    content: "\e92d";
+}
+
+.new-icon-pending::before {
+    content: "\e92f";
+}
+
+.new-icon-showroom::before {
+    content: "\e909";
+}
+
+.new-icon-newTab::before {
+    content: "\e934";
+}
+
+.new-icon-on-map::before {
+    content: "\e935";
+}
+
+.new-icon-whole::before {
+    content: "\e936";
+}
+
+.new-icon-doc::before {
+    content: "\e938";
+}
+
+.new-icon-downloaded::before {
+    content: "\e944";
+}
+
+
+
+
+
+// arrows start
+.new-icon-arrow__bottom::before {
+    content: '\e913';
+}
+
+.new-icon-arrow__right::before {
+    content: '\e908';
+}
+
+.new-icon-arrow__left::before {
+    content: '\e916';
+}
+
+.new-icon-arrow-triangle::before {
+    content: '\e912';
+}
+
+.new-icon-arrow-long::before {
+    content: '\e917';
+}
+
+// arrows end
+
+
+// notification start
+.new-icon-notification_order::before {
+    content: "\e90b";
+}
+
+.new-icon-notification_delivery::before {
+    content: "\e925";
+}
+
+.new-icon-notification_payments::before {
+    content: "\e90c";
+}
+
+.new-icon-notification_support::before {
+    content: "\e906";
+}
+
+.new-icon-notification_comments::before {
+    content: "\e907";
+}
+
+.new-icon-notification_documents::before {
+    content: "\e90a";
+}
+
+.new-icon-shout::before {
+    content: "\e948";
+}
+
+// notification end
+
+
+// catalog start
+.new-icon-catalog0::before {
+    content: "\e905";
+}
+
+.new-icon-catalog1::before {
+    content: "\e903";
+}
+
+.new-icon-catalog2::before {
+    content: "\e902";
+}
+
+.new-icon-catalog3::before {
+    content: "\e901";
+}
+
+.new-icon-catalog4::before {
+    content: "\e900";
+}
+
+.new-icon-catalog5::before {
+    content: "\e904";
+}
+
+// catalog end
+
+
+// home page icon Как начать работу с B2B-порталом start
+.new-icon-request::before {
+    content: "\e91d";
+}
+
+.new-icon-contract::before {
+    content: "\e91c";
+}
+
+.new-icon-accounting::before {
+    content: "\e91b";
+}
+
+.new-icon-advantages::before {
+    content: "\e91a";
+}
+
+// home page icon Как начать работу с B2B-порталом end
+
+
+// social icons start
+.new-icon__socialVk::before {
+    content: "\e91e";
+}
+
+.new-icon__socialFb::before {
+    content: "\e920";
+}
+
+.new-icon__socialIn::before {
+    content: "\e91f";
+}
+
+// social icons end
+
+
+
+// product details specifications icons start
+.new-icon__saw::before {
+    content: "\e926";
+}
+
+.new-icon__tinted::before {
+    content: "\e927";
+}
+
+.new-icon__oversized::before {
+    content: "\e928";
+}
+
+.new-icon__fragile::before {
+    content: "\e929";
+}
+
+.new-icon__heavy::before {
+    content: "\e92a";
+}
+
+.new-icon__rent::before {
+    content: "\e92b";
+}
+
+
+.new-icon__related::before {
+    content: "\e933";
+}
+
+.new-icon__info::before {
+    content: "\e930";
+}
+
+.new-icon__certificate::before {
+    content: "\e931";
+}
+
+.new-icon__replace::before {
+    content: "\e932";
+}
+
+
+// product details specifications icons end

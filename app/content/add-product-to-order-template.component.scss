@@ -1,0 +1,98 @@
+@import '../styles/base/shared';
+
+.add-template__counter--btn {
+    @include wh(100%, 45px);
+}
+
+.add-template__select {
+    .ng-select-container {
+        height: 45px;
+    }
+
+    .ng-arrow-wrapper {
+        width: 45px;
+    }
+}
+
+.add-template__counter--increment {
+    max-width: 135px;
+    width: 100%;
+
+    .px-counter {
+        @include wh(100%, 45px);
+    }
+}
+
+.create-template__title {
+    margin-bottom: 27px;
+
+    h2 {
+        font: 30px/37px $Bold;
+        color: var(--black_color);
+        margin-bottom: 9px;
+    }
+
+    p {
+        font-size: 18px/22px $Regular;
+        color: #797F83;
+    }
+}
+
+.tint {
+    margin-bottom: 28px;
+
+    &-switch {
+        margin-bottom: 12px;
+
+        &__warning {
+
+            &--icon {
+                font-size: 22px;
+                color: #B0B6BD;
+                margin-right: 8px;
+            }
+
+            &--text {
+                font: 13px $Regular;
+                color: #797F83;
+            }
+        }
+    }
+
+    &-warning {
+        margin-top: 12px;
+    }
+
+    &-box {
+        &__main {
+            max-width: 160px;
+            width: 100%;
+
+            input {
+                @include wh(100%, 40px);
+                border: 1px solid #AFB6BD;
+                padding: 10px 16px;
+                font: 15px $Regular;
+                color: var(--black_color);
+
+                &::placeholder {
+                    color: #797F83;
+                }
+            }
+        }
+
+        &__link {
+            font: 15px $Regular;
+            color: var(--global_color);
+            padding-top: 10px;
+            padding-left: 10px;
+            text-align: right;
+            transition: $transition;
+            white-space: nowrap;
+
+            &:hover {
+                color: var(--black_color);
+            }
+        }
+    }
+}

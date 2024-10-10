@@ -1,0 +1,120 @@
+<!-- ДОБАВИТЬ В ШАБЛОН -->
+<div class="modal-container" *ngIf="isAuthenticatedUser">
+
+   <span class="icon icon-close icon-close__modal" (click)="dialogRef.close()"></span>
+
+   <div class="create-template__title">
+      <h2>Добавить в шаблон</h2>
+      <p> {{name}} </p>
+      <!-- <p>Краска Tikkurila Special Interior Kitchen&Bathroom С полуматовая 0.9 л</p> -->
+   </div>
+
+   <div class="tint">
+      <ng-container
+         *ngIf="canBeColored && volumeLitre > 0 && productAnyTintCatalog && (productTintType==2 || productTintType==3)">
+         <div class="tint-switch d-f a-i-c">
+            <label class="checkbox checkbox-switch d-f a-i-c">
+               <input type="checkbox" [(ngModel)]="isNeedColoring" hidden (change)="changeIsNeedColoring()" />
+               <span class="checkbox-switch__slider">да</span>
+               <p class="checkbox-switch__text">Колеровать</p>
+            </label>
+         </div>
+         <div class="tint-box d-f j-c-b" *ngIf="isNeedColoring">
+            <div class="tint-box__main required">
+               <input type="text" placeholder="Код цвета" [(ngModel)]="colorCode" maxlength="25">
+               <p class="required-tooltip d_none" style="text-align: left;" *ngIf="colorCode=='' && isNeedColoring">
+                  Заполните поле</p>
+            </div>
+            <a href="#" class="tint-box__link" (click)="openModalColoring()">
+               Каталоги цветов
+            </a>
+         </div>
+         <div class="product-details__info--cnt-add__tint--area-warning tint-warning d-f a-i-c" *ngIf="isNeedColoring && productTintType==3">
+            <i class="new-icon new-icon-warning"></i>
+            <p>Возможен разнотон</p>
+         </div>
+      </ng-container>
+
+      <div class="tint-switch__warning d-f " *ngIf="canBeColored && productTintType==1 && productAnyTintCatalog">
+         <i class="icon icon-exclamatory tint-switch__warning--icon"></i>
+         <p class="tint-switch__warning--text">По вопросам колеровки краски базы С
+            обращайтесь к вашему менеджеру</p>
+      </div>
+
+      <div class="tint-switch__warning d-f " *ngIf="canBeColored && !productAnyTintCatalog">
+         <i class="icon icon-exclamatory tint-switch__warning--icon"></i>
+         <p class="tint-switch__warning--text">Для оформления колеровки данного товара обратитесь к вашему менеджеру</p>
+      </div>
+   </div>
+
+
+
+
+   <!-- add-template--select == start -->
+   <div class="cards-product__item--select">
+      <div class="cards-product__item--select-title">
+         <p>Выберите шаблон:</p>
+      </div>
+      <div class="select-filter sort-select__filter add-template__select">
+         <ng-select [(ngModel)]="selectedOrderTemplateId" [searchable]="false" notFoundText="Список шаблонов пуст"
+            [clearable]="false">
+            <ng-option *ngFor="let orderTemplate of orderTemplates" [value]="orderTemplate.id">
+               {{orderTemplate.name}}
+            </ng-option>
+         </ng-select>
+      </div>
+   </div>
+   <!-- add-template--select == start -->
+
+   <div class="create-template d-f a-i-c j-c-c">
+      <i class="icon icon-createPlus create-template__icon"></i>
+      <span (click)="dialogRef.close(); goToAdding()">Создать новый шаблон</span>
+   </div>
+
+   <div class="d-f a-i-e j-c-b">
+      <div class="add-template__counter--increment cards-product__item--counter-increment">
+         <div class="cards-product__item--select-title">
+            <p>Выберите кол-во:</p>
+         </div>
+         <app-product-counter ngDefaultControl productCounterMax="{{amountInStock}}"
+            productCounterMin="{{shipmentMultiplicity}}" productCounterStep="{{shipmentMultiplicity}}"
+            productCounterQuantity="{{selectedQuantity}}" (increment)="increment(selectedQuantity)"
+            (decrement)="decrement(selectedQuantity)" (error)="errorMethod()" (changeNumber)="changeNumber($event)"
+            [(ngModel)]="selectedQuantity"></app-product-counter>
+      </div>
+      <div class="add-template__counter--btn btn-global">
+         <button class="btn-global__red" type="button"
+            [disabled]="selectedOrderTemplateId == '' || isSaving || (canBeColored && isNeedColoring && (colorCode==''||colorCode==null) && productAnyTintCatalog && (productTintType==2 || productTintType==3))"
+            type="button" (click)="save()" id="AddItemToTemplate">ДОБАВИТЬ</button>
+      </div>
+   </div>
+
+</div>
+<!-- /ДОБАВИТЬ В ШАБЛОН -->
+
+
+
+
+
+
+
+
+
+<!-- АВТОРИЗАЦИЯ -->
+<div class="modal-container" *ngIf="!isAuthenticatedUser">
+   <span class="icon icon-close icon-close__modal" (click)="dialogRef.close()"></span>
+   <div class="modal-title">
+      <h2>Уважаемый пользователь!</h2>
+      <p> Работа с шаблонами доступна только для авторизованных пользователей </p>
+   </div>
+
+   <div class="d-f">
+      <div class="modal-box__btn btn-global">
+         <button class="btn-global__red" type="button" (click)="openModalLogin(); dialogRef.close()">ВОЙТИ</button>
+      </div>
+      <!--<div class="modal-box__btn btn-global btn-global__red">
+            <a *ngIf="!isUserLoggedIn" href="#" routerLink="/registration" (click)="dialogRef.close()" >РЕГИСТРАЦИЯ</a>
+         </div>-->
+   </div>
+</div>
+<!-- /АВТОРИЗАЦИЯ -->

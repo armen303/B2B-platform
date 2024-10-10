@@ -1,0 +1,105 @@
+<!-- top-part == start -->
+<div class="animate_show_up">
+   <div class="container animate_show_up">
+      <div class="crumb">
+         <ul class="crumb-list d-f f-w a-i-c">
+            <li class="crumb-list__item">
+               <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+            </li>
+            <li class="crumb-list__item">−</li>
+            <li class="crumb-list__item">Подтверждение заказа</li>
+         </ul>
+      </div>
+
+      <div class="global-title">
+         <h1>Подтверждение заказа</h1>
+      </div>
+   </div>
+</div>
+<!-- top-part == end -->
+
+
+<div class="container">
+   <div class="order-confirm">
+
+      <div class="order-confirm__content" *ngIf="isLoaded && order">
+
+         <div class="order-confirm__title">
+            <h2>
+               Ваш заказ <a id="orderNumberLink" href="#" [routerLink]="['/user/order-info/'+order.id]">
+                  №
+                  {{order.numberInMaxiProAPI}}
+               </a> успешно оформлен!
+            </h2>
+            <p>
+               Посмотреть состояние заказов Вы можете в <a href="#" [routerLink]="['/user/current-orders']">Личном
+                  Кабинете.</a> Наш менеджер свяжется с Вами в
+               ближайшее время!
+            </p>
+         </div>
+
+         <div class="order-confirm__info d-f a-i-c j-c-b f-w">
+            <div class="order-confirm__info--text">
+               <div class="order-confirm__info--text-table">
+
+                  <!-- order-confirm__info--text-table === start -->
+                  <table *ngIf="order">
+                     <tr>
+                        <td>Номер заказа:</td>
+                        <td><a class="global_color" href="#" id="NumberOrderConfirmation"
+                              [routerLink]="['/user/order-info/'+order.id]">{{order.numberInMaxiProAPI}}</a></td>
+                     </tr>
+                     <tr *ngIf="order.deliveryService">
+                        <td>Дата доставки:</td>
+                        <td>{{order.deliveryService.deliveryDate | date: "mediumDate"}}</td>
+                     </tr>
+                     <tr *ngIf="order.deliveryService && order.deliveryService.deliveryInterval">
+                        <td>Время доставки:</td>
+                        <td>с {{order.deliveryService.deliveryInterval.from | date: "shortTime"}} до
+                           {{order.deliveryService.deliveryInterval.to | date: "shortTime" }}</td>
+                     </tr>
+                     <tr *ngIf="order.deliveryService">
+                        <td>Адрес доставки:</td>
+                        <td>{{order.address}}</td>
+                     </tr>
+                     <tr *ngIf="!order.deliveryService">
+                        <td>Самовывоз:</td>
+                        <td>{{order.depotName}}</td>
+                     </tr>
+                     <tr>
+                        <td>Итоговая стоимость:</td>
+                        <td class="second_color">
+                           <span>
+                              {{ order.totalCost.toFixed(2)| fractionSizeSpace}} ₽
+                           </span>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>Статусы оплаты:</td>
+                        <td>
+                           <span *ngIf="order.isPaid" class="green_color">
+                              <i class="icon icon-delivered icon-del-wait__confirm"></i>Оплачено
+                           </span>
+                           <span *ngIf="!order.isPaid" class="global_color"><i
+                                 class="icon icon-waiting icon-del-wait__confirm"></i>Ожидает оплаты</span>
+                        </td>
+                     </tr>
+                  </table>
+                  <!-- order-confirm__info--text-table === end -->
+
+               </div>
+               <div class="order-confirm__info--text-btn btn-global">
+                  <a href="#" class="btn-global__red" [routerLink]="['/user/current-orders']">Перейти в личный
+                     кабинет</a>
+               </div>
+            </div>
+            <div class="order-confirm__info--img">
+               <img src="../../../assets/img/order-confirm/delivery.png" alt="img">
+            </div>
+         </div>
+      </div>
+
+
+   </div>
+
+</div>

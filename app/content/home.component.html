@@ -1,0 +1,931 @@
+<div class="home" *ngIf="!isUserLoggedIn">
+   <!-- MAIN SECTION = START -->
+   <section class="home-main bg-cover d-f j-c-b"
+      style="background-image: url(../assets/img/home/main/bg.jpg);">
+      <div class="container">
+         <div class="home-main__box d-f">
+            <div class="home-main__box--text">
+               <div class="home-main__box--text-title">
+                  <p>МаксиПро — одна из компаний группы Леруа Мерлен</p>
+                  <h1>Портал для <span>профессионального</span> решения строительных задач</h1>
+               </div>
+               <div class="home-main__box--text-description">
+                  <p>
+                     B2B-Портал МаксиПРО — многофункциональная digital-платформа, предназначенная для средних и
+                     крупных
+                     строительных компаний. Мы делаем процесс закупок удобным и быстрым
+                  </p>
+               </div>
+               <div class="home-main__box--text-btn d-i-f a-i-c" (click)="openModalRequest()">
+                  <span>отправить заявку</span>
+                  <i class="new-icon new-icon-arrow-long"></i>
+               </div>
+            </div>
+
+            <picture class="home-main__box--img">
+               <source srcset="../../assets/img/home/main/banner768.png" media="(max-width: 767.98px)" />
+               <source srcset="../../assets/img/home/main/banner1024.png" media="(max-width: 1023.98px)" />
+               <source srcset="../../assets/img/home/main/banner1280.png" media="(max-width: 1279.98px)" />
+               <source srcset="../../assets/img/home/main/banner1440.png" media="(max-width: 1439.98px)" />
+               <img src="../../assets/img/home/main/banner.png" alt="img">
+            </picture>
+         </div>
+      </div>
+   </section>
+   <!-- MAIN SECTION = END -->
+   <!-- DETAILS SECTION = START -->
+   <section class="home-details">
+      <div class="container">
+         <div class="home-sections__title">
+            <h2>Подробнее о Портале</h2>
+         </div>
+      </div>
+      <div class="container">
+         <div class="home-details__box">
+            <div class="home-details__box--list d-f f-w j-c-b">
+               <div class="home-details__box--list-item d-f">
+                  <div class="home-details__box--list-item__img">
+                     <img src="../../assets/img/home/details/1.png" alt="img">
+                  </div>
+                  <div class="home-details__box--list-item__text">
+                     <h3>Удобная доставка</h3>
+                     <p>
+                        Экспресс / за 1 час по г. Мытищи<br> Стандартная / за 5 час по г. Москва и МО<br> Точно
+                        ко
+                        времени /
+                        привезут в нужный час
+                     </p>
+                  </div>
+               </div>
+               <div class="home-details__box--list-item d-f">
+                  <div class="home-details__box--list-item__img">
+                     <img src="../../assets/img/home/details/2.png" alt="img">
+                  </div>
+                  <div class="home-details__box--list-item__text">
+                     <h3>Складские возможности</h3>
+                     <p>30 000 квадратных метров<br> 17 000 товаров всегда в наличии<br> 65 000 позиций под заказ
+                     </p>
+                  </div>
+               </div>
+               <div class="home-details__box--list-item d-f">
+                  <div class="home-details__box--list-item__img">
+                     <img src="../../assets/img/home/details/3.png" alt="img">
+                  </div>
+                  <div class="home-details__box--list-item__text">
+                     <h3>Индивидуальные цены</h3>
+                     <p>Объектное и индивидуальное ценообразование<br> и настраиваемый каталог</p>
+                  </div>
+               </div>
+               <div class="home-details__box--list-item d-f">
+                  <div class="home-details__box--list-item__img">
+                     <img src="../../assets/img/home/details/4.png" alt="img">
+                  </div>
+                  <div class="home-details__box--list-item__text">
+                     <h3>Единое окно для всех услуг</h3>
+                     <p>Интеграция с ERP-системой и возможность<br> разграничения прав сотрудников</p>
+                  </div>
+               </div>
+               <div class="home-details__box--list-item d-f">
+                  <div class="home-details__box--list-item__img">
+                     <img src="../../assets/img/home/details/5.png" alt="img">
+                  </div>
+                  <div class="home-details__box--list-item__text">
+                     <h3>Персональный менеджер</h3>
+                     <p>Выделенный менеджер, доступный<br> ежедневно для вас с 8 до 20</p>
+                  </div>
+               </div>
+               <div class="home-details__box--list-item d-f">
+                  <div class="home-details__box--list-item__img">
+                     <img src="../../assets/img/home/details/6.png" alt="img">
+                  </div>
+                  <div class="home-details__box--list-item__text">
+                     <h3>Отсрочка платежа</h3>
+                     <p>Отсрочка платежа до 30 дней*<br> и удобные формы оплаты</p>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <!-- DETAILS SECTION = END -->
+   <!-- CATEGORIES SECTION = START -->
+   <section class="home-categories">
+      <div class="container">
+         <div class="home-sections__title">
+            <h2>Категории товаров на Портале</h2>
+         </div>
+      </div>
+      <div class="container">
+         <div class="home-categories__list d-f f-w">
+            <div class="home-categories__list--item">
+               <div class="home-categories__list--item-box d-f a-i-e">
+                  <p>Общестроительные<br> работы</p>
+                  <img src="../../assets/img/home/categories/1.png" alt="img">
+               </div>
+            </div>
+            <div class="home-categories__list--item">
+               <div class="home-categories__list--item-box d-f a-i-e">
+                  <p>Инструмент <br> и крепеж</p>
+                  <img src="../../assets/img/home/categories/2.png" alt="img">
+               </div>
+            </div>
+            <div class="home-categories__list--item">
+               <div class="home-categories__list--item-box d-f a-i-e">
+                  <p>Электрика</p>
+                  <img src="../../assets/img/home/categories/3.png" alt="img">
+               </div>
+            </div>
+            <div class="home-categories__list--item">
+               <div class="home-categories__list--item-box d-f a-i-e">
+                  <p>Инженерные <br> системы</p>
+                  <img src="../../assets/img/home/categories/4.png" alt="img">
+               </div>
+            </div>
+            <div class="home-categories__list--item">
+               <div class="home-categories__list--item-box d-f a-i-e">
+                  <p>Системы<br> безопасности</p>
+                  <img src="../../assets/img/home/categories/5.png" alt="img">
+               </div>
+            </div>
+            <div class="home-categories__list--item">
+               <div class="home-categories__list--item-box d-f a-i-e">
+                  <p>Отделка <br> и декор</p>
+                  <img src="../../assets/img/home/categories/6.png" alt="img">
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <!-- CATEGORIES SECTION = END -->
+   <!-- STARTED SECTION = START -->
+   <section class="home-started">
+      <div class="container">
+         <div class="home-sections__title home-started__title">
+            <h2>Как начать работу с B2B-Порталом</h2>
+         </div>
+      </div>
+
+      <div class="container">
+         <div class="home-started__box">
+            <div class="home-started__box--list d-f f-w">
+               <div class="home-started__box--list-item">
+                  <div
+                     class="home-started__box--list-item__icon home-started__box--list-item__icon-request d-f a-i-c j-c-c">
+                     <i class="new-icon new-icon-request new_global_color"></i>
+                  </div>
+                  <div class="home-started__box--list-item__text">
+                     <p>Отправьте заявку</p>
+                     <div class="home-started__box--list-item__btn">
+                        <button (click)="openModalRequest()">отправить заявку</button>
+                     </div>
+                  </div>
+               </div>
+               <div class="home-started__box--list-item">
+                  <div class="home-started__box--list-item__icon d-f a-i-c j-c-c">
+                     <i class="new-icon new-icon-contract"></i>
+                  </div>
+                  <div class="home-started__box--list-item__text">
+                     <p>Заключите<br> договор</p>
+                  </div>
+               </div>
+               <div class="home-started__box--list-item">
+                  <div class="home-started__box--list-item__icon d-f a-i-c j-c-c">
+                     <i class="new-icon new-icon-accounting"></i>
+                  </div>
+                  <div class="home-started__box--list-item__text">
+                     <p>Учетные данные<br> придут в SMS<br> и email</p>
+                  </div>
+               </div>
+               <div class="home-started__box--list-item">
+                  <div class="home-started__box--list-item__icon d-f a-i-c j-c-c">
+                     <i class="new-icon new-icon-advantages"></i>
+                  </div>
+                  <div class="home-started__box--list-item__text">
+                     <p>Используйте<br> все преимущества<br> Портала</p>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <!-- STARTED SECTION = END -->
+   <!-- SERVICES SECTION = START -->
+   <section class="home-services">
+      <div class="container">
+         <div class="home-sections__title">
+            <h2>Дополнительные сервисы МаксиПРО</h2>
+         </div>
+      </div>
+
+      <div class="container">
+         <div class="home-services__list d-f f-w">
+            <div class="home-services__list--item">
+               <div class="home-services__list--item-box d-f a-i-e">
+                  <p>Аренда<br> инструмента</p>
+                  <img src="../../assets/img/home/services/1.png" alt="img">
+               </div>
+            </div>
+            <div class="home-services__list--item">
+               <div class="home-services__list--item-box d-f a-i-e">
+                  <p>Технические<br> консультации</p>
+                  <img src="../../assets/img/home/services/2.png" alt="img">
+               </div>
+            </div>
+            <div class="home-services__list--item">
+               <div class="home-services__list--item-box d-f a-i-e">
+                  <p>Распил по металлу <br> и дереву</p>
+                  <img src="../../assets/img/home/services/3.png" alt="img">
+               </div>
+            </div>
+            <div class="home-services__list--item">
+               <div class="home-services__list--item-box d-f a-i-e">
+                  <p>Колеровка</p>
+                  <img src="../../assets/img/home/services/4.png" alt="img">
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <!-- SERVICES SECTION = END -->
+   <!-- NEWS SECTION = START -->
+   <section class="home-news">
+      <div class="container">
+         <div class="home-sections__title">
+            <h2>Новости МаксиПРО</h2>
+         </div>
+      </div>
+      <div class="home-news__container">
+         <div class="home-news__slider">
+            <ngx-slick-carousel class="slick-carousel d_block" [config]="slickConfigNews">
+               <div ngxSlickItem *ngFor="let newsItem of news">
+                  <a href="#" [routerLink]="['/news', newsItem.id]" class="home-news__slider--info d_block">
+                     <time
+                        class="home-news__slider--info-time d_block">{{ newsItem.creationDateTime | date: "d MMMM yyyy" }}</time>
+                     <p class="home-news__slider--info-description">{{newsItem.title | words : 6 : " ..." }}</p>
+                  </a>
+               </div>
+            </ngx-slick-carousel>
+         </div>
+         <div class="container">
+            <a href="#" [routerLink]="['/news-list']" class="home-main__box--text-btn d-i-f a-i-c">
+               <span>Перейти к новостям</span>
+               <i class="new-icon new-icon-arrow-long"></i>
+            </a>
+         </div>
+      </div>
+   </section>
+   <!-- NEWS SECTION = END -->
+   <!-- QUESTION SECTION = START -->
+   <section class="home-question bg-cover d-f a-i-c"
+      style="background-image: url(../assets/img/home/question/bg.jpg);">
+      <div class="container">
+         <div class="home-question__box d-f a-i-c">
+            <div class="home-question__box--title">
+               Остались вопросы о Портале?
+            </div>
+            <div class="home-question__box--btn">
+               <button (click)="openModalRequest()">Перезвоните мне</button>
+            </div>
+         </div>
+      </div>
+   </section>
+   <!-- QUESTION SECTION = END -->
+   <!-- MAP SECTION = START -->
+   <section class="home-map bg-cover d_none" style="background-image: url(../assets/img/home/map/bg.jpg);">
+      <div class="container">
+         <a target="_blank"
+            href="https://yandex.ru/maps/213/moscow/?ll=37.729035%2C55.913397&mode=search&oid=205828251197&ol=biz&sctx=ZAAAAAgBEAAaKAoSCYnQCDauz0JAEabtX1lp4EtAEhIJSggPAEBh8z8RFflQRv532j8iBQABAgQFKAowADje4PW0%2FYbo5wpA9FNIAVXNzMw%2BWABiK3JlbGV2X3JhbmtpbmdfaGVhdnlfZm9ybXVsYT1jbGlja18wLjdfZHNzbTJqAnJ1cACdAc3MTD2gAQCoAQC9AapXxj%2FCAQa9vMfi%2FgU%3D&sll=37.729035%2C55.913397&sspn=0.302811%2C0.102966&text=%D0%BC%D0%B0%D0%BA%D1%81%D0%B8%D0%BF%D1%80%D0%BE&z=12"
+            class="home-map__box--link d_block">
+            <p>Шоурум МаксиПРО</p>
+            <span>г. Мытищи, ул. Мира, вл. 42 с. 1</span>
+         </a>
+      </div>
+   </section>
+   <section class="home-map home-map__mob bg-cover" style="background-image: url(../assets/img/home/map/bg.jpg);">
+      <div class="container">
+         <div class="home-map__box home-map__mob--box d-f">
+            <div class="home-map__box--slider">
+               <ngx-slick-carousel class="slick-carousel d_block" [config]="slickConfigmap">
+                  <div ngxSlickItem>
+                     <div class="home-map__box--slider-info">
+                        <div class="home-map__box--slider-info__img">
+                           <img src="../../assets/img/home/map/slider/4.jpg" alt="img">
+                        </div>
+                        <div class="home-map__box--slider-info__text">
+                           <p>Шоурум 1000 м²</p>
+                        </div>
+                     </div>
+                  </div>
+                  <div ngxSlickItem>
+                     <div class="home-map__box--slider-info">
+                        <div class="home-map__box--slider-info__img">
+                           <img src="../../assets/img/home/map/slider/1.jpg" alt="img">
+                        </div>
+                        <div class="home-map__box--slider-info__text">
+                           <p>Кафе «Анкер»</p>
+                        </div>
+                     </div>
+                  </div>
+                  <div ngxSlickItem>
+                     <div class="home-map__box--slider-info">
+                        <div class="home-map__box--slider-info__img">
+                           <img src="../../assets/img/home/map/slider/2.jpg" alt="img">
+                        </div>
+                        <div class="home-map__box--slider-info__text">
+                           <p>Колеровка</p>
+                        </div>
+                     </div>
+                  </div>
+                  <div ngxSlickItem>
+                     <div class="home-map__box--slider-info">
+                        <div class="home-map__box--slider-info__img">
+                           <img src="../../assets/img/home/map/slider/3.jpg" alt="img">
+                        </div>
+                        <div class="home-map__box--slider-info__text">
+                           <p>Переговорные комнаты</p>
+                        </div>
+                     </div>
+                  </div>
+               </ngx-slick-carousel>
+            </div>
+            <a class="home-map__box--link home-map__mob--box-link" target="_blank"
+               href="https://yandex.ru/maps/213/moscow/?ll=37.729035%2C55.913397&mode=search&oid=205828251197&ol=biz&sctx=ZAAAAAgBEAAaKAoSCYnQCDauz0JAEabtX1lp4EtAEhIJSggPAEBh8z8RFflQRv532j8iBQABAgQFKAowADje4PW0%2FYbo5wpA9FNIAVXNzMw%2BWABiK3JlbGV2X3JhbmtpbmdfaGVhdnlfZm9ybXVsYT1jbGlja18wLjdfZHNzbTJqAnJ1cACdAc3MTD2gAQCoAQC9AapXxj%2FCAQa9vMfi%2FgU%3D&sll=37.729035%2C55.913397&sspn=0.302811%2C0.102966&text=%D0%BC%D0%B0%D0%BA%D1%81%D0%B8%D0%BF%D1%80%D0%BE&z=12">
+               <p>Шоурум МаксиПРО</p>
+               <span>г. Мытищи, ул. Мира, вл. 42 с. 1</span>
+            </a>
+         </div>
+      </div>
+   </section>
+   <!-- MAP SECTION = END -->
+</div>
+
+
+
+<!--  DASHBOARD  === START -->
+<div class="dashboard" *ngIf="isUserLoggedIn && isLoaded">
+   <div class="container">
+      <div class="dashboard-nav d-f a-i-c">
+         <a href="#" (click)="openModalEstimates()"
+            class="dashboard-nav__link dashboard-nav__link--estimate d-f a-i-c">
+            <div class="dashboard-nav__link--img">
+               <img src="../../../assets/img/dashboard/nav/1.png" alt="img">
+            </div>
+            <p>Загрузить смету</p>
+         </a>
+         <a *ngIf="hasAccessToAddConstructionObject" href="#" (click)="goToObjects()"
+            class="dashboard-nav__link dashboard-nav__link--object d-f a-i-c">
+            <div class="dashboard-nav__link--img">
+               <img src="../../../assets/img/dashboard/nav/2.png" alt="img">
+            </div>
+            <p>Новый объект</p>
+         </a>
+         <a href="#" (click)="openModalNewTemplate()"
+            class="dashboard-nav__link dashboard-nav__link--template d-f a-i-c">
+            <div class="dashboard-nav__link--img">
+               <img src="../../../assets/img/dashboard/nav/3.png" alt="img">
+            </div>
+            <p>Новый шаблон</p>
+         </a>
+         <a *ngIf="isMaster" href="#" [routerLink]="['/user/create-employee']"
+            class="dashboard-nav__link dashboard-nav__link--employee d-f a-i-c">
+            <div class="dashboard-nav__link--img">
+               <img src="../../../assets/img/dashboard/nav/4.png" alt="img">
+            </div>
+            <p>Новый сотрудник</p>
+         </a>
+         <a href="#" [routerLink]="['/faq']"
+               class="dashboard-nav__link dashboard-nav__link--user d-f a-i-c">
+                <div class="dashboard-nav__link--img">
+                    <img src="../../../assets/img/dashboard/nav/5.png" alt="img">
+                </div>
+                <p>Руководство пользователя</p>
+            </a>
+      </div>
+
+
+      <div class="dashboard-user d-f f-w">
+         <div class="dashboard-user__box">
+            <div class="dashboard-user__box--title">
+               <h3 class="dashboard-mintitle">Мой портал максипро</h3>
+            </div>
+            <div class="dashboard-user__box--info d-f">
+               <div
+                  class="dashboard-user__box--info-avatar dashboard-user__box--info-avatar__letter d-f a-i-c j-c-c">
+                  <span class="firstshortuserletter">{{firstshortusername}}</span>
+                  <span class="lastshortuserletter">{{lastshortusername}}</span>
+               </div>
+               <div class="dashboard-user__box--info-name d-f f-d-c j-c-b">
+                  <p>{{firstusername}} {{lastusername}}</p>
+                  <span *ngIf="homeContentForAuthorized">{{homeContentForAuthorized.companyInfo.shortName}}</span>
+               </div>
+            </div>
+         </div>
+
+         <div class="dashboard-user__box"
+            *ngIf="homeContentForAuthorized && homeContentForAuthorized.managers && homeContentForAuthorized.managers.length>0">
+            <div class="dashboard-user__box--title d-f a-i-c">
+               <h3 class="dashboard-mintitle">персональный менеджер</h3>
+               <a href="#" *ngIf="homeContentForAuthorized.managers.length>1" (click)="openModalManagers()">
+                  <span class="dashboard-links">Все менеджеры</span><sup
+                     class="dashboard-sup">{{homeContentForAuthorized.managers.length}}</sup>
+               </a>
+            </div>
+            <div class="dashboard-user__box--info d-f">
+               <div class="dashboard-user__box--info-avatar d-f a-i-c j-c-c">
+                  <img *ngIf="homeContentForAuthorized.managers[0].photoModel"
+                     [src]="getFileUrl(homeContentForAuthorized.managers[0].photoModel.id)"
+                     alt="{{homeContentForAuthorized.managers[0].name}}"
+                     title="{{homeContentForAuthorized.managers[0].name}}">
+                  <img *ngIf="!homeContentForAuthorized.managers[0].photoModel" src="/assets/img/managers/default.png"
+                     alt="manager-img">
+               </div>
+               <div class="dashboard-user__box--info-name d-f f-d-c j-c-b">
+                  <h3 class="d-f">
+                     <p>{{homeContentForAuthorized.managers[0].name}}</p>
+                     <a
+                        [attr.href]="'tel:' + homeContentForAuthorized.managers[0].phoneNumber"><span>{{homeContentForAuthorized.managers[0].phoneNumber | phone : 'RU'}}</span></a>
+                  </h3>
+                  <a [attr.href]="'mailto:' + homeContentForAuthorized.managers[0].email"
+                     class="mail-desktop"><span>{{homeContentForAuthorized.managers[0].email}}</span></a>
+               </div>
+            </div>
+            <a [attr.href]="'mailto:' + homeContentForAuthorized.managers[0].email"
+               class="mail d_none"><span>{{homeContentForAuthorized.managers[0].email}}</span></a>
+         </div>
+
+         <div class="dashboard-user__box"
+            *ngIf="homeContentForAuthorized && homeContentForAuthorized.companyInfo.paymentSum>0 && homeContentForAuthorized.companyInfo.paymentDateTime">
+            <div class="dashboard-user__box--title">
+               <h3 class="dashboard-mintitle">Ближайший платеж</h3>
+            </div>
+            <div class="dashboard-user__box--payment">
+               <h3 class="d-f a-i-c">
+                  <p>
+                     {{getDateString(homeContentForAuthorized.companyInfo.paymentDateTime)}} <span
+                        class="zero">{{ homeContentForAuthorized.companyInfo.paymentSum.toFixed(2) | fractionSizeSpace }} ₽</span>
+                  </p>
+                  <!--<a href="#" class="d-i-f a-i-c">
+                         <i class="new-icon new-icon-filePluse"></i>
+                         <span>Создать счет</span>
+                      </a>-->
+               </h3>
+               <a href="#" [routerLink]="['/user/finance']" class="dashboard-links">Все финансы</a>
+            </div>
+         </div>
+      </div>
+
+
+      <!-- orders -->
+      <div class="dashboard-orders dashboard-currentoreders">
+         <div class="dashboard-orders__box"
+            *ngIf="homeContentForAuthorized && homeContentForAuthorized.currentOrders.totalCountOfOrders ==0 && homeContentForAuthorized.doneOrders.totalCountOfOrders>0">
+            <div class="dashboard-orders__box--title d-i-f a-i-c">
+               <h3 class="dashboard-mintitle">текущие заказы</h3>
+               <p class="dashboard-mintitle__emty">
+                  Все заказы выполнены. Для создания заказа выберите товары из каталога
+                  в меню или <a href="#" (click)="openModalEstimates()" class="dashboard-links">
+                     загрузите готовую
+                     смету
+                  </a>
+               </p>
+            </div>
+         </div>
+         <div class="dashboard-orders__box"
+            *ngIf="homeContentForAuthorized && homeContentForAuthorized.currentOrders.totalCountOfOrders ==0 && homeContentForAuthorized.doneOrders.totalCountOfOrders == 0">
+            <div class="dashboard-orders__box--title d-i-f a-i-c">
+               <h3 class="dashboard-mintitle">текущие заказы</h3>
+               <p class="dashboard-mintitle__emty">
+                  У вас пока нет заказов. Для создания заказа выберите товары из каталога
+                  в меню или <a href="#" (click)="openModalEstimates()" class="dashboard-links">
+                     загрузите готовую
+                     смету
+                  </a>
+               </p>
+            </div>
+         </div>
+         <div class="dashboard-orders__box dashboard-expand d-f a-i-c j-c-b click-expand"
+            data-expand="true"
+            *ngIf="homeContentForAuthorized && homeContentForAuthorized.currentOrders.totalCountOfOrders>0">
+            <div class="dashboard-orders__box--title d-i-f a-i-c">
+               <h3 class="dashboard-mintitle">текущие заказы</h3>
+               <a href="#" [routerLink]="['/user/current-orders']">
+                  <span class="dashboard-links">
+                     Посмотреть
+                     все
+                  </span><sup class="dashboard-sup">{{homeContentForAuthorized.currentOrders.totalCountOfOrders}}</sup>
+               </a>
+            </div>
+
+            <div class="dashboard-expand__text d-f a-i-c">
+               <h4>
+                  <p class="text-show d_none">Показать</p>
+                  <p class="text-hide">Свернуть</p>
+               </h4>
+               <i class="icon icon-arrow icon-arrow__top"></i>
+            </div>
+         </div>
+
+         <div class="dashboard-currentoreders__list expand-block"
+            *ngIf="homeContentForAuthorized && homeContentForAuthorized.currentOrders.totalCountOfOrders>0">
+            <div class="dashboard-currentoreders__list--item d-f j-c-b"
+               *ngFor="let order of homeContentForAuthorized.currentOrders.orders">
+               <div class="dashboard-currentoreders__list--item-info">
+                  <div class="dashboard-currentoreders__list--item-info__main d-f">
+                     <div class="dashboard-currentoreders__list--item-info__main--date">
+                        <a href="#" (click)="goToOrder(order.id)">
+                           Заказ от
+                           {{getDateString(order.creationDateAndTime)}}
+                        </a>
+                        <p class="zero">{{order.numberInMaxiProAPI}}</p>
+                     </div>
+                     <div class="dashboard-currentoreders__list--item-info__main--number">
+                        <p class="d-f a-i-c" *ngIf="!isDelivered(order.state)">
+                           <i class="new-icon new-icon-notification_order"></i>
+                           <span>{{getOrderStateName(order.state)}}</span>
+                        </p>
+                        <p class="d-f a-i-c" *ngIf="isDelivered(order.state)">
+                           <i class="new-icon new-icon-notification_delivery"></i>
+                           <span>Доставляется</span>
+                        </p>
+                        <h3 class="d-f a-i-c">
+                           <p>Доставка:</p>
+                           <span>
+                              <ng-container *ngIf="!order.deliveryNeeded">Самовывоз</ng-container>
+                              <ng-container *ngIf="order.deliveryNeeded">
+                                 {{getDateString(order.deliveryService.deliveryDate)}}
+                                 <ng-container *ngIf="getOrderDeliveryType(order.deliveryService.type) == 'ExactTime'">
+                                    {{order.deliveryService.deliveryTime | date: "shortTime"}}
+                                 </ng-container>
+                                 <ng-container
+                                    *ngIf="getOrderDeliveryType(order.deliveryService.type)!='ExactTime' && getOrderDeliveryType(order.deliveryService.type)!= 'Express'">
+                                    <ng-container *ngIf="order.deliveryService.deliveryInterval">
+                                       с
+                                       {{order.deliveryService.deliveryInterval.from | date: "shortTime"}}
+                                    </ng-container>
+                                    <ng-container *ngIf="order.deliveryService.deliveryInterval">
+                                       до {{order.deliveryService.deliveryInterval.to | date: "shortTime"}}
+                                    </ng-container>
+                                 </ng-container>
+                              </ng-container>
+                           </span>
+                        </h3>
+                     </div>
+                  </div>
+
+                  <div class="line-clamp line-clamp_2 dashboard-currentoreders__list--item-info__address"
+                     *ngIf="order.constructionObject">
+                     <p>{{order.constructionObject.name}}</p>
+                  </div>
+               </div>
+
+               <div class="dashboard-currentoreders__list--item-sum d-f a-i-c">
+                  <div class="dashboard-currentoreders__list--item-sum__price d-f j-c-e">
+                      <h3 class="zero" *ngIf="order.totalCost!==null">
+                          <span *ngIf="isValueInteger(order.totalCost)">{{order.totalCost | fractionSizeSpace}} ₽</span>
+                          <span *ngIf="!isValueInteger(order.totalCost)">{{order.totalCost.toFixed(2) | fractionSizeSpace}} ₽</span>
+                      </h3>
+                     <h4>
+                        <ng-container>
+                           <p class="d-f a-i-c" *ngIf="!order.isPaid">
+                              <span>Ожидает оплаты</span>
+                              <a href="#" *ngIf="order.invoiceDocumentsQunatity > 0" (click)="downloadInvoice(order)"
+                                 class="download-file d-f a-i-c">
+                                 <i class="new-icon new-icon-fileDownload"></i>
+                                 <span>Счет</span>
+                              </a>
+                           </p>
+                           <p *ngIf="order.isPaid" class="green_color">Оплачено</p>
+                        </ng-container>
+                        <span>{{order.createdByName}}</span>
+                     </h4>
+                  </div>
+
+                  <div class="dashboard-currentoreders__list--item-sum__img d-f a-i-c"
+                     *ngIf="order.itemsQuantity>5">
+                     <ul class="d-f">
+                        <li *ngFor="let number of [0,1,2,3]; let idx = index">
+                           <img *ngIf="order.productsImages[number]"
+                              [src]="cloudinaryHelper.getImageUrl(order.productsImages[number], 360, 360)"
+                              (error)="setBrokenImage($event)" alt="img">
+                           <img *ngIf="!order.productsImages[number]" src="/assets/img/product-default-image.jpg"
+                              alt="default-image" />
+                        </li>
+                     </ul>
+                     <a href="#" (click)="goToOrder(order.id)"
+                        class="dashboard-currentoreders__list--item-sum__img--count d-f f-d-c a-i-c j-c-c">
+                        <p>{{order.itemsQuantity}}</p>
+                        <p>позиций</p>
+                     </a>
+                  </div>
+                  <div class="dashboard-currentoreders__list--item-sum__img d-f a-i-c"
+                     *ngIf="order.itemsQuantity<=5">
+                     <ul class="d-f">
+                        <li *ngFor="let image of order.productsImages">
+                           <img *ngIf="image" [src]="cloudinaryHelper.getImageUrl(image, 360, 360)"
+                              (error)="setBrokenImage($event)" alt="img">
+                           <img *ngIf="!image" src="/assets/img/product-default-image.jpg" alt="default-image" />
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <!-- orders -->
+      <div class="dashboard-order__main d-f">
+         <div class="dashboard-order__blocks">
+            <div class="dashboard-order__blocks--list">
+
+               <div class="dashboard-orders">
+                  <div class="dashboard-orders__box"
+                     *ngIf="homeContentForAuthorized && homeContentForAuthorized.doneOrders.totalCountOfOrders ==0">
+                     <div class="dashboard-orders__box--title d-i-f a-i-c">
+                        <h3 class="dashboard-mintitle">выполненные заказы</h3>
+                        <p class="dashboard-mintitle__emty">Пока нет выполненных заказов</p>
+                     </div>
+                  </div>
+                  <div *ngIf="homeContentForAuthorized && homeContentForAuthorized.doneOrders.totalCountOfOrders>0"
+                     class="dashboard-orders__box dashboard-expand d-f a-i-c j-c-b click-expand"
+                     data-expand="true">
+                     <div class="dashboard-orders__box--title d-i-f a-i-c">
+                        <h3 class="dashboard-mintitle">выполненные заказы</h3>
+                        <a href="#" [routerLink]="['/user/orders-history']">
+                           <span class="dashboard-links">
+                              Посмотреть
+                              все
+                           </span><sup
+                              class="dashboard-sup">{{homeContentForAuthorized.doneOrders.totalCountOfOrders}}</sup>
+                        </a>
+                     </div>
+
+                     <div class="dashboard-expand__text d-f a-i-c">
+                        <h4>
+                           <p class="text-show d_none">Показать</p>
+                           <p class="text-hide">Свернуть</p>
+                        </h4>
+                        <i class="icon icon-arrow icon-arrow__top"></i>
+                     </div>
+                  </div>
+
+                  <div class="expand-block"
+                     *ngIf="homeContentForAuthorized && homeContentForAuthorized.doneOrders.totalCountOfOrders>0">
+                     <ul class="dashboard-order__blocks--list-info">
+                        <li class="dashboard-order__blocks--list-info__item d-f a-i-c j-c-b"
+                           *ngFor="let order of homeContentForAuthorized.doneOrders.orders">
+                           <div class="dashboard-order__blocks--list-info__item--date d-f a-i-c">
+                              <a href="#" (click)="goToOrder(order.id)"
+                                 class="number zero">{{order.numberInMaxiProAPI}}</a>
+                              <p>{{getDateString(order.creationDateAndTime)}}</p>
+                           </div>
+                           <div class="dashboard-order__blocks--list-info__item--price d-f a-i-c">
+                              <p class="zero">
+                                  <ng-container *ngIf="order.totalCost!==null">
+                                      <span *ngIf="isValueInteger(order.totalCost)">{{order.totalCost | fractionSizeSpace}} ₽</span>
+                                      <span *ngIf="!isValueInteger(order.totalCost)">{{order.totalCost.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                  </ng-container>
+                              </p>
+                              <span *ngIf="isDone(order.state)">Выполнен</span>
+                              <span *ngIf="!isDone(order.state)">Отменен</span>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+
+            <div class="dashboard-order__blocks--list">
+               <div class="dashboard-orders">
+                  <div class="dashboard-orders__box"
+                     *ngIf="homeContentForAuthorized && homeContentForAuthorized.templates.totalCountOfTemplates ==0">
+                     <div class="dashboard-orders__box--title d-i-f a-i-c">
+                        <h3 class="dashboard-mintitle">Шаблоны</h3>
+                        <p class="dashboard-mintitle__emty">
+                           <a href="#" [routerLink]="['/user/order-templates']" class="dashboard-links">
+                              Создавайте
+                              шаблоны
+                           </a> для повторяющихся покупок
+                        </p>
+                     </div>
+                  </div>
+                  <div
+                     class="dashboard-orders__box dashboard-expand d-f a-i-c j-c-b click-expand"
+                     *ngIf="homeContentForAuthorized && homeContentForAuthorized.templates.totalCountOfTemplates >0"
+                     data-expand="true">
+                     <div class="dashboard-orders__box--title d-i-f a-i-c">
+                        <h3 class="dashboard-mintitle">Шаблоны</h3>
+                        <a href="#" [routerLink]="['/user/order-templates']">
+                           <span class="dashboard-links">Посмотреть все</span><sup
+                              class="dashboard-sup">{{homeContentForAuthorized.templates.totalCountOfTemplates}}</sup>
+                        </a>
+                     </div>
+
+                     <div class="dashboard-expand__text d-f a-i-c">
+                        <h4>
+                           <p class="text-show d_none" id="showTemplates">Показать</p>
+                           <p class="text-hide" id="hideTemplates">Свернуть</p>
+                        </h4>
+                        <i class="icon icon-arrow icon-arrow__top"></i>
+                     </div>
+                  </div>
+
+                  <div class="expand-block"
+                     *ngIf="homeContentForAuthorized && homeContentForAuthorized.templates.totalCountOfTemplates >0">
+                     <ul class="dashboard-order__blocks--list-info">
+                        <li class="dashboard-order__blocks--list-info__item d-f a-i-c j-c-b"
+                           *ngFor="let template of homeContentForAuthorized.templates.templates">
+                           <div class="dashboard-order__blocks--list-info__item--date d-f a-i-c">
+                              <a href="#" (click)="goToTemplate(template.id)">{{getNameString(template.name)}}</a>
+                           </div>
+                           <div class="dashboard-order__blocks--list-info__item--price d-f a-i-c">
+                               <p class="zero">
+                                   <span *ngIf="isValueInteger(template.totalCost)">{{template.totalCost | fractionSizeSpace}} ₽</span>
+                                   <span *ngIf="!isValueInteger(template.totalCost)">{{template.totalCost.toFixed(2) | fractionSizeSpace}} ₽</span>
+                               </p>
+                              <span>
+                                 <a href="#" (click)="addTemplateToBasket(template.id)" class="dashboard-links">
+                                    В
+                                    корзину
+                                 </a>
+                              </span>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <div class="dashboard-order__blocks">
+
+            <div class="dashboard-order__blocks--list">
+               <div class="dashboard-orders">
+                  <div class="dashboard-orders__box"
+                     *ngIf="homeContentForAuthorized && homeContentForAuthorized.baskets.totalCountOfBaskets ==0">
+                     <div class="dashboard-orders__box--title d-i-f a-i-c">
+                        <h3 class="dashboard-mintitle">отложенные корзины</h3>
+                        <p class="dashboard-mintitle__emty">Если сохраните корзину, она будет здесь</p>
+                     </div>
+                  </div>
+                  <div
+                     class="dashboard-orders__box dashboard-expand d-f a-i-c j-c-b click-expand"
+                     *ngIf="homeContentForAuthorized && homeContentForAuthorized.baskets.totalCountOfBaskets >0"
+                     data-expand="true">
+                     <div class="dashboard-orders__box--title d-i-f a-i-c">
+                        <h3 class="dashboard-mintitle">отложенные корзины</h3>
+                        <a href="#" [routerLink]="['/user/saved-baskets']">
+                           <span class="dashboard-links">Посмотреть все</span><sup
+                              class="dashboard-sup">{{homeContentForAuthorized.baskets.totalCountOfBaskets}}</sup>
+                        </a>
+                     </div>
+                     <div class="dashboard-expand__text d-f a-i-c">
+                        <h4>
+                           <p class="text-show d_none">Показать</p>
+                           <p class="text-hide">Свернуть</p>
+                        </h4>
+                        <i class="icon icon-arrow icon-arrow__top"></i>
+                     </div>
+                  </div>
+                  <div class="expand-block"
+                     *ngIf="homeContentForAuthorized && homeContentForAuthorized.baskets.totalCountOfBaskets >0">
+                     <ul class="dashboard-order__blocks--list-info">
+                        <li class="dashboard-order__blocks--list-info__item d-f a-i-c j-c-b"
+                           *ngFor="let basket of homeContentForAuthorized.baskets.baskets">
+                           <div class="dashboard-order__blocks--list-info__item--date d-f a-i-c">
+                              <h3>{{getNameString(basket.name)}}</h3>
+                              <p>{{getDateString(basket.creationDateTime)}}</p>
+                           </div>
+                           <div class="dashboard-order__blocks--list-info__item--price d-f a-i-c">
+                               <p class="zero">
+                                   <span *ngIf="isValueInteger(basket.totalCost)">{{basket.totalCost | fractionSizeSpace}} ₽</span>
+                                   <span *ngIf="!isValueInteger(basket.totalCost)">{{basket.totalCost.toFixed(2) | fractionSizeSpace}} ₽</span>
+                               </p>
+                              <span>
+                                 <a href="#" (click)="checkout(basket.id)" class="dashboard-links">Оформить</a>
+                              </span>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+
+            <div class="dashboard-order__blocks--list">
+               <div class="dashboard-touse d-f a-i-c">
+                  <div class="dashboard-touse__img">
+                     <img src="../../../assets/img/dashboard/to-use/1.jpg" alt="img">
+                  </div>
+                  <div class="dashboard-touse__text d-f f-d-c j-c-c">
+                     <h3>Как пользоваться Порталом?</h3>
+                     <p>Расскажем о всех возможностях Портала Онлайн через Skype или Zoom</p>
+                     <button (click)="openModalConsultation()">Записаться на консультацию</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <!-- popular -->
+      <div class="dashboard-popular">
+         <div class="dashboard-title">
+            <h2>Популярные товары</h2>
+         </div>
+
+         <div class="product-slider"
+            *ngIf="homeContentForAuthorized && homeContentForAuthorized.popularProducts.length>0">
+            <div class="product-slider__list">
+               <ngx-slick-carousel class="slick-carousel d_block" [config]="productSlider">
+                  <div ngxSlickItem *ngFor="let product of homeContentForAuthorized.popularProducts">
+                     <div class="product-slider__list--item">
+                        <a href="#" class="product-slider__list--item-img" (click)="goToProduct(product.vendorCode)">
+                           <img *ngIf="product.imageUrl"
+                              [src]="cloudinaryHelper.getImageUrl(product.imageUrl, 360, 360)"
+                              (error)="setBrokenImage($event)" alt="img">
+                           <img *ngIf="!product.imageUrl" src="/assets/img/product-default-image.jpg"
+                              alt="default-image" />
+                        </a>
+                        <div class="product-slider__list--item-description">
+                           <h3 class="d-f a-i-c">
+                               <span class="zero">
+                                   <span *ngIf="isValueInteger(product.price)">{{product.price | fractionSizeSpace}} ₽</span>
+                                   <span *ngIf="!isValueInteger(product.price)">{{product.price.toFixed(2) | fractionSizeSpace}} ₽</span>
+                               </span>
+                              <i class="new-icon new-icon-basket"
+                                 (click)="addToBasket(product.id, product.shipmentMultiplicity)"></i>
+                           </h3>
+                           <a href="#" class="line-clamp line-clamp_3" (click)="goToProduct(product.vendorCode)">
+                              {{product.name}}
+                           </a>
+                        </div>
+                     </div>
+                  </div>
+               </ngx-slick-carousel>
+            </div>
+         </div>
+      </div>
+
+      <!-- services -->
+      <div class="dashboard-services">
+         <div class="dashboard-title">
+            <h2>Дополнительные сервисы МаксиПРО</h2>
+         </div>
+
+         <div class="dashboard-services__list d-f f-w">
+            <div class="dashboard-services__list--item">
+               <div class="dashboard-services__list--item-box d-f a-i-e">
+                  <p>Аренда<br> инструмента</p>
+                  <img src="../../../assets/img/home/services/1.png" alt="img">
+               </div>
+            </div>
+            <div class="dashboard-services__list--item">
+               <div class="dashboard-services__list--item-box d-f a-i-e">
+                  <p>Технические<br> консультации</p>
+                  <img src="../../../assets/img/home/services/2.png" alt="img">
+               </div>
+            </div>
+            <div class="dashboard-services__list--item">
+               <div class="dashboard-services__list--item-box d-f a-i-e">
+                  <p>Распил по металлу <br> и дереву</p>
+                  <img src="../../../assets/img/home/services/3.png" alt="img">
+               </div>
+            </div>
+            <div class="dashboard-services__list--item">
+               <div class="dashboard-services__list--item-box d-f a-i-e">
+                  <p>Колеровка</p>
+                  <img src="../../../assets/img/home/services/4.png" alt="img">
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- news -->
+   <div class="dashboard-news">
+      <div class="container">
+         <div class="dashboard-title d-f a-i-c j-c-b">
+            <h2>Новости МаксиПРО</h2>
+            <a href="#" [routerLink]="['/news-list']" class="dashboard-news-all d-i-f a-i-c">
+               <span>Перейти к новостям</span>
+               <i class="new-icon new-icon-arrow-long"></i>
+            </a>
+         </div>
+      </div>
+      <div class="home-news__container">
+         <div class="home-news__slider">
+            <div class="dashboard-news__list">
+               <ngx-slick-carousel class="slick-carousel d_block" [config]="newSlider">
+                  <div ngxSlickItem *ngFor="let newsItem of homeContentForAuthorized.news">
+                     <a href="#" (click)="goToNewsItem(newsItem.id)" class="dashboard-news__list--info d_block">
+                        <time
+                           class="dashboard-news__list--info-time d_block">{{getDateString(newsItem.creationDateTime)}}</time>
+                        <p class="line-clamp line-clamp_2 dashboard-news__list--info-description">
+                           {{newsItem.title}}
+                        </p>
+                     </a>
+                  </div>
+               </ngx-slick-carousel>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!--  DASHBOARD  === END -->

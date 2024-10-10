@@ -1,0 +1,171 @@
+﻿@import '../styles/base/shared';
+
+.catalog-main {
+    margin-top: 20px;
+    margin-bottom: 80px;
+
+    @include xs {
+        margin-bottom: 48px;
+    }
+
+    &__list {
+        margin: -12px;
+
+        @include sm {
+            margin: -8px;
+        }
+
+        &--item {
+            width: 33.333%;
+            padding: 12px;
+
+            @include sm {
+                width: 50%;
+                padding: 8px;
+            }
+
+            @include xs {
+                width: 100%;
+            }
+
+            &-box {
+                @include wh(100%, 128px);
+                background-color: #3C444B;
+                padding-left: 28px;
+                overflow: hidden;
+                position: relative;
+
+                @include xs {
+                    padding-left: 20px;
+                }
+
+                a {
+                    width: 220px;
+                    font: 22px/24px $Bold;
+                    color: white;
+                    position: relative;
+                    z-index: 9;
+                }
+
+                img {
+                    width: auto;
+                    position: absolute;
+                    top: 0px;
+                    right: 0px;
+                    pointer-events: none;
+
+                    @include xl {
+                        right: -35px;
+                    }
+
+                    @include lg {
+                        right: -85px;
+                    }
+
+                    @include xs {
+                        right: -100px;
+                    }
+                }
+            }
+
+            &-name {
+                background-color: white;
+                padding: 28px;
+
+                &__link {
+
+                    &+& {
+                        margin-top: 12px;
+                    }
+
+                    font: 15px $Regular;
+                    color: var(--black_color);
+                    display: block;
+
+                    &:hover {
+                        color: var(--global_color_hover);
+                    }
+                }
+            }
+        }
+    }
+
+    &__services {
+        margin-top: 80px;
+
+        &--title {
+            margin-bottom: 28px;
+
+            h2 {
+                font: 20px/24px $Bold;
+                color: #797f83;
+                letter-spacing: .04em;
+                text-transform: uppercase;
+            }
+        }
+
+        &--list {
+            margin: -12px;
+
+            @include sm {
+                margin: -8px;
+            }
+
+            @include xs {
+                margin: 0;
+            }
+
+            &-item {
+                @include wh(25%, 320px);
+                padding: 12px;
+
+                @include sm {
+                    width: 50%;
+                    padding: 8px;
+                }
+
+                @include xs {
+                    @include wh(100%, 228px);
+                    padding: 0;
+
+                    &+& {
+                        margin-top: 16px;
+                    }
+                }
+
+                &__box {
+                    @include wh(100%);
+                    background-color: white;
+                    padding-left: 28px;
+                    padding-bottom: 28px;
+                    overflow: hidden;
+                    position: relative;
+
+                    @include xs {
+                        padding-left: 20px;
+                        padding-bottom: 20px;
+                    }
+
+                    p {
+                        font: 22px/24px $Bold;
+                        color: var(--black_color);
+                    }
+
+                    img {
+                        width: auto;
+                        position: absolute;
+                        top: -7px;
+                        right: -35px;
+                        pointer-events: none;
+
+                        @include xs {
+                            top: -60px;
+                            right: -43px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

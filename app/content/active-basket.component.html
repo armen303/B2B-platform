@@ -1,0 +1,1968 @@
+<div *ngIf="isLoaded">
+
+    <!-- crumb == start -->
+    <div class="container animate_show_up">
+        <div class="crumb">
+            <ul class="crumb-list d-f f-w a-i-c">
+                <li class="crumb-list__item">
+                    <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+                </li>
+                <li class="crumb-list__item">−</li>
+                <li class="crumb-list__item">Корзина</li>
+            </ul>
+        </div>
+
+        <div class="global-title">
+            <h1>Корзина</h1>
+
+            <h2 class="global-title__sub" id="LoadingTemplate">
+                Вы можете создать заказ из файла. Мы подготовили для вас
+                <a target="_blank" href="#" (click)="getExcelTemplate()">шаблон</a>, внесите в него необходимые
+                товары и затем <a href="#" (click)="addProductToBasketFromFile()">загрузите его на сайт</a>
+            </h2>
+        </div>
+    </div>
+    <!-- crumb == end -->
+    <!-- Если нет ни одного заказа то вырисовывает блок пустышку-->
+    <div id="emptyBasketDiv" *ngIf="isBasketEmpty()">
+        <div class="container">
+            <div class="empty">
+                <div class="empty__content d-f a-i-c j-c-b f-w">
+                    <div class="empty__text">
+                        <div class="empty__text--title">
+                            <h2>Ваш заказ не сформирован</h2>
+                            <p>
+                                К сожалению вы еще не добавили товары к вашему заказу, но это легко исправить! Перейдите
+                                в <a href="#" [routerLink]="['/catalog']"> каталог</a> и добавляйте интересующие вас
+                                товары.
+                            </p>
+                        </div>
+                        <div class="empty__text--btn btn-global">
+                            <a href="#" [routerLink]="['/catalog']" class="btn-global__red">Перейти в каталог</a>
+                        </div>
+                    </div>
+
+                    <div class="empty__img d-f j-c-c a-i-c">
+                        <img src="/assets/img/order-not-found.jpg" alt="img">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Если нет ни одного заказа то вырисовывает блок пустышку-->
+
+    <div class="basket" *ngIf="!isBasketEmpty()">
+        <div class="container">
+            <div class="basket-discount-print d-f a-i-c">
+                <div class="basket-discount tooltip" *ngIf="totalCostModel.discountValue>0" id="AdditionalDiscount">
+                    <h3 class="d-f a-i-c j-c-c">
+                        <p>При заказе через Портал действует дополнительная скидка</p>
+                        <span>−2%</span>
+                    </h3>
+                    <div class="tooltip-content">
+                        <ul class="tooltip-content__list triangle triangle-down">
+                            <li>
+                                Скидка действует только на товары <br> не распространяется на доставку, сервисы и доп.
+                                услуги
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="basket-print d-f a-i-c j-c-c">
+                    <div class="basket-print__box">
+                        <a href="#" class="basket-print__box--link d-f a-i-c" (click)="printPdf(pdf)" id="PrintOut">
+                            <i class="icon icon-print"></i>
+                            <span>Распечатать</span>
+                        </a>
+                    </div>
+                    <div class="basket-print__box d-f a-i-c">
+                        <div class="basket-print__box--download d-f a-i-c">
+                            <i class="icon icon-file_download"></i>
+                            <span>Скачать</span>
+                        </div>
+                        <div class="basket-print__box--dropdown">
+                            <a href="#" class="basket-print__box--dropdown-link" (click)="downloadExcel()"
+                               id="download">Без спецификации товаров</a>
+                            <a href="#" class="basket-print__box--dropdown-link"
+                               (click)="downloadExcelWithSpecification()" id="downloadWithSpec">
+                                Со спецификацией
+                                товаров
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="basket-content d-f">
+                <div class="basket-products">
+
+                    <div class="basket-products__sum" id="AmountOfProductsOnTop">
+                        <ul>
+                            <li class="d-f a-i-c j-c-b" id="sumUp">
+                                <h3>
+                                    <p> стоимость товаров:</p>
+                                </h3>
+                                <h4 class="new-sum">
+                                    <span *ngIf="isValueInteger(totalCostModel.totalCostWithoutDiscount-totalCostModel.totalTintPrice)">{{totalCostModel.totalCostWithoutDiscount-totalCostModel.totalTintPrice | fractionSizeSpace}} ₽</span>
+                                    <span *ngIf="!isValueInteger(totalCostModel.totalCostWithoutDiscount-totalCostModel.totalTintPrice)">{{(totalCostModel.totalCostWithoutDiscount-totalCostModel.totalTintPrice).toFixed(2) | fractionSizeSpace}} ₽</span>
+                                </h4>
+                            </li>
+                            <li *ngIf="totalCostModel.discountValue>0" class="d-f a-i-c j-c-b" id="discountUp">
+                                <h3>
+                                    <p class="green_color">
+                                        СКИДКА
+                                        {{ totalCostModel.discountValue.toFixed(0) | fractionSizeSpace}}%:
+                                    </p>
+                                </h3>
+                                <h4 class="new-sum">
+                                    <span class="green_color">
+                                        <span *ngIf="isValueInteger(totalCostModel.discount)">-{{totalCostModel.discount | fractionSizeSpace}} ₽</span>
+                                        <span *ngIf="!isValueInteger(totalCostModel.discount)">-{{totalCostModel.discount.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                    </span>
+                                </h4>
+                            </li>
+                            <li class="d-f a-i-c j-c-b" id="totalUp">
+                                <h3>
+                                    <p> ИТОГО ПО ТОВАРАМ:</p>
+                                </h3>
+                                <h4>
+                                    <span *ngIf="isValueInteger(totalCostModel.totalCost)">{{totalCostModel.totalCost | fractionSizeSpace}} ₽</span>
+                                    <span *ngIf="!isValueInteger(totalCostModel.totalCost)">{{totalCostModel.totalCost.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                </h4>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- ожидается изменение = start Интерфейс выбора способа просмотра позиций корзины (по порядку добавления, по подкатегориям) -->
+                    <!-- <div class="basket-products__filter">
+                        <div class="basket-products__filter--box d-f a-i-c">
+                            <p class="basket-products__filter--box-title">Сортировать:</p>
+                            <div class="dropdown basket-products__filter--box-dropdown">
+                                <div class="d-f a-i-c dropdown-select window-click click-expand border-0" data-expand="false">
+                                    <div class="dropdown-select__arrow d-f a-i-c j-c-b">
+                                        <p class="dropdown-select__selected dropdown basket-products__filter--box-dropdown__selected">по добавлению в корзину</p>
+                                    </div>
+                                    <i class="icon icon-arrow icon-arrow__bottom d-f a-i-c j-c-c "></i>
+                                </div>
+                                <ul class="compare-box__sidebar--select-list dropdown-list expand-block d_none scrollbar">
+                                    <li class="dropdown-list__item">
+                                        <p>по добавлению в корзину</p>
+                                    </li>
+                                    <select hidden name="selectListName">
+                                        <option value="по добавлению в корзину">по добавлению в корзину</option>
+                                    </select>
+                                </ul>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- ожидается изменение = end -->
+
+                    <div class="basket-products__list"
+                         *ngFor="let group of activeBasket.groups | orderBy : 'subcategoryName'">
+                        <div class="basket-products__list--title d-f a-i-c j-c-b">
+                            <h3> {{ group.subcategoryName }} </h3>
+                        </div>
+                        <article class="basket-products__list--item d-f a-i-c"
+                                 *ngFor="let item of group.orderItems  | orderBy : 'productName'">
+                            <span class="icon icon-close icon-close__remove" (click)="removeOrderItem(item)"></span>
+                            <div class="basket-products__list--item-img">
+                                <a [routerLink]="['/product', item.vendorCode]" target="_blank">
+                                    <img *ngIf="item.productMainImageUrl.length > 0"
+                                         [src]="cloudinaryHelper.getImageUrl(item.productMainImageUrl, 360, 360)"
+                                         (error)="setBrokenImage($event)" alt="img" />
+                                    <img *ngIf="item.productMainImageUrl.length <= 0"
+                                         src="/assets/img/product-default-image.jpg" />
+                                </a>
+                            </div>
+                            <div class="basket-products__list--item-info">
+                                <div class="basket-products__list--item-info__name">
+                                    <a [routerLink]="['/product', item.vendorCode]" target="_blank">{{ item.productName }}</a>
+                                </div>
+                                <div class="basket-products__list--item-info__tint"
+                                     *ngIf="item.canBeColored && item.tintColor!=null">
+                                    <h3 class="d-f a-i-c" id="ComplementaryServices">
+                                        <p>Доп. услуги: </p>
+                                        <span>Колеровка {{item.tintColor}}</span>
+                                    </h3>
+                                </div>
+                                <div class="basket-products__list--item-info__text  d-f a-i-c">
+                                    <div class="basket-products__list--item-info__text--vendorcode" id="vendorcode">
+                                        <p>Артикул:<span> {{ item.vendorCode }}</span></p>
+                                    </div>
+                                    <div class="cards-product__item--remainder">
+                                        <ul>
+                                            <li class="d-f a-i-c"
+                                                *ngIf="item.amountInStock>0 && item.quantity <= item.amountInStock"
+                                                id="inStock">
+                                                <i class="new-icon new-icon-added"></i>
+                                                <h3 class="d-f a-i-c">
+                                                    <p>
+                                                        В наличии <i class="green_color">{{ (item.amountInStock/item.unitOfMeasurementCoefficient).toFixed(2) }}</i>
+                                                        <span>{{item.unitOfMeasurementName}}</span>
+                                                    </p>
+
+                                                </h3>
+                                                <div class="basket-print__box d-f a-i-c"
+                                                     *ngIf="item.productDepos.length>1">
+                                                    <div class="basket-print__box--link d-f a-i-c">
+                                                        <span>Все магазины</span>
+                                                    </div>
+                                                    <div class="basket-print__box--dropdown">
+                                                        <ng-container *ngFor="let productDepot of item.productDepos">
+                                                            <span>
+                                                                <span class="basket-print__box--dropdown-link">{{productDepot.depotName}}</span>
+                                                                <span> {{productDepot.amountInStock}}</span>
+                                                            </span>
+                                                            <br />
+                                                        </ng-container>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="item.productDepos.length==1">
+                                                    <div>
+                                                        <span>{{item.productDepos[0].depotName}}</span>
+                                                    </div>
+                                                </div>
+                                                <!-- <h3>Депо Мытищи</h3> -->
+                                                <!-- <div class="tooltip">
+                                                    <h3>Все магазины</h3>
+                                                    <div class="tooltip-content">
+                                                        <ul class="tooltip-content__list triangle triangle-down">
+                                                            <li>Депо Мытищи 4</li>
+                                                            <li>Депо Елино 56</li>
+                                                        </ul>
+                                                    </div>
+                                                </div> -->
+                                            </li>
+                                            <li class="d-f a-i-c"
+                                                *ngIf="(item.amountInStock==0 || item.quantity > item.amountInStock) && (item.gamma==2 || item.gamma==3 ) && item.deliveryDelay > 0">
+                                                <i class="new-icon new-icon-pending"></i>
+                                                <h3 class="d-f a-i-c">
+                                                    <p>Под заказ.</p>
+                                                    <span>
+                                                        Доставка: от {{item.deliveryDelay}}
+                                                        {{declensionMaker.getDeclensionFrom(item.deliveryDelay, "дня", "дней")}}
+                                                    </span>
+                                                </h3>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="basket-products__list--item-info__data d-f a-i-c">
+                                    <div class="basket-products__list--item-info__data--counter tooltip">
+                                        <app-product-counter productCounterMin="{{item.shipmentMultiplicity}}"
+                                                             productCounterMax="{{item.amountInStock}}"
+                                                             productCounterStep="{{item.shipmentMultiplicity}}"
+                                                             productCounterQuantity="{{item.quantity}}"
+                                                             (decrement)="decrementQuantity(item)"
+                                                             (changeNumber)="changeNumber($event, item)"
+                                                             (increment)="incrementQuantity(item)" (error)="errorMethod()">
+                                        </app-product-counter>
+                                        <div class="tooltip-content" *ngIf="item.quantity> item.amountInStock">
+                                            <ul class="tooltip-content__list triangle triangle-down">
+                                                <li>
+                                                    В наличии: {{ item.amountInStock }} {{item.unitOfMeasurementName}}
+                                                </li>
+                                                <li>
+                                                    Под заказ {{item.deliveryDelay?item.deliveryDelay:0}}
+                                                    {{declensionMaker.getDeclension(item.deliveryDelay, "день", "дня", "дней")}}:
+                                                    {{item.quantity-item.amountInStock}} {{item.unitOfMeasurementName}}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="tooltip">
+                                        <ul class="d-f tooltip-list">
+                                            <li class="tooltip-list__item" *ngIf="item.isFragile">
+                                                <i class="icon icon-glass tooltip-list__item--icon"></i>
+                                                <p class="triangle triangle-down tooltip-list__item--content"
+                                                   id="Fragile">
+                                                    <span>Хрупкий</span>
+                                                </p>
+                                            </li>
+                                            <li class="tooltip-list__item" *ngIf="item.isUnliftable">
+                                                <i class="icon icon-weight tooltip-list__item--icon"></i>
+                                                <p class="triangle triangle-down tooltip-list__item--content"
+                                                   id="Unmanageable">
+                                                    <span>Неподъёмный</span>
+                                                </p>
+                                            </li>
+                                            <li class="tooltip-list__item" *ngIf="item.isOversized">
+                                                <i class="icon icon-oversize tooltip-list__item--icon"></i>
+                                                <p class="triangle triangle-down tooltip-list__item--content"
+                                                   id="Oversize">
+                                                    <span>Негабарит</span>
+                                                </p>
+                                            </li>
+                                            <!-- <li class="tooltip-list__item" *ngIf="item.canBeCut">
+                                               <i class="icon icon-saw tooltip-list__item--icon"></i>
+                                               <p class="triangle triangle-down tooltip-list__item--content" id="CanCut">
+                                                  <span>
+                                                     Можно распилить
+                                                  </span>
+                                               </p>
+                                            </li> -->
+                                            <li class="tooltip-list__item" *ngIf="item.canBeColored">
+                                                <i class="icon icon-tinting tooltip-list__item--icon"></i>
+                                                <p class="triangle triangle-down tooltip-list__item--content"
+                                                   id="CanBeTinted">
+                                                    <span>
+                                                        Можно колеровать
+                                                    </span>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="basket-products__list--item-price">
+                                <h3 class="basket-products__list--item-price__sum" id="PricePerPiece">
+                                    <p>
+                                        <ng-container *ngIf="isValueInteger(item.specialPrice)">{{item.specialPrice | fractionSizeSpace}} ₽</ng-container>
+                                        <ng-container *ngIf="!isValueInteger(item.specialPrice)">{{item.specialPrice.toFixed(2) | fractionSizeSpace}} ₽</ng-container>
+                                    </p>
+                                    <span>цена за {{item.unitOfMeasurementNameForSingleOne }}</span>
+                                </h3>
+                                <div class="basket-products__list--item-price__tint"
+                                     *ngIf="item.canBeColored && item.tintColor!=null">
+                                    <h3 class="d-f a-i-c j-c-e">
+                                        <p>Колеровка</p>
+                                        <span *ngIf="isValueInteger(item.tintPrice)">{{item.tintPrice | fractionSizeSpace}} ₽</span>
+                                        <span *ngIf="!isValueInteger(item.tintPrice)">{{item.tintPrice.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                    </h3>
+                                </div>
+                                <div class="basket-products__list--item-price__info">
+                                    <ul>
+                                        <li class="d-f a-i-c j-c-e"
+                                            *ngIf="item.showAdditionalPriceInfo && item.price > item.specialPrice">
+                                            <p>Розничная цена</p>
+                                            <span *ngIf="isValueInteger(item.price)">{{item.price | fractionSizeSpace}} ₽</span>
+                                            <span *ngIf="!isValueInteger(item.price)">{{item.price.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                        </li>
+                                        <li class="d-f a-i-c j-c-e"
+                                            *ngIf="item.showAdditionalPriceInfo && item.price > item.specialPrice && item.discount>=1">
+                                            <p>скидка</p>
+                                            <span>{{item.discount}}%</span>
+                                        </li>
+                                        <li class="d-f a-i-c j-c-e"
+                                            *ngIf="item.marketPrice>0 && item.marketPrice > item.specialPrice">
+                                            <p>Цена рынка</p>
+                                            <span *ngIf="isValueInteger(item.marketPrice*item.unitOfMeasurementCoefficient)">{{item.marketPrice*item.unitOfMeasurementCoefficient | fractionSizeSpace}} ₽</span>
+                                            <span *ngIf="!isValueInteger(item.marketPrice*item.unitOfMeasurementCoefficient)">{{(item.marketPrice*item.unitOfMeasurementCoefficient).toFixed(2) | fractionSizeSpace}} ₽</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="basket-products__list--item-info__data--counter d_none ">
+                                    <app-product-counter productCounterMin="{{item.shipmentMultiplicity}}"
+                                                         productCounterMax="{{item.amountInStock}}"
+                                                         productCounterStep="{{item.shipmentMultiplicity}}"
+                                                         productCounterQuantity="{{item.quantity}}" (decrement)="decrementQuantity(item)"
+                                                         (changeNumber)="changeNumber($event, item)"
+                                                         (increment)="incrementQuantity(item)" (error)="errorMethod()" class="tooltip">
+                                    </app-product-counter>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="basket-products__sum" *ngIf="activeBasket.groups && activeBasket.groups.length"
+                         id="AmountOfProductsOnDown">
+                        <ul>
+                            <li *ngIf="totalCostModel.productsQuantity>0" class="d-f a-i-c j-c-b" id="QuantityInCart">
+                                <h3>
+                                    <p style="color: #797F83"> позиций в корзине</p>
+                                </h3>
+                                <h4 class="new-sum">
+                                    <span style="color: #797F83">
+                                        {{ totalCostModel.productsQuantity | fractionSizeSpace }}
+                                    </span>
+                                </h4>
+                            </li>
+                            <li *ngIf="totalCostModel.totalWeight>0" class="d-f a-i-c j-c-b" id="TotalWeight">
+                                <h3>
+                                    <p style="color: #797F83"> общий вес</p>
+                                </h3>
+                                <h4 class="new-sum">
+                                    <span style="color: #797F83">
+                                        {{ totalCostModel.totalWeight.toFixed(2) | fractionSizeSpace }} КГ
+                                    </span>
+                                </h4>
+                            </li>
+                            <li *ngIf="totalCostModel.anyProductsWithTint" class="d-f a-i-c j-c-b" id="TotalTint">
+                                <h3>
+                                    <p style="color: #797F83"> стоимость колеровки</p>
+                                </h3>
+                                <h4 class="new-sum">
+                                    <span style="color: #797F83">
+                                        <span *ngIf="isValueInteger(totalCostModel.totalTintPrice)">{{totalCostModel.totalTintPrice | fractionSizeSpace}}</span>
+                                        <span *ngIf="!isValueInteger(totalCostModel.totalTintPrice)">{{totalCostModel.totalTintPrice.toFixed(2) | fractionSizeSpace}}</span>
+                                    </span>
+                                </h4>
+                            </li>
+                            <li class="d-f a-i-c j-c-b" id="sumDown">
+                                <h3>
+                                    <p> стоимость товаров:</p>
+                                </h3>
+                                <h4 class="new-sum">
+                                    <span *ngIf="isValueInteger(totalCostModel.totalCostWithoutDiscount-totalCostModel.totalTintPrice)">{{totalCostModel.totalCostWithoutDiscount-totalCostModel.totalTintPrice | fractionSizeSpace}} ₽</span>
+                                    <span *ngIf="!isValueInteger(totalCostModel.totalCostWithoutDiscount-totalCostModel.totalTintPrice)">{{(totalCostModel.totalCostWithoutDiscount-totalCostModel.totalTintPrice).toFixed(2) | fractionSizeSpace}} ₽</span>
+                                </h4>
+                            </li>
+                            <li *ngIf="totalCostModel.discountValue>0" class="d-f a-i-c j-c-b" id="discountDown">
+                                <h3>
+                                    <p class="green_color">
+                                        СКИДКА
+                                        {{ totalCostModel.discountValue.toFixed(0) | fractionSizeSpace}}%:
+                                    </p>
+                                </h3>
+                                <h4 class="new-sum">
+                                    <span class="green_color" *ngIf="isValueInteger(totalCostModel.discount)">-{{totalCostModel.discount | fractionSizeSpace}} ₽</span>
+                                    <span class="green_color" *ngIf="!isValueInteger(totalCostModel.discount)">-{{totalCostModel.discount.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                </h4>
+                            </li>
+                            <li class="d-f a-i-c j-c-b" id="TotalDown">
+                                <h3>
+                                    <p> ИТОГО:</p>
+                                </h3>
+                                <h4>
+                                    <span *ngIf="isValueInteger(totalCostModel.totalCost)">{{totalCostModel.totalCost | fractionSizeSpace}} ₽</span>
+                                    <span *ngIf="!isValueInteger(totalCostModel.totalCost)">{{totalCostModel.totalCost.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                </h4>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <div class="d-f j-c-b a-i-c">
+                        <div class="create-template d-f a-i-c j-c-c" id="EmptyTrash"
+                             (click)="openModalRemovingWindow()">
+                            <i class="icon icon-trash create-template__icon"></i>
+                            <span>ОЧИСТИТЬ КОРЗИНУ</span>
+                        </div>
+                        <div class="create-template d-f a-i-c j-c-c" id="SaveBasket"
+                             *ngIf="activeBasket.groups && activeBasket.groups.length" (click)="deferBasket()">
+                            <i class="icon icon-saveCart create-template__icon"></i>
+                            <span>СОХРАНИТЬ В ОТЛОЖЕННЫХ КОРЗИНАХ</span>
+                        </div>
+                    </div>
+
+                    <div class="basket-products__issue d_none"
+                         *ngIf="activeBasket.groups && activeBasket.groups.length">
+                        <div class="basket-products__issue--btn btn-global">
+                            <button class="btn-global__red"> Оформить заказ</button>
+                        </div>
+                    </div>
+
+                    <!-- Товары снятые с продажи -- start -->
+                    <div class="basket-products__list basket-products__discontinued"
+                         *ngIf="activeBasket.discontinuedProducts && activeBasket.discontinuedProducts.length">
+                        <div class="basket-products__discontinued--title d-f a-i-c">
+                            <h3> Товары снятые с продажи</h3>
+                        </div>
+                        <article *ngFor="let discontinuedProduct of activeBasket.discontinuedProducts"
+                                 class="basket-products__list--item basket-products__discontinued--item d-f a-i-c">
+                            <span class="icon icon-close icon-close__remove"></span>
+                            <span class="icon icon-close icon-close__remove"
+                                  (click)="removeOrderItem(discontinuedProduct)"></span>
+                            <div class="basket-products__list--item-img basket-products__discontinued--item-img">
+                                <a href="#" (click)="goToProduct(discontinuedProduct.vendorCode)">
+                                    <img *ngIf="discontinuedProduct.productMainImageUrl.length > 0"
+                                         [src]="cloudinaryHelper.getImageUrl(discontinuedProduct.productMainImageUrl, 360, 360)"
+                                         (error)="setBrokenImage($event)" alt="img" />
+                                    <img *ngIf="discontinuedProduct.productMainImageUrl.length <= 0"
+                                         src="/assets/img/product-default-image.jpg" alt="default-image" />
+                                </a>
+                            </div>
+                            <div class="basket-products__list--item-info">
+                                <div class="basket-products__list--item-info__name">
+                                    <a href="#"
+                                       (click)="goToProduct(discontinuedProduct.vendorCode)">{{ discontinuedProduct.productName }}</a>
+                                </div>
+                                <div class="basket-products__list--item-info__text  d-f a-i-c">
+                                    <div class="basket-products__list--item-info__text--vendorcode">
+                                        <p>Артикул:<span> {{ discontinuedProduct.vendorCode }}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="basket-products__discontinued--btn">
+                                <button>снят с продажи</button>
+                            </div>
+                        </article>
+                    </div>
+                    <!-- Товары снятые с продажи -- end -->
+                </div>
+                <div class="basket-info" *ngIf="isLoaded && (!latePaymentsGroups || latePaymentsGroups.length<1)">
+                    <!-- basket-authorization (авторизация) !isUserLoggedIn  START-->
+                    <div class="basket-authorization" *ngIf="!isUserLoggedIn">
+                        <div class="basket-authorization__title">
+                            <h2>Авторизация</h2>
+                            <p>
+                                <i class="icon icon-exclamatory icon-exclamatory__authorization"></i>
+                                <span>Чтобы оформить заказ необходима авторизация</span>
+                            </p>
+                        </div>
+                        <div class="basket-authorization__form">
+                            <form #loginForm="ngForm">
+                                <div class="basket-authorization__form--area">
+                                    <div class="basket-authorization__form--area-label d-f">
+                                        <label class="d-f f-d-c j-c-b">
+                                            <span>Введите email или телефон</span>
+                                            <input type="text" required name="emailInput" id="emailInput"
+                                                   [(ngModel)]="email" />
+                                        </label>
+                                        <label class="d-f f-d-c j-c-b">
+                                            <span>Введите пароль</span>
+                                            <input type="password" required name="passwordInput" id="passwordInput"
+                                                   [(ngModel)]="password" />
+                                        </label>
+
+                                    </div>
+                                    <p class="pop-up-form__row" style="display:flex;justify-content: center;"
+                                       *ngIf="!isFirstAttempt">
+                                        <re-captcha (resolved)="captchaResolved($event)"></re-captcha>
+                                    </p>
+                                    <div class="basket-authorization__form--area-forgot">
+                                        <a href="#" (click)="openModalRecovery()">Забыли пароль?</a>
+                                    </div>
+                                </div>
+                                <div class="basket-authorization__form--login d-f">
+                                    <div class="basket-authorization__form--login-btn btn-global">
+                                        <button class="btn-global__red" (click)="login()">ВОЙТИ</button>
+                                    </div>
+                                    <!--<div class="basket-authorization__form--login-btn">
+                                                <a class="basket-authorization__form--login-btn__reg d-f j-c-c a-i-c"
+                                                   *ngIf="!isUserLoggedIn" href="#" routerLink="/registration">РЕГИСТРАЦИЯ</a>
+                                             </div>-->
+                                </div>
+                            </form>
+                        </div>
+                        <div class="basket-advantages">
+                            <div class="basket-advantages__title">
+                                <h2> Наши преимущества</h2>
+                            </div>
+                            <div class="basket-advantages__list d-f a-i-s">
+                                <i class="icon icon-service"></i>
+                                <h3>
+                                    <p>Высокий уровень сервиса</p>
+                                    <span>
+                                        Все услуги в одном месте: личный менеджер,
+                                        многофункциональная
+                                        платформа, поддержка 24/7, профессиональный ассортимент, аренда спецтехники,
+                                        доставка
+                                        на
+                                        объект
+                                        в нужное время.
+                                    </span>
+                                </h3>
+                            </div>
+                            <div class="basket-advantages__list d-f a-i-s">
+                                <i class="icon icon-goods"></i>
+                                <h3>
+                                    <p>Широкий ассортимент</p>
+                                    <span>
+                                        Большой выбор премиальных товаров от ведущих
+                                        производителей.
+                                        Все товары сертифицированы, мы контролируем качество при каждой поставке.
+                                    </span>
+                                </h3>
+                            </div>
+                            <div class="basket-advantages__list d-f a-i-s">
+                                <i class="icon icon-pay"></i>
+                                <h3>
+                                    <p>Удобная форма оплаты</p>
+                                    <span>
+                                        Оплата заказа корпоративной картой единовременно или в
+                                        рассрочку.
+                                    </span>
+                                </h3>
+                            </div>
+                            <div class="basket-advantages__list d-f a-i-s">
+                                <i class="icon icon-delivery"></i>
+                                <h3>
+                                    <p>Разные варианты доставки</p>
+                                    <span>
+                                        Доставка в течение 5 часов, к выбранному времени, самовывоз со
+                                        склада с 7.00 до 23.00, доставка манипулятором, подъем заказа.
+                                    </span>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- basket-authorization (авторизация) !isUserLoggedIn  END -->
+                    <!-- basket-decor (oформление) isUserLoggedIn  START-->
+                    <div class="basket-decor" *ngIf="isUserLoggedIn">
+                        <div class="basket-decor__tab">
+                            <div class="basket-decor__tab--list d-f j-c-b">
+                                <div class="basket-decor__tab--list-item change_active payment_click_remove active">
+                                    <span (click)="sidebarTabs(true)">Оформление</span>
+                                </div>
+                                <div class="basket-decor__tab--list-item change_active payment_click_add"
+                                     [ngClass]="{'disabled': !isConstructionObjectSelected}">
+                                    <span (click)="sidebarTabs(false)">Оплата заказа</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="basket-decor__content" [class.d_none]="sidebarTabToggle!==true">
+                            <!-- ДОСТАВКА & САМОВЫВОЗ start -->
+                            <div class="basket-decor__take">
+                                <div class="basket-decor__take--tab">
+                                    <div class="basket-decor__title">
+                                        <h2>{{deliveryNeeded2 ? 'ДОСТАВКА' : 'Самовывоз'}}</h2>
+                                    </div>
+                                    <div class="basket-decor__take--tab-list d-f a-i-c">
+                                        <div class="basket-decor__take--tab-list__item change_active active"
+                                             id="PickupOrder"
+                                             [class]="deliveryNeeded2 === false?'basket-decor__take--tab-list__item active active':'basket-decor__take--tab-list__item change_active'">
+                                            <label class="d-f a-i-c">
+                                                <i class="icon icon-pickup"></i>
+                                                <span>Самовывоз</span>
+                                                <i class="circle"></i>
+                                                <input class="d_none" type="radio" (click)="deliveryChanged2(false)">
+                                            </label>
+                                        </div>
+                                        <div class="basket-decor__take--tab-list__item change_active" id="DeliveryOrder"
+                                             [class]="deliveryNeeded2 === true?'basket-decor__take--tab-list__item active active':'basket-decor__take--tab-list__item change_active'">
+                                            <label class="d-f a-i-c">
+                                                <i class="icon icon-delivery"></i>
+                                                <span>Доставка</span>
+                                                <i class="circle"></i>
+                                                <input class="d_none" type="radio"
+                                                       [attr.checked]="deliveryNeeded2 === true"
+                                                       (click)="deliveryChanged2(true)">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- ДОСТАВКА start -->
+                                <ng-container *ngIf="deliveryNeeded2">
+                                    <div class="basket-decor__title">
+                                        <h2>Адрес доставки</h2>
+                                    </div>
+                                    <div class="basket-decor__object--select">
+                                        <div class="basket-decor__object--select-title">
+                                            <p>Выберите объект *</p>
+                                        </div>
+                                        <div class="dropdown">
+                                            <div class="d-f a-i-c dropdown-select window-click click-expand"
+                                                 data-expand="false">
+                                                <div class="dropdown-select__arrow dropdown-select__area d-f a-i-c j-c-b">
+                                                    <input type="text" autocomplete="off" placeholder="Поиск..."
+                                                           (keyup)="getConstructionObjects()" [(ngModel)]="searchQuery"
+                                                           class="input-expand border-0">
+                                                    <i class="new-icon new-icon-close-remove d-f a-i-c j-c-c"
+                                                       *ngIf="searchQuery" (click)="removeSearchQuery()"></i>
+                                                </div>
+                                                <i class="icon icon-arrow icon-arrow__bottom d-f a-i-c j-c-c "></i>
+                                            </div>
+                                            <ul class="compare-box__sidebar--select-list dropdown-list expand-block d_none scrollbar">
+                                                <ng-container *ngFor="let constructionObject of constructionObjects">
+                                                    <li class="dropdown-list__item"
+                                                        [class.active]="selectedConstructionObject === constructionObject"
+                                                        (click)="constructionObjectChange(constructionObject.id)">
+                                                        <p>{{ constructionObject.name }} </p>
+                                                        <span>{{ constructionObject.address }}</span>
+                                                    </li>
+                                                </ng-container>
+                                                <ng-container *ngIf="constructionObjects.length==0">
+                                                    <li class="dropdown-list__item d-f a-i-c">
+                                                        <p>Объекты строительства не найдены</p>
+                                                    </li>
+                                                </ng-container>
+
+                                                <select hidden [(ngModel)]="selectedConstructionObject"
+                                                        notFoundText="Список объектов пуст" name="selectListName">
+                                                    <option *ngFor="let constructionObject of constructionObjects"
+                                                            [value]="constructionObject">
+                                                        {{constructionObject.name}} {{constructionObject.address}}
+                                                    </option>
+                                                </select>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </ng-container>
+                                <!-- ДОСТАВКА end -->
+                                <!-- САМОВЫВОЗ start -->
+                                <ng-container>
+                                    <div class="basket-decor__object--select" *ngIf="!deliveryNeeded2">
+                                        <div class="basket-decor__object--select-title">
+                                            <p>Выберите пункт самовывоза</p>
+                                        </div>
+                                        <div class="select-filter sort-select__filter">
+                                            <div class="dropdown">
+                                                <div class="d-f a-i-c dropdown-select window-click click-expand"
+                                                     data-expand="false">
+                                                    <div class="dropdown-select__arrow dropdown-select__area d-f a-i-c j-c-b">
+                                                        <input type="text" autocomplete="off"
+                                                               placeholder="Пункт самовывоза" (keyup)="getDepots()"
+                                                               [(ngModel)]="selectedDepotName"
+                                                               class="input-expand border-0">
+                                                    </div>
+                                                    <i class="icon icon-arrow icon-arrow__bottom d-f a-i-c j-c-c "></i>
+                                                </div>
+                                                <ul class="compare-box__sidebar--select-list dropdown-list expand-block d_none scrollbar">
+                                                    <ng-container *ngFor="let depot of depots">
+                                                        <li class="dropdown-list__item"
+                                                            [class.active]="selectedDepot === depot"
+                                                            (click)="depotChange(depot.id)">
+                                                            <p>{{depot.name}} - {{ depot.address }} </p>
+                                                        </li>
+                                                    </ng-container>
+
+                                                    <ng-container *ngIf="depots.length==0">
+                                                        <li class="dropdown-list__item d-f a-i-c">
+                                                            <p>Пункты самовывоза не найдены</p>
+                                                        </li>
+                                                    </ng-container>
+
+                                                    <select hidden [(ngModel)]="selectedDepot"
+                                                            notFoundText="Список пунктов пуст" name="selectList">
+                                                        <option *ngFor="let depot of depots" [value]="depotId">
+                                                            {{depot.name}} - {{ depot.address }}
+                                                        </option>
+                                                    </select>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="basket-decor__warning d-f a-i-s">
+                                            <i class="new-icon new-icon-warning"></i>
+                                            <span class="basket-decor__warning--title">
+                                                Возможную дату самовывоза
+                                                уточняйте у вашего<br /> менеджера
+                                            </span>
+                                            <i class="new-icon new-icon-info tooltip"
+                                               *ngIf="message!=null && message.length > 0">
+                                                <ul class="tooltip-content tooltip-content__list triangle triangle-down">
+                                                    <li>
+                                                        {{message}}
+                                                    </li>
+                                                </ul>
+                                            </i>
+                                        </div>
+                                    </div>
+                                    <div class="basket-decor__object--select" *ngIf="!deliveryNeeded2">
+                                        <div class="basket-decor__object--select-title" *ngIf="hasAccessToAdd">
+                                            <p class="d-f a-i-c">
+                                                К какому объекту привязать заказ
+                                                <i class="new-icon new-icon-info tooltip">
+                                                    <ul class="tooltip-content tooltip-content__list triangle triangle-down">
+                                                        <li>
+                                                            Ваш заказ будет отображаться в статистике затрат<br> по
+                                                            объекту, будут
+                                                            доступны графики динамики<br> и распределения затрат
+                                                        </li>
+                                                    </ul>
+                                                </i>
+                                            </p>
+                                        </div>
+                                        <div class="select-filter sort-select__filter">
+                                            <div class="dropdown">
+                                                <div class="d-f a-i-c dropdown-select window-click click-expand"
+                                                     data-expand="false">
+                                                    <div class="dropdown-select__arrow dropdown-select__area d-f a-i-c j-c-b">
+                                                        <input type="text" autocomplete="off"
+                                                               placeholder="Выберите объект"
+                                                               (keyup)="getConstructionObjects()"
+                                                               [(ngModel)]="searchQueryForDepot"
+                                                               class="input-expand border-0">
+                                                        <i class="new-icon new-icon-close-remove d-f a-i-c j-c-c"
+                                                           *ngIf="searchQueryForDepot"
+                                                           (click)="removeSearchQueryForDepot()"></i>
+                                                    </div>
+                                                    <i class="icon icon-arrow icon-arrow__bottom d-f a-i-c j-c-c "></i>
+                                                </div>
+                                                <ul class="compare-box__sidebar--select-list dropdown-list expand-block d_none scrollbar">
+                                                    <ng-container *ngFor="let constructionObject of constructionObjects">
+                                                        <li class="dropdown-list__item"
+                                                            [class.active]="selectedConstructionObjectForDepot === constructionObject"
+                                                            (click)="constructionObjectChangeForDepot(constructionObject.id)">
+                                                            <p>{{ constructionObject.name }} </p>
+                                                            <span>{{ constructionObject.address }}</span>
+                                                        </li>
+                                                    </ng-container>
+
+                                                    <ng-container *ngIf="constructionObjects.length==0">
+                                                        <li class="dropdown-list__item d-f a-i-c">
+                                                            <p>Объекты строительства не найдены</p>
+                                                        </li>
+                                                    </ng-container>
+
+                                                    <select hidden [(ngModel)]="selectedConstructionObjectForDepot"
+                                                            notFoundText="Список объектов пуст" name="selectListName">
+                                                        <option *ngFor="let constructionObject of constructionObjects"
+                                                                [value]="constructionObject">
+                                                            {{constructionObject.name}} {{constructionObject.address}}
+                                                        </option>
+                                                    </select>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <!-- САМОВЫВОЗ end -->
+                            </div>
+
+
+                            <div class="basket-decor__object--create" *ngIf="hasAccessToAdd">
+                                <a class="a-i-c j-c-c" href="#" (click)="goToObjectsOnMap()">
+                                    <i class="icon icon-createPlus "></i>
+                                    <span>привязать к новому объекту</span>
+                                </a>
+                            </div>
+
+
+                            <!-- ДОСТАВКА start -->
+                            <div class="basket-decor__take--content" *ngIf="deliveryNeeded2">
+
+                                <div class="basket-decor__take--data">
+                                    <div class="basket-decor__object--select ng-select">
+                                        <div class="basket-decor__object--select-title">
+                                            <p class="disabled"> Дата *</p>
+                                        </div>
+                                        <div class="select-filter__date select-filter__input select-filter sort-select__filter d-f disabled"
+                                             [class]="selectedConstructionObject!=null && successfulResult ? 'select-filter__date select-filter__input select-filter sort-select__filter d-f':'select-filter__date select-filter__input select-filter sort-select__filter d-f disabled'">
+                                            <input name="dp" [(ngModel)]="selectedDate" ngbDatepicker #d="ngbDatepicker"
+                                                   (focus)="d.open()" (dateSelect)="dateRangeChanged(selectedDate)"
+                                                   (change)="deliveryDateRangeChanged(selectedDate)"
+                                                   [minDate]="currentDate()" class="border-0">
+                                            <span class="ng-arrow-wrapper"><span class="ng-arrow"></span></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="basket-decor__object--select">
+                                    <div class="basket-decor__object--select-title">
+                                        <p class="disabled"> Тип доставки *</p>
+                                    </div>
+                                    <div class="select-filter sort-select__filter">
+                                        <div class="dropdown">
+                                            <div class="d-f a-i-c dropdown-select window-click click-expand"
+                                                 [class]="selectedConstructionObject!=null  && successfulResult ? 'd-f a-i-c dropdown-select window-click click-expand':'d-f a-i-c dropdown-select window-click click-expand disabled'"
+                                                 data-expand="false">
+                                                <div class="dropdown-select__arrow dropdown-select__area d-f a-i-c j-c-b">
+                                                    <input type="text" autocomplete="off" placeholder="Тип доставки"
+                                                           [(ngModel)]="selectedDeliveryTypeName"
+                                                           class="input-expand border-0">
+                                                </div>
+                                                <i class="icon icon-arrow icon-arrow__bottom d-f a-i-c j-c-c "></i>
+                                            </div>
+                                            <ul class="compare-box__sidebar--select-list dropdown-list expand-block d_none scrollbar">
+                                                <ng-container *ngFor="let deliveryTypeModel of availableDeliveryTypeModels">
+                                                    <li (click)="selectDeliveryType(deliveryTypeModel.key)"
+                                                        class="dropdown-list__item"
+                                                        [class.active]="key === deliveryTypeModel.key">
+                                                        <p> {{deliveryTypeModel.name}}</p>
+                                                    </li>
+                                                </ng-container>
+
+                                                <select hidden [(ngModel)]="key" notFoundText="Список объектов пуст"
+                                                        name="selectedListName">
+                                                    <option [value]="deliveryTypeModel.key"
+                                                            *ngFor="let deliveryTypeModel of availableDeliveryTypeModels">
+                                                        {{deliveryTypeModel.name}}
+                                                    </option>
+                                                </select>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="basket-decor__object--select">
+                                    <div class="basket-decor__object--select-title">
+                                        <p class="disabled"> Период времени *</p>
+                                    </div>
+                                    <div class="select-filter sort-select__filter">
+                                        <div class="dropdown">
+                                            <div class="d-f a-i-c dropdown-select window-click click-expand"
+                                                 [class]="selectedConstructionObject!=null  && successfulResult ? 'd-f a-i-c dropdown-select window-click click-expand':'d-f a-i-c dropdown-select window-click click-expand disabled'"
+                                                 data-expand="false">
+                                                <div class="dropdown-select__arrow dropdown-select__area d-f a-i-c j-c-b">
+                                                    <input type="text" autocomplete="off"
+                                                           placeholder="Интервал доставки"
+                                                           [(ngModel)]="selectedIntervalName"
+                                                           class="input-expand border-0">
+                                                </div>
+                                                <i class="icon icon-arrow icon-arrow__bottom d-f a-i-c j-c-c "></i>
+                                            </div>
+                                            <ul class="compare-box__sidebar--select-list dropdown-list expand-block d_none scrollbar">
+                                                <ng-container *ngFor="let interval of intervals">
+                                                    <li (click)="selectInterval(interval)" class="dropdown-list__item"
+                                                        [class.active]="selectedInterval === interval">
+                                                        <p>
+                                                            с {{interval.from | date: "shortTime"}}
+                                                            до {{interval.to |  date: "shortTime"}}
+                                                        </p>
+                                                    </li>
+                                                </ng-container>
+
+                                                <select hidden [(ngModel)]="selectedInterval"
+                                                        notFoundText="Список объектов пуст" name="selectedIntervalListName">
+                                                    <option *ngFor="let interval of intervals" [value]="interval">
+                                                        с {{interval.from | date: "shortTime"}}
+                                                        до {{interval.to |  date: "shortTime"}}
+                                                    </option>
+                                                </select>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ДОСТАВКА end -->
+                            <div class="basket-decor__take--content"
+                                 *ngIf="!successfulResult && isConstructionObjectSelected && deliveryNeeded2">
+                                <div class="basket-authorization__title">
+                                    <p>
+                                        <i class="icon icon-exclamatory icon-exclamatory__authorization"></i>
+                                        <span>
+                                            Автоматический расчёт доставки для данного заказа невозможен, менеджер
+                                            свяжется
+                                            с
+                                            вами
+                                            после оформления заказа для уточнения деталей доставки
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+
+
+                            <div class="basket-decor__btn btn-global ">
+                                <button id="changeTabButton" class="btn-global__red payment_click" type="button"
+                                        (click)="changeTab()"
+                                        [disabled]="(deliveryNeeded2 && !selectedConstructionObject) || (!deliveryNeeded2 && !selectedDepot)">
+                                    Перейти к оплате
+                                </button>
+                            </div>
+
+                            <!-- ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ start -->
+                            <div class="basket-decor__services" *ngIf="deliveryNeeded2">
+                                <div class="basket-decor__title">
+                                    <h2>ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ</h2>
+                                </div>
+                                <div class="checkbox-floor">
+                                    <label class="checkbox d-f a-i-c">
+                                        <input id="riseToFloorCheckbox" class="d_none" type="checkbox"
+                                               name="rise-to-floor" [checked]="lifting" (click)="liftingChanged($event)" />
+                                        <i class="icon icon-checkmark checkbox-checkmark d-f a-i-c j-c-c"></i>
+                                        <span class="checkbox-name">Подъем на этаж</span>
+                                    </label>
+
+                                    <div class="basket-decor__services--indicate" *ngIf="lifting && deliveryNeeded2">
+                                        <div class="basket-decor__object--select-title">
+                                            <p> Укажите этаж</p>
+                                        </div>
+                                        <div class="basket-decor__services--indicate-content d-f a-i-c j-c-b">
+                                            <div class="basket-decor__services--indicate-content__floor d-f a-i-c">
+                                                <div class="basket-decor__services--indicate-content__floor--write">
+                                                    <input id="floorNumericbox" type="number" [(ngModel)]="floor"
+                                                           (change)="changeFloor()" />
+                                                </div>
+                                                <div class="indicate-floor" *ngIf="deliveryNeeded2">
+                                                    <label class="checkbox d-f a-i-c">
+                                                        <input id="serviceLiftCheckbox" class="d_none" type="checkbox"
+                                                               name="service-lift" [checked]="cargoLift"
+                                                               [(ngModel)]="cargoLift" (change)="changeCargo()" />
+                                                        <i class="icon icon-checkmark checkbox-checkmark d-f a-i-c j-c-c"></i>
+                                                        <span class="checkbox-name">Грузовой лифт</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="basket-decor__services--indicate-content__price d-f a-i-c">
+                                                <span *ngIf="isValueInteger(liftingPrice)">{{liftingPrice | fractionSizeSpace}} ₽</span>
+                                                <span *ngIf="!isValueInteger(liftingPrice)">{{liftingPrice.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="basket-decor__price">
+                                    <ul class="basket-decor__price--list">
+                                        <li class="basket-decor__price--list-item d-f a-i-c j-c-b">
+                                            <h4>Итого по товарам</h4>
+                                            <p class="basket-decor__services--indicate-content__price d-f a-i-c">
+                                                <span *ngIf="isValueInteger(totalCostModel.totalCost)">{{totalCostModel.totalCost | fractionSizeSpace}} ₽</span>
+                                                <span *ngIf="!isValueInteger(totalCostModel.totalCost)">{{totalCostModel.totalCost.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                            </p>
+                                        </li>
+                                        <li class="basket-decor__price--list-item d-f a-i-c j-c-b"
+                                            *ngIf="deliveryNeeded2==true">
+                                            <h4> Доставка</h4>
+                                            <p class="basket-decor__services--indicate-content__price d-f a-i-c">
+                                                <span *ngIf="isValueInteger(deliveryPrice)">{{deliveryPrice | fractionSizeSpace}} ₽</span>
+                                                <span *ngIf="!isValueInteger(deliveryPrice)">{{deliveryPrice.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                            </p>
+                                        </li>
+                                        <li class="basket-decor__price--list-item basket-decor__price--list-item__bold d-f a-i-c j-c-b">
+                                            <h4> Итоговая сумма:</h4>
+                                            <p class="basket-decor__services--indicate-content__price d-f a-i-c">
+                                                <span *ngIf="isValueInteger(orderTotalPrice)">{{orderTotalPrice | fractionSizeSpace}} ₽</span>
+                                                <span *ngIf="!isValueInteger(orderTotalPrice)">{{orderTotalPrice.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ end -->
+
+                        </div>
+
+                        <!-- Перейти к оплате start -->
+                        <div class="basket-decor__total" [class.d_none]="sidebarTabToggle!==false">
+                            <div class="basket-decor__price basket-decor__total--price">
+                                <ul class="basket-decor__price--list" id="PriceList">
+                                    <li class="basket-decor__price--list-item d-f a-i-c j-c-b">
+                                        <h4> Стоимость товара</h4>
+                                        <p class="basket-decor__services--indicate-content__price d-f a-i-c">
+                                            <span *ngIf="isValueInteger(totalCostModel.totalCost - totalCostModel.totalTintPrice)">{{totalCostModel.totalCost - totalCostModel.totalTintPrice | fractionSizeSpace}} ₽</span>
+                                            <span *ngIf="!isValueInteger(totalCostModel.totalCost - totalCostModel.totalTintPrice)">{{(totalCostModel.totalCost - totalCostModel.totalTintPrice).toFixed(2) | fractionSizeSpace}} ₽</span>
+                                        </p>
+                                    </li>
+                                    <li *ngIf="deliveryNeeded2==true"
+                                        class="basket-decor__price--list-item d-f a-i-c j-c-b">
+                                        <h4> Доставка</h4>
+                                        <p class="basket-decor__services--indicate-content__price d-f a-i-c">
+                                            <span *ngIf="isValueInteger(deliveryPrice)">{{deliveryPrice | fractionSizeSpace}} ₽</span>
+                                            <span *ngIf="!isValueInteger(deliveryPrice)">{{deliveryPrice.toFixed(2) | fractionSizeSpace}} ₽</span>
+
+                                        </p>
+                                    </li>
+                                    <li *ngIf="deliveryNeeded2==true"
+                                        class="basket-decor__price--list-item d-f a-i-c j-c-b">
+                                        <h4> Подъем</h4>
+                                        <p class="basket-decor__services--indicate-content__price d-f a-i-c">
+                                            <span *ngIf="ligting">
+                                                <span *ngIf="isValueInteger(liftingPrice)">{{liftingPrice | fractionSizeSpace}} ₽</span>
+                                                <span *ngIf="!isValueInteger(liftingPrice)">{{liftingPrice.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                            </span>
+                                            <span *ngIf="!ligting">0 ₽</span>
+                                        </p>
+                                    </li>
+                                    <li class="basket-decor__price--list-item basket-decor__price--list-item__bold d-f a-i-c j-c-b">
+                                        <h4> Итоговая сумма:</h4>
+                                        <p class="basket-decor__services--indicate-content__price d-f a-i-c">
+                                            <span *ngIf="isValueInteger(orderTotalPrice)">{{orderTotalPrice | fractionSizeSpace}} ₽</span>
+                                            <span *ngIf="!isValueInteger(orderTotalPrice)">{{orderTotalPrice.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="basket-decor__total--way">
+                                <div class="basket-decor__title" id="BasketDecor">
+                                    <h2>Выберите способ оплаты</h2>
+                                </div>
+                                <div class="basket-decor__total--way-radio" *ngIf="paymentInfo">
+                                    <ul>
+                                        <li *ngFor="let availablePaymentMethod of availablePaymentMethodModels">
+                                            <label class="checkbox d-f a-i-c">
+                                                <input id="PaymentMethod{{availablePaymentMethod.key}}" type="radio"
+                                                       class="d_none" name="compare"
+                                                       [disabled]="(isDefferedPaymentType(availablePaymentMethod.key) && !paymentInfo.deferredPaymentAvailable) || (isBalancePaymentType(availablePaymentMethod.key) && !paymentInfo.balanceAvailable)"
+                                                       [checked]="paymentMethod == availablePaymentMethod.key"
+                                                       (click)="paymentChanged(availablePaymentMethod.key)" />
+                                                <i class="checkbox-radio d-f a-i-c j-c-c"></i>
+                                                <span class="checkbox-name">{{availablePaymentMethod.name}}</span>
+                                                <i class="new-icon new-icon-info tooltip"
+                                                   *ngIf="(isDefferedPaymentType(availablePaymentMethod.key) && !paymentInfo.deferredPaymentAvailable) || (isBalancePaymentType(availablePaymentMethod.key) && !paymentInfo.balanceAvailable)">
+                                                    <ul class="tooltip-content tooltip-content__list triangle triangle-down">
+                                                        <li class="d-f a-i-c j-c-b">
+                                                            Сумма заказа превышает остаток вашего<br /> кредитного
+                                                            лимита, выберите
+                                                            другой способ оплаты.
+                                                        </li>
+                                                    </ul>
+                                                </i>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Выберите отсрочку start -->
+                            <div *ngIf="isDeferredPaymentChecked && paymentInfo.deferredPaymentAvailable">
+                                <!--<div class="basket-authorization__title ng-star-inserted">
+                                   <p>
+                                      <i class="icon icon-exclamatory icon-exclamatory__authorization"></i>
+                                      <span>В рассрочку можно оплатить заказ не превышающий сумму доступного
+                                         лимита</span>
+                                   </p>
+                                </div>-->
+                                <div class="basket-decor__object--select">
+                                    <div class="basket-decor__object--select-title" id="BasketDecorObject">
+                                        <p> Выберите отсрочку</p>
+                                    </div>
+                                    <div class="select-filter sort-select__filter">
+                                        <ng-select [searchable]="false" notFoundText="Отсрочки не найдены"
+                                                   [clearable]="false" [(ngModel)]="selectedCreditLimitId"
+                                                   (change)="selectCreditLimit()">
+                                            <ng-option *ngFor="let availableCreditLimit of availableCreditLimits"
+                                                       [value]="availableCreditLimit.id">
+                                                {{availableCreditLimit.purpose.replace("&nbsp;", " ").replace("&nbsp;", " ")}},
+                                                {{availableCreditLimit.availableFunds}} ₽
+                                            </ng-option>
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class="basket-decor__price--list-item basket-decor__price--list-item__bold d-f a-i-c j-c-b"
+                                     id="BasketDecorPrice">
+                                    <h4> Остаток лимита:</h4>
+                                    <p class="basket-decor__services--indicate-content__price d-f a-i-c">
+                                        <span> {{creditLimitBalance.toFixed(2) | fractionSizeSpace}} ₽</span>
+
+                                    </p>
+                                </div>
+                                <!--<div class="basket-authorization__title ng-star-inserted">
+                                   <p>
+                                      <i class="icon icon-exclamatory icon-exclamatory__authorization"></i>
+                                      <span>Вы можете оплатить им другие заказы</span>
+                                   </p>
+                                </div>-->
+                            </div>
+                            <!-- Выберите отсрочку end -->
+
+                            <div class="basket-decor__btn btn-global">
+                                <button id="createOrderButton" type="button"
+                                        [disabled]="isSaving || (deliveryNeeded2 && selectedConstructionObject==null) || (!deliveryNeeded2 && selectedDepot==null) || (paymentInfo && isDefferedPaymentType(paymentMethod) && !paymentInfo.deferredPaymentAvailable)"
+                                        (click)="createOrder()" class="btn-global__red">
+                                    ЗАКАЗАТЬ
+                                </button>
+                            </div>
+
+                        </div>
+                        <!-- Перейти к оплате end -->
+                        <!--</div>-->
+                        <!-- basket-decor (oформление) isUserLoggedIn  END-->
+
+                        <div class="basket-info__return d_none">
+                            <span class="basket-info__return--btn d-f j-c-c a-i-c">
+                                Вернуться к списку
+                                товаров
+                            </span>
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- ЗАДОЛЖЕННОСТЬ start -->
+
+                <div class="basket-info" *ngIf="isLoaded && latePaymentsGroups && latePaymentsGroups.length>=1">
+                    <div class="basket-decor__debt">
+                        <div class="basket-authorization__title ng-star-inserted">
+                            <p>
+                                <i class="icon icon-exclamatory icon-exclamatory__authorization"></i>
+                                <span>
+                                    Невозможно оформить новый заказ, у вас
+                                    есть задолженность по оплате. Для погашения
+                                    задолженности свяжитесь с менеджером.
+                                </span>
+                            </p>
+                        </div>
+
+                        <div class="basket-decor__debt--cnt">
+                            <div class="basket-decor__debt--cnt-box"
+                                 *ngFor="let latePaymentsGroup of latePaymentsGroups">
+                                <div class="basket-decor__debt--cnt-box__deferment">
+                                    <div class="basket-decor__debt--cnt-box__deferment--title">
+                                        <span>ОТСРОЧКА</span>
+                                    </div>
+                                    <div class="basket-decor__debt--cnt-box__deferment--info d-f a-i-c">
+                                        <p>{{latePaymentsGroup.purpose}}</p>
+                                        <span>{{latePaymentsGroup.documentNumber}}</span>
+                                    </div>
+                                </div>
+                                <div class="basket-decor__debt--cnt-box__info"
+                                     *ngFor="let latePayment of latePaymentsGroup.latePayments">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>№ ЗАКАЗА</th>
+                                                <th>ОБЩАЯ СУММА</th>
+                                                <th>ЗАДОЛЖЕННОСТЬ</th>
+                                                <th>Оплатить до</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <h4>Заказ</h4>
+                                                    <a href="#">{{latePayment.orderNumber}}</a>
+                                                </td>
+                                                <td>
+                                                    <p class="d-f a-i-c">
+                                                        <span>{{latePayment.orderTotalCost}} ₽</span>
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <p class="d-f a-i-c">
+                                                        <span class="global_color">{{latePayment.debt}} ₽</span>
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <p class="d-f a-i-c">
+                                                        <span class="global_color">
+                                                            {{latePayment.payBefore | date: "shortDate"}}
+                                                        </span> <i class="icon icon-exclamatory global_color"></i>
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ЗАДОЛЖЕННОСТЬ end -->
+            </div>
+        </div>
+    </div>
+
+    <div class="downloaded d-f a-i-c" *ngIf="showDownloadStatusBar">
+        <div class="downloaded-box">
+            <svg class="downloaded-box__load">
+                <circle r="17" cx="17" cy="17" [style.stroke-dashoffset]="bar" class="downloaded-box__load--circle">
+                </circle>
+            </svg>
+            <i *ngIf="progress >= 100" class="downloaded-box__icon new-icon new-icon new-icon-added"></i>
+            <i *ngIf="progress <= 99" class="downloaded-box__icon new-icon new-icon-downloaded"></i>
+        </div>
+        <p *ngIf="progress <= 99" class="downloaded-text">Файл скачивается</p>
+        <p *ngIf="progress >= 100" class="downloaded-text">Файл загружен</p>
+    </div>
+
+
+
+
+
+
+
+
+
+
+    
+    <div style="position: absolute; left: -1000px; top: 0;">
+        <kendo-pdf-export #pdf paperSize="A4" margin="2,8cm" multiPage="true" [repeatHeaders]="false" [scale]="0.8">
+            <table style="width:95%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0; background-color: #fff; margin-left: auto; margin-right: auto;"
+                   cellpadding="0" cellspacing="0" *ngIf="isLoaded && showPdf">
+                <tbody>
+                    <tr>
+                        <td style="padding: 15px 30px;  background-color: #fff;">
+                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                   cellpadding="0" cellspacing="0">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 0;">
+                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                                   cellpadding="0" cellspacing="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:170px; height: 93px;">
+                                                            <img src="../../assets/img/pdf/new-logo.png"
+                                                                 style="width: 170px; height: 93px;" width="170px"
+                                                                 height="93px" alt="logo" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 0;" width="100%"></td>
+                                        <td style="padding: 0;">
+                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                                   cellpadding="0" cellspacing="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:227px; height: 104px;">
+                                                            <img src="../../assets/img/pdf/info.png"
+                                                                 style="width: 227px; height: 104px;" width="227px"
+                                                                 height="104px" alt="logo" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 25px 30px; background-color: rgb(230, 230, 230);">
+                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                   cellpadding="0" cellspacing="0">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 0;">
+                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                                   cellpadding="0" cellspacing="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="padding: 0;">
+                                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="font-size: 10px; color: #000; padding: 0;">
+                                                                            Наш
+                                                                            сайт:
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td style="padding: 0;">
+                                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="padding: 0;">
+                                                                            <a href="https://b2b.maxipro.ru/" target="_blank"
+                                                                               style="font-size: 10px; color: #0000ff; text-decoration: underline; padding: 0;">b2b.maxipro.ru</a>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="padding: 0;">
+                                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="font-size: 10px; color: #000; padding: 0;">
+                                                                            Связаться с нами:
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td style="padding: 0;">
+                                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="padding: 0;">
+                                                                            <a href="b2b.maxipro.ru" target="_blank"
+                                                                               style="font-size: 10px; color: #000; padding: 0;">
+                                                                                +7
+                                                                                (499) 391-40-40
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="padding: 0;">
+                                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="font-size: 10px; color: #000; padding: 0;">
+                                                                            Адрес:
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td style="padding: 0;">
+                                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="padding: 0;">
+                                                                            <span style="font-size: 10px; color: #000;">
+                                                                                115162, г. Москва, ул. Шаболовка,
+                                                                                31А
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 0;">
+                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                                   cellpadding="0" cellspacing="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="padding: 0;">
+                                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style=" padding: 0;">
+                                                                            <span style="font-size: 10px; color: #000; border-bottom: 1px solid transparent;">
+                                                                                Ваш
+                                                                                персональный менеджер:
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td style="padding: 0;">
+                                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="padding: 0;">
+                                                                            <span style="font-size: 10px; color: #000; ">
+                                                                                {{managerNameForPDF}}
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="padding: 0;">
+                                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="padding: 0;">
+                                                                            <a href="b2b.maxipro.ru" target="_blank"
+                                                                               style="font-size: 10px;  color: #000; padding: 0;">{{managerPhoneNumberForPdf}}</a>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="padding: 0;">
+                                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="padding: 0;">
+                                                                            <a [attr.href]="'mailto:' + managerEmailForPdf" target="_blank"
+                                                                               style="font-size: 10px; color: #0000ff; text-decoration: underline; padding: 0;">{{managerEmailForPdf}}</a>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 15px 25px 45px 25px; background-color: rgb(230, 230, 230);">
+                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                   cellpadding="0" cellspacing="0">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 0;">
+                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                                   cellpadding="0" cellspacing="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="padding: 0;">
+                                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="padding: 0;">
+                                                                            <span style="font-size: 17px; color: #a6093d;">
+                                                                                Коммерческое
+                                                                                предложение от {{currentDateForPdf | date: shortDate}} для {{companyNameForPdf}}
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0;">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table style="width:95%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;  margin-left: auto; margin-right: auto;"
+                   cellpadding="0" cellspacing="0" *ngIf="isLoaded && showPdf">
+                <thead>
+                    <tr>
+                        <th style="padding: 15px 5px; width: 115px; text-align: center; background-color: #3f3f3f; border: 1px solid #010101;">
+                            <span style="font-size: 10px; text-transform: uppercase; color: #ffff;">ФОТО</span>
+                        </th>
+                        <th style="padding: 15px 5px;  text-align: center; background-color: #3f3f3f; border: 1px solid #010101;">
+                            <span style="width: 80px; display: block; font-size: 10px; text-transform: uppercase; color: #ffff;">
+                                НАИМЕНОВАНИЕ
+                                <br />
+                                ТОВАРА
+                            </span>
+                        </th>
+                        <th style="padding: 15px 5px; text-align: center; background-color: #3f3f3f; border: 1px solid #010101;">
+                            <span style="font-size: 10px; text-transform: uppercase; color: #ffff;">АРТИКУЛ</span>
+                        </th>
+                        <th style="padding: 15px 5px; text-align: center; background-color: #3f3f3f; border: 1px solid #010101;">
+                            <span style="font-size: 10px; text-transform: uppercase; color: #ffff;">ЦЕНА</span>
+                        </th>
+                        <th style="padding: 15px 5px; text-align: center; background-color: #3f3f3f; border: 1px solid #010101;">
+                            <span style="font-size: 10px; text-transform: uppercase; color: #ffff;">КОЛ-ВО</span>
+                        </th>
+                        <th style="padding: 15px 5px; text-align: center; background-color: #3f3f3f; border: 1px solid #010101;">
+                            <span style="font-size: 10px; text-transform: uppercase; color: #ffff;">
+                                ЕДИНИЦА
+                                <br />
+                                ИЗМЕРЕНИЯ
+                            </span>
+                        </th>
+                        <th style="padding: 15px 5px;  text-align: center; background-color: #a6093d; border: 1px solid #010101;">
+                            <span style="font-size: 10px; text-transform: uppercase; color: #ffff;">СУММА</span>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <ng-container *ngFor="let group of activeBasket?.groups; let groupIndex = index">
+                        <ng-container *ngFor="let item of group.orderItems; let itemIndex = index">
+                            <tr [style.background-color]="isGrey() ? 'white' : '#F5F5F5'">
+                                <td style="padding: 15px 5px; width: 115px; height: 115px; border: 1px solid #bcbcbc;">
+                                    <img *ngIf="item.productMainImageUrl; else defaultImgTemplate"
+                                         [src]="cloudinaryHelper.getImageUrl(item.productMainImageUrl, 220, 220)"
+                                         alt="img" />
+                                    <ng-template #defaultImgTemplate>
+                                        <img *ngIf="!item.productMainImageUrl"
+                                             src="/assets/img/product-default-image.jpg" alt="product default image"
+                                             style="width: 150px; height: 150px" />
+                                    </ng-template>
+                                </td>
+                                <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">
+                                    <span style="width: 80px; display: block; font-size: 12px; color: #000; line-height: 12px; word-break: break-word;">
+                                        {{item.productName}}
+                                    </span>
+                                </td>
+                                <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">
+                                    <span style="font-size: 12px; color: #000;"> {{item.vendorCode}}</span>
+                                </td>
+                                <td style="padding: 5px; text-align: center; border: 1px solid #bcbcbc;">
+                                    <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                           cellpadding="0" cellspacing="0">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 0 3px 0 0; text-align: right;">
+                                                    <span>
+                                                        {{ item.specialPrice.toFixed(2) | fractionSizeSpace }}
+                                                    </span>
+                                                </td>
+                                                <td style="padding: 0; width: 9px; height: 9px; text-align: left;">
+                                                    <img src="../../assets/img/pdf/ruble.svg"
+                                                         style="width: 9; height: 9px;"
+                                                         width="9px" height="9px" alt="rub">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">
+                                    <span style="font-size: 12px; color: #000;">{{item.quantity}}</span>
+                                </td>
+                                <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">
+                                    <span style="font-size: 12px; color: #000;"> {{item.unitOfMeasurementNameByQuantity}}</span>
+                                </td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #bcbcbc;">
+                                    <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                           cellpadding="0" cellspacing="0">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 0 3px 0 0; text-align: right;">
+                                                    <span style="font-size: 12px; color: #000; white-space: nowrap;">
+                                                        {{(item.quantity * item.specialPrice).toFixed(2) | fractionSizeSpace}}
+                                                    </span>
+                                                </td>
+                                                <td style="padding: 0; width: 9px; height: 9px; text-align: left;">
+                                                    <img src="../../assets/img/pdf/ruble.svg"
+                                                         style="width: 9; height: 9px;"
+                                                         width="9px" height="9px" alt="rub">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr *ngIf="item.canBeColored && item.tintColor!=null" style="font-size:11px">
+                                <td style="padding: 15px 5px; width: 115px; border: 1px solid #bcbcbc;">Дополнительные услуги</td>
+                                <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">КОЛЕРОВКА</td>
+                                <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">{{item.tintColor}}</td>
+                                <td style="padding: 5px; text-align: center; border: 1px solid #bcbcbc;">
+                                    <table>
+                                    <tbody>
+                                    <tr>
+                                        <td style="padding: 0 5px 0 0;  text-align: right;">
+                                            <span style="color: #000;">
+                                                {{item.tintPriceForUnit.toFixed(2)| fractionSizeSpace }}
+                                            </span>
+                                        </td>
+                                        <td style="padding: 0; width: 9px; height: 9px; text-align: left;">
+                                            <img src="../../assets/img/pdf/ruble.svg"
+                                                 style="width: 9; height: 9px;"
+                                                 width="9px" height="9px"
+                                                 alt="rub">
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                </td>
+                                <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">{{item.volumeLitre}}</td>
+                                <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">литр</td>
+                                <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">
+                                    <table>
+                                        <tbody>
+                                        <tr>
+                                            <td style="padding: 0 5px 0 0;  text-align: right;">
+                                            <span style="color: #000;">
+                                                {{item.tintPrice.toFixed(2)| fractionSizeSpace }}
+                                            </span>
+                                            </td>
+                                            <td style="padding: 0; width: 9px; height: 9px; text-align: left;">
+                                                <img src="../../assets/img/pdf/ruble.svg"
+                                                     style="width: 9; height: 9px;"
+                                                     width="9px" height="9px"
+                                                     alt="rub">
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </ng-container>
+
+                    </ng-container>
+                </tbody>
+            </table>
+            
+            <table style="width:95%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;  margin-left: auto; margin-right: auto;"
+                   cellpadding="0" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td style="padding: 0; border: 1px solid #010101;">
+                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 5px 5px 5px 25px;">
+                                            <span style="font-size: 12px; color: #000; ">ВСЕГО ПОЗИЦИИ</span> {{ totalCostModel.productsQuantity | fractionSizeSpace}}
+                                        </td>
+                                        <td style="padding: 5px;">
+                                            <span style="font-size: 12px; color: #000;">
+                                                ОБЩИЙ ВЕС {{ totalCostModel.totalWeight.toFixed(2) | fractionSizeSpace }} кг
+                                            </span>
+                                        </td>
+                                        <td style="padding: 5px;">
+                                            <table>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="padding: 0 5px 0 0;  text-align: right;">
+                                                            <span style="font-size: 12px; color: #000;  font-weight: bold;">
+                                                                {{ totalCostModel.totalCost.toFixed(2) | fractionSizeSpace }}
+                                                            </span>
+                                                        </td>
+                                                        <td style="padding: 0; width: 9px; height: 9px; text-align: left;">
+                                                            <img src="../../assets/img/pdf/ruble.svg"
+                                                                 style="width: 9; height: 9px;"
+                                                                 width="9px" height="9px"
+                                                                 alt="rub">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table style="width:95%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0; background-color: #fff; margin-left: auto; margin-right: auto;"
+                   cellpadding="0" cellspacing="0" *ngIf="isLoaded && showPdf">
+                <tbody>
+
+                    <tr>
+                        <td style="padding: 25px; background-color: rgb(255, 255, 255);">
+                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                   cellpadding="0" cellspacing="0">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 0;">
+                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                                   cellpadding="0" cellspacing="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="padding: 0;">
+                                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="padding: 0;">
+                                                                            <span style="font-size: 12px; color: #000;">
+                                                                                Коммерческое
+                                                                                предложение
+                                                                                действительно в течение 3-х календарных
+                                                                                дней (до
+                                                                                {{afterDateForPdf | date: shortDate}})
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0 0 25px 25px; background-color: rgb(255, 255, 255);">
+                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                   cellpadding="0" cellspacing="0">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 0;">
+                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                                   cellpadding="0" cellspacing="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="padding: 0;">
+                                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="padding: 0;">
+                                                                            <span style="font-size: 10px; color: #000;">
+                                                                                ООО
+                                                                                «ПРО ВОСТОК»
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="padding: 5px 0 0 0;">
+                                                                            <span style="font-size: 10px; color: #000;">
+                                                                                тел.:
+                                                                                8 (495)
+                                                                                961-01-60
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="padding: 5px 0 0 0;">
+                                                                            <span style="font-size: 10px; color: #000;">
+                                                                                Юридический
+                                                                                адрес:
+                                                                                115162, г. Москва, ул. Шаболовка, д. 31,
+                                                                                стр. 23, эт. 2, пом.
+                                                                                2
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="padding: 5px 0 0 0;">
+                                                                            <span style="font-size: 10px; color: #000;">
+                                                                                Фактический
+                                                                                адрес:
+                                                                                115162, г. Москва, ул. Шаболовка, д. 31,
+                                                                                стр. 23, эт. 2, пом.
+                                                                                2
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 0 25px 25px; background-color: rgb(255, 255, 255);">
+                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                   cellpadding="0" cellspacing="0">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 0;">
+                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                                   cellpadding="0" cellspacing="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="padding: 0;">
+                                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="padding: 0;">
+                                                                            <span style="font-size: 10px; color: #000;">
+                                                                                ИНН:
+                                                                                7725498851 / КПП:
+                                                                                772501001
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="padding: 5px 0 0 0;">
+                                                                            <span style="font-size: 10px; color: #000;">
+                                                                                ОГРН
+                                                                                1187746914959
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="padding: 5px 0 0 0;">
+                                                                            <span style="font-size: 10px; color: #000;">
+                                                                                ОКПО
+                                                                                34082920
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 0 0 25px; background-color: rgb(255, 255, 255);">
+                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                   cellpadding="0" cellspacing="0">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 0;">
+                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                                   cellpadding="0" cellspacing="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="padding: 0;">
+                                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="padding: 0;">
+                                                                            <span style="font-size: 10px; color: #000;">
+                                                                                Банковские
+                                                                                реквизиты:
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="padding: 5px 0 0 0;">
+                                                                            <span style="font-size: 10px; color: #000;">
+                                                                                P/с
+                                                                                №40702810300000097055
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="padding: 5px 0 0 0;">
+                                                                            <span style="font-size: 10px; color: #000;">
+                                                                                Банк:
+                                                                                «Райффайзенбанк»
+                                                                                (АО «Райффайзенбанк»)
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="padding: 5px 0 0 0;">
+                                                                            <span style="font-size: 10px; color: #000;">
+                                                                                к/c
+                                                                                №
+                                                                                30101810200000000700
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="padding: 5px 0 0 0;">
+                                                                            <span style="font-size: 10px; color: #000;">
+                                                                                БИК
+                                                                                044525700
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 15px 30px;  background-color: #fff;">
+                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                   cellpadding="0" cellspacing="0">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 0;">
+                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                                   cellpadding="0" cellspacing="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="padding: 0; width: 29px; height: 40px;">
+                                                            <img src="../../assets/img/pdf/mini-logo.png"
+                                                                 style="width: 29px; height: 40px;" width="29px"
+                                                                 height="40px" alt="logo" />
+                                                        </td>
+                                                        <td style="padding: 0 0 0 5px; vertical-align: bottom;">
+                                                            <span style="font-size: 11px; color: rgb(147, 147, 147); white-space: nowrap;">
+                                                                МаксиПРО – проект Леруа Мерлен
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 0;" width="100%"></td>
+                                        <td style="padding: 0;">
+                                            <table style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                                   cellpadding="0" cellspacing="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:106px; height: 53px;">
+                                                            <img src="../../assets/img/pdf/LM-Base.png"
+                                                                 style="width: 106px; height: 53px;" width="106px"
+                                                                 height="53px" alt="logo" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </kendo-pdf-export>
+
+    </div>

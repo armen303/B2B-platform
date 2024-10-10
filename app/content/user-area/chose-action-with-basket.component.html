@@ -1,0 +1,20 @@
+<div class="modal-container">
+   <span class="icon icon-close icon-close__modal" (click)="dialogRef.close()"></span>
+   <div class="modal-title">
+      <p>В вашей основной корзине уже есть товары, что с ними сделать?</p>
+   </div>
+
+   <div class="d-f">
+      <div class="modal-box__btn btn-global">
+         <button type="button" class="btn-global__red" (click)="remove()">УДАЛИТЬ, ОНИ НЕ НУЖНЫ</button>
+      </div>
+      <div class="modal-box__btn btn-global btn-global__green">
+         <button type="button"  (click)="combine()">ОБЪЕДИНИТЬ С
+            ЗАГРУЖАЕМЫМИ</button>
+      </div>
+   </div>
+
+   <div class="modal-box__btn btn-global btn-global__gray">
+      <button type="button"  (click)="save(); dialogRef.close()">ОТЛОЖИТЬ ИХ</button>
+   </div>
+</div>

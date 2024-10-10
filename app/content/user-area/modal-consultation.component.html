@@ -1,0 +1,21 @@
+﻿<div class="consultation-modal modal-content__box animate_show_fadeIn">
+    <div class="consultation-modal__container">
+        <span class="icon icon-close icon-close__modal" (click)="activeModal.dismiss()"></span>
+        <div class="consultation-modal__container--title">
+            <h2>Запись на онлайн <br> консультацию</h2>
+        </div>
+        <form class="consultation-modal__container--form" #supportForm="ngForm">
+            <div class="consultation-modal__container--form-input">
+                <input type="text" name="nameInput" [(ngModel)]="name" placeholder="Имя*" autocomplete="off" required />
+            </div>
+            <div class="consultation-modal__container--form-input"
+                 [class.required]="fieldIsEmpty(phoneNumberRef) || !phoneNumberIsValid">
+                <input #phoneNumberRef="ngModel" name="phoneNumber"  type="text" (input)="setCorrectPhoneNumber($event.target, phoneNumberRef)"
+                       [(ngModel)]="phoneNumber" placeholder="Телефон*" autocomplete="off" required/>
+            </div>
+            <div class="consultation-modal__container--form-btn">
+                <button [disabled]="!supportForm.form.valid || !phoneIsValid" (click)="createTechSupportTicket()">записаться</button>
+            </div>
+        </form>
+    </div>
+</div>

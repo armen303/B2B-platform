@@ -1,0 +1,61 @@
+<div class="bread-crumb-and-title animate_show_up transparent-bg">
+ <div class="container remove-horisontal-spacer">
+  <div class="row">
+   <div class="col-xl-12">
+    <!-- bread-crumb -->
+    <div class="bread-crumb">
+     <div class="bread-crumb__list">
+      <a href="#" class="bread-crumb__home-link" [routerLink]="['/home']"></a>
+      <a href="#" class="bread-crumb__link">Спецпредложения</a>
+     </div>
+    </div>
+    <!-- /bread-crumb -->
+    <h1 class="main-title">Спецпредложения</h1>
+   </div>
+  </div>
+ </div>
+</div>
+
+<!-- nv-special-offer -->
+<div class="nv-special-offer animate_show_up">
+ <div class="container">
+  <div class="row" *ngIf="specialOffers.length > 0">
+
+   <div class="col-xl-12 col-lg-12 col-md-6 col-sm-12 nv-no-spacer" *ngFor="let specialOffer of specialOffers">
+    <article class="nv-special-offer-article">
+     <div class="nv-special-offer-article__info">
+
+      <h2 class="nv-special-offer-article__title">
+       <a href="#" (click)="goTo(specialOffer.url)" class="nv-special-offer-article__title-link">
+        {{specialOffer.name}}
+       </a>
+      </h2>
+
+      <div class="nv-special-offer-article__description">
+       {{specialOffer.description}}
+      </div>
+
+      <div class="nv-special-offer-article__read-more-cell">
+       <button (click)="goTo(specialOffer.url)" class="nv-special-offer-article__read-more">ПОДРОБНЕЕ</button>
+      </div>
+
+     </div>
+     <div class="nv-special-offer-article__img-cell nv-special-offer-article__img-cell--center">
+      <a href="#" (click)="goTo(specialOffer.url)">
+       <picture>
+        <!-- <img [src]="getImageUrl(specialOffer.imageId, 742, 412)" alt="{{specialOffer.name}}"
+         title="{{specialOffer.name}}" class="g-resize" width="742" height="412" /> -->
+
+        <img [src]="getImageUrl(specialOffer.imageId, 992, 548)" alt="{{specialOffer.name}}"
+         title="{{specialOffer.name}}" class="g-resize" width="992" height="548" />
+
+       </picture>
+      </a>
+     </div>
+    </article>
+   </div>
+
+  </div>
+ </div>
+</div>
+<!-- nv-special-offer -->

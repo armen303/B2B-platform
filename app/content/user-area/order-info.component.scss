@@ -1,0 +1,431 @@
+@import '../../styles/base/shared';
+
+.order-singel {
+    margin: 20px 0;
+}
+
+.kendo-pdf div {
+    opacity: 0;
+    visibility: hidden;
+    display: block;
+    position: absolute;
+    height: 0;
+}
+
+.order-info {
+    margin-bottom: 20px;
+
+    &__download {
+        margin: 0 -15px;
+        padding: 26px 15px;
+        background-color: #F7F8F9;
+
+        @include xs {
+            display: block;
+            padding: 11px 15px 26px;
+        }
+
+        &--btn {
+            margin: 0 15px;
+        }
+    }
+}
+
+.еmployee-block {
+    margin-top: 8px;
+
+    &__name {
+        font: 13px/13px $Regular;
+        color: $second_color;
+
+        &--main {
+            font: 14px $Semibold;
+        }
+    }
+
+    &__icon {
+        font-size: 16px;
+        color: #B9BABB;
+        margin-left: 8px;
+    }
+
+}
+
+.order-list__title {
+    margin-top: 26px;
+    margin-bottom: 26px;
+
+    h2 {
+        font: 15px/15px $Bold;
+        color: $second_color;
+        letter-spacing: 0.75px;
+    }
+}
+
+
+.basket-print {
+    margin-bottom: 40px;
+
+    &__box {
+        position: relative;
+
+        &+& {
+            margin-left: 20px;
+        }
+
+        &:hover &--dropdown {
+            display: block;
+        }
+
+        &--link {
+            color: $second_color;
+            transition: $transition;
+            cursor: pointer;
+
+            &:hover {
+                color: var(--global_color);
+            }
+
+            .icon {
+                font: 21px $Bold;
+                margin-right: 5px;
+            }
+
+            span {
+                font: 16px $Bold;
+            }
+        }
+
+        &--download {
+            color: var(--global_color);
+            cursor: pointer;
+
+            .icon {
+                font-size: 21px;
+                margin-right: 5px;
+            }
+
+            span {
+                font: 16px $Bold;
+            }
+        }
+
+        &--dropdown {
+            width: 235px;
+            position: absolute;
+            top: calc(100% + 12px);
+            left: 0;
+            background-color: white;
+            border: 1px solid #AFB6BD;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.04), 0px 12px 16px rgba(0, 0, 0, 0.02), 0px 8px 20px rgba(0, 0, 0, 0.04), 0px 2px 4px rgba(0, 0, 0, 0.12);
+            padding: 16px 20px;
+            display: none;
+            z-index: 9999999;
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: -12px;
+                left: 0;
+                @include wh(100%, 12px);
+            }
+
+            @include lg {
+                left: auto;
+                right: 0;
+            }
+
+            &-link {
+                font: 15px $Regular;
+                color: var(--black_color);
+
+                &+& {
+                    margin-top: 12px;
+                }
+
+                &:hover {
+                    color: var(--global_color_hover);
+                }
+            }
+        }
+    }
+}
+
+
+.order-document {
+    margin: 0 -15px;
+    padding: 26px 15px 26px 15px;
+    background-color: #F4F6F6;
+
+    &__title {
+        font: 13px/13px $Regular;
+        color: $second_color;
+    }
+
+    &__name {
+        margin: 16px -15px 0 -15px;
+
+        &-item {
+            width: 50%;
+            padding: 0 15px;
+
+            &:not(:nth-child(1)):not(:nth-child(2)) {
+                margin-top: 15px;
+            }
+
+            a {
+                font: 15.5px/22.5px $Regular;
+                color: var(--global_color);
+                border-bottom: .5px solid var(--global_color);
+            }
+        }
+    }
+}
+
+
+.order-list__table {
+    margin: 0 -15px;
+
+    @include lg {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+
+        @include lg {
+            width: 856px;
+        }
+
+
+
+        tr {
+            transition: $transition;
+
+            th {
+                font: 13px $Semibold;
+                letter-spacing: 0.65px;
+                color: rgba(47, 64, 69, 0.5);
+                padding: 0 15px 15px;
+                vertical-align: middle;
+                text-transform: uppercase;
+            }
+
+            td {
+                font: 18px $Regular;
+                color: $second_color;
+                padding: 16px 15px 13px 15px;
+                vertical-align: middle;
+
+                .order-list__table--img {
+                    @include wh(60px);
+                    margin-right: 13px;
+
+                    @include lg {
+                        display: none;
+                    }
+
+                    a {
+                        @include wh(100%);
+                        display: block;
+
+                        img {
+                            @include wh(100%);
+
+                        }
+                    }
+                }
+
+                .order-list__table--link {
+                    width: 201px;
+                    color: $second_color;
+
+                    a {
+                        font-size: 15.5px;
+                        color: $second_color;
+                        display: block;
+
+                        &:hover {
+                            color: var(--global_color);
+                            text-decoration: underline;
+                        }
+                    }
+                }
+
+                .order-list__table--packing {
+                    font-size: 13px;
+                }
+            }
+
+            +tr {
+                border-top: 1px solid #EBEBEB;
+            }
+
+            +tr:hover {
+                background-color: #FCEEF2;
+            }
+
+        }
+
+
+    }
+
+    &--tint {
+        border: 0 !important; // pending changes ...
+
+        &:hover {
+            background-color: transparent !important; // pending chnages ... 
+        }
+
+        td {
+            padding: 0 !important; // pending changes ...
+            padding-bottom: 40px !important; // pending changes ...
+        }
+
+        &-box {
+            margin-left: 133px;
+            padding: 17px;
+            background: #F7F8F9;
+
+            @include xs {
+                padding: 8px 13px;
+            }
+
+            &__title {
+                &--list {
+                    font: 16px $Regular;
+                    white-space: nowrap;
+
+                    &+.order-list__table--tint-box__title--list {
+                        margin-left: 45px;
+                    }
+
+                    p {
+                        color: rgba(0, 0, 0, 0.6);
+                        margin-right: 4px;
+                    }
+
+                    span {
+                        color: #000000;
+                    }
+                }
+            }
+
+            &__count {
+                width: 50%;
+                padding-left: 80px;
+
+                @include lg {
+                    padding-left: 0;
+                }
+
+                &--list {
+                    width: 25%;
+                }
+
+                &--sum {
+                    text-align: right;
+                }
+            }
+        }
+    }
+
+    .icon-exclamatory {
+        margin-left: 7px;
+
+        &::before {
+            font-size: 15px;
+            color: var(--global_color);
+        }
+    }
+}
+
+.order-info__count {
+    margin-top: 18px;
+    padding-right: 20px;
+
+    @include lg {
+        padding-right: 0;
+        flex-direction: column-reverse;
+    }
+
+    &--download {
+
+        @include lg {
+            margin-top: 20px;
+        }
+
+        a {
+            padding: 11px 18px;
+            border: 1px solid rgba(#40474A, .8);
+            border-radius: 4px;
+            color: #40474A;
+            transition: $transition;
+
+            &:hover {
+                color: var(--global_color);
+                border: 1px solid var(--global_color);
+
+            }
+
+            span {
+                font: 14px $Bold;
+                margin-right: 11px;
+            }
+
+            .icon {
+                font-size: 17px;
+            }
+        }
+    }
+
+    &--table {
+        margin-left: auto;
+
+        table {
+            width: auto;
+
+            tbody tr td {
+                vertical-align: middle;
+                padding: 7px;
+            }
+        }
+
+        table tbody tr td:first-child {
+            font: 13px/13px $Regular;
+            color: $second_color;
+        }
+
+        table tbody tr td:last-child {
+            font: 14px/14px $Regular;
+            color: $second_color;
+        }
+
+        table tbody tr:last-child td:not(:first-child) {
+            font: 23px/23px $Semibold;
+        }
+
+        table tbody tr:last-child td {
+            color: $green_color;
+
+            &:first-child {
+                font: 13px/13px $Semibold;
+            }
+        }
+    }
+}
+
+
+@include lg {
+    .order-document__name-item {
+        width: 100%;
+
+        &:not(:nth-child(1)):not(:nth-child(2)) {
+            margin-top: 8px;
+        }
+
+        &:nth-child(2) {
+            margin-top: 8px;
+        }
+    }
+}

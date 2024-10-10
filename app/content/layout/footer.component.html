@@ -1,0 +1,117 @@
+<footer class="footer  {{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}">
+   <div class="container">
+      <div class="footer-box d-f j-c-b a-i-c">
+         <div class="footer-box__logo d-f a-i-c">
+            <a href="#" class="footer-box__logo--img" [routerLink]="['/home']">
+                <img *ngIf="isUserLoggedIn || !isHomePage" src="../../../assets/img/footer/logo.svg" alt="logo"> 
+               <img *ngIf="!isUserLoggedIn && isHomePage" src="../../../assets/img/footer/logo-home.svg" alt="logo">
+            </a>
+            <div class="footer-box__logo--text {{isUserLoggedIn || isHomePage ? 'style-home' : 'style'}}">
+               <p>B2B-Портал строительных материалов</p>
+            </div>
+         </div>
+
+         <div class="footer-box__content">
+            <div class="footer-box__content--nav d-f a-i-c">
+               <div class="footer-box__content--nav-menu">
+                  <ul class="d-f a-i-c">
+                     <li>
+                        <a href="#" [routerLink]="['/faq']" class="{{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}">МаксиПРО B2B</a>
+                     </li>
+                     <li>
+                        <a href="#" [routerLink]="['/support']" class="{{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}">Поддержка</a>
+                     </li>
+                     <li>
+                        <a href="#"  [routerLink]="['/delivery/info']" class="{{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}">Доставка</a>
+                     </li>
+                     <li>
+                        <a href="#" [routerLink]="['/provided-services']" class="{{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}">Сервисы</a>
+                     </li>
+                     <li>
+                        <a href="#" [routerLink]="['/news-list']" class="{{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}">Новости</a>
+                     </li>
+                     <!-- <li class="header-nav__box--menu-list__item">
+                        <a href="#" [routerLink]="['/user/learning-center']"
+                           class="header-nav__box--menu-list__item--link header-nav__box--menu-link__learning header-nav__box--menu-link">Центр обучения
+                        </a>
+                     </li> -->
+                  </ul>
+               </div>
+               <div class="footer-box__content--nav-callcenter d-f a-i-c">
+                  <a href="mailto:b2b@maxipro.ru" class="footer-box__content--nav-callcenter__mail {{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}">b2b@maxipro.ru</a>
+                  <a href="tel:84993914040" class="footer-box__content--nav-callcenter__phone {{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}">8 499 391 40 40</a>
+                  <div class="footer-box__content--nav-socialicons footer-box__content--nav-socialicons__mobile d_none">
+                     <ul class="d-f a-i-c">
+                        <li class="d-f a-i-c">
+                           <a href="https://vk.com/maxipro_official" target="_blank"
+                              class="new-icon new-icon__socialVk {{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}"></a>
+                        </li>
+                        <li class="d-f a-i-c">
+                           <a href="https://www.facebook.com/maxipro.official/" target="_blank"
+                              class="new-icon new-icon__socialFb {{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}"></a>
+                        </li>
+                        <li class="d-f a-i-c">
+                           <a href="https://www.instagram.com/maxipro_official/" target="_blank"
+                              class="new-icon new-icon__socialIn {{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}"></a>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+               <div class="footer-box__content--nav-socialicons footer-box__content--nav-socialicons__desktop">
+                  <ul class="d-f a-i-c">
+                     <li class="d-f a-i-c">
+                        <a href="https://vk.com/maxipro_official" target="_blank"
+                           class="new-icon new-icon__socialVk {{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}"></a>
+                     </li>
+                     <li class="d-f a-i-c">
+                        <a href="https://www.facebook.com/maxipro.official/" target="_blank"
+                           class="new-icon new-icon__socialFb {{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}"></a>
+                     </li>
+                     <li class="d-f a-i-c">
+                        <a href="https://www.instagram.com/maxipro_official/" target="_blank"
+                           class="new-icon new-icon__socialIn {{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}"></a>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+            <div class="footer-box__content--info footer-box__content--info-desktop d-f a-i-c">
+               <p class="{{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}">2020 © МаксиПро ООО «Про Восток»</p>
+               <a class="{{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}" href="./assets/files/pravila-obrabotki-personalnyh-dannyh-maxipro-v1.pdf" target="_blank">Правила
+                  обработки персональных данных</a>
+               <a class="{{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}" href="./assets/files/Соглашение_на_пользование_порталом.pdf" target="_blank">Пользовательское
+                  соглашение</a>
+            </div>
+         </div>
+
+         <div class="footer-box__partners footer-box__partners--desktop d-f a-i-c j-c-c">
+            <a href="https://www.adeo.com/ru/index"
+               class="footer-box__partners--img d-f a-i-c j-c-c" target="_blank"
+               style="width: 84px;height: 52px;">
+               <img src="../../../assets/img/footer/partners/adeo-logo.png" alt="img">
+            </a>
+            <a href="https://leroymerlin.ru/" class="footer-box__partners--img d-f a-i-c j-c-c"
+               target="_blank" style="width: 106px;height: 53px;">
+               <img src="../../../assets/img/footer/partners/LM-Base.png" alt="img">
+            </a>
+         </div>
+      </div>
+      <div class="footer-box__content--info footer-box__content--info-mobile a-i-c d_none">
+         <p class="{{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}">2020 © МаксиПро ООО «Про Восток»</p>
+         <a class="{{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}" href="./assets/files/pravila-obrabotki-personalnyh-dannyh-maxipro-v1.pdf" target="_blank">Правила
+            обработки персональных данных</a>
+         <a class="{{ !isUserLoggedIn && isHomePage ? 'style-home' : 'style'}}" href="./assets/files/polzovatelskoe-soglashenie-maxipro-v1.pdf" target="_blank">Пользовательское
+            соглашение</a>
+         <div class="footer-box__partners footer-box__partners--mobile a-i-c d_none">
+            <a href="https://www.adeo.com/ru/index"
+               class="footer-box__partners--img d-f a-i-c j-c-c" target="_blank"
+               style="width: 84px;height: 52px;">
+               <img src="../../../assets/img/footer/partners/adeo-logo.png" alt="img">
+            </a>
+            <a href="https://leroymerlin.ru/" class="footer-box__partners--img d-f a-i-c j-c-c"
+               target="_blank" style="width: 106px;height: 53px;">
+               <img src="../../../assets/img/footer/partners/LM-Base.png" alt="img">
+            </a>
+         </div>
+      </div>
+   </div>
+</footer>

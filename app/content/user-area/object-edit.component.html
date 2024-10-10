@@ -1,0 +1,138 @@
+<!-- crumb == start -->
+<div class="container animate_show_up">
+   <div class="crumb">
+      <ul class="crumb-list d-f f-w a-i-c">
+         <li class="crumb-list__item">
+            <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">
+            <a href="#" class="crumb-list__item--link" [routerLink]="['/user/objects']">Объекты</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">{{oldName}}</li>
+      </ul>
+   </div>
+
+   <div class="global-title">
+      <h1>{{name}}</h1>
+   </div>
+</div>
+<!-- crumb == end -->
+
+
+<div class="container" *ngIf="isLoaded">
+   <div class="employee-create bg-br">
+      <form #supportForm="ngForm">
+         <div class="object-edit">
+
+            <div class="object-edit__data">
+               <div class="employee-create__box--list-access__title">
+                  <p>Данные объекта</p>
+               </div>
+               <div class="object-edit__data--area d-f j-c-b">
+                  <div class="object-edit__data--area-name object-edit__data--area-item">
+                     <div class="employee-create__box--list-item" [class.required]="fieldIsEmpty(nameRef)">
+                        <div class="employee-create__box--list-item__name">
+                           <p class="employee-create__box--list-item__name__text">Название объекта*</p>
+                        </div>
+                        <div class="employee-create__box--list-item__input">
+                           <input type="text" #nameRef="ngModel" placeholder="Введите название" [(ngModel)]="name"
+                              name="name" id="nameInput" required />
+                        </div>
+                        <h3 class="required-tooltip d_none">заполнение обязательно</h3>
+                     </div>
+                  </div>
+                  <div class="object-edit__data--area-value object-edit__data--area-item">
+                     <p>Площадь, м²</p>
+                     <input type="number" placeholder="0" name="areaInput" id="object-square" (change)="changeArea()"
+                        [(ngModel)]="area">
+                  </div>
+                  <div class="object-edit__data--area-description object-edit__data--area-item">
+                     <p>Описание</p>
+                     <input type="text" placeholder="Введите подробное описание" name="objectDescription"
+                        id="object-description" [(ngModel)]="description">
+                  </div>
+               </div>
+            </div>
+            <div class="employee-opportunity" *ngIf="isMaster">
+               <div class="employee-create__box--list-access__title">
+                  <p>доступ к объектам строительства</p>
+                  <span>
+                     Объект будет доступен только выбранным сотрудникам. <br> Если сотрудники не выбраны, объект
+                     будет
+                     доступен всем.
+                  </span>
+               </div>
+               <div class="object-edit__building">
+                  <div class="object-edit__building--select d-f a-i-c">
+                     <div class="object-edit__building--select-dropdown">
+                        <div class="dropdown-empty d-f a-i-c" *ngIf="!showDropDown">
+                           <p>Список сотрудников пуст</p>
+                        </div>
+                        <div class="dropdown" *ngIf="showDropDown">
+                           <div class="d-f a-i-c dropdown-select window-click click-expand"
+                              data-expand="false">
+                              <div
+                                 class="dropdown-select__arrow dropdown-select__area d-f a-i-c j-c-b">
+                                 <input type="text" name="managersSearchText" [(ngModel)]="searchQuery"
+                                    autocomplete="off" placeholder="Выберите сотрудника" (keyup)="getEmployees()"
+                                    class="input-expand border-0">
+                              </div>
+                              <i
+                                 class="icon icon-arrow icon-arrow__bottom dropdown-arrow d-f a-i-c j-c-c "></i>
+                           </div>
+                           <ul class="dropdown-list expand-block d_none scrollbar" id="ListOfEmployees">
+                              <ng-container *ngFor="let employee of employees">
+                                 <li [class.active]="selectedEmployee === employee"
+                                    (click)="setEmployeeAsSelected(employee)"
+                                    class="dropdown-list__item d-f a-i-c j-c-b">
+                                    {{employee.firstName}} {{employee.lastName}}
+                                 </li>
+                              </ng-container>
+                              <ng-container *ngIf="employees.length==0 && searchQuery">
+                                 <li class="dropdown-list__empty d-f a-i-c j-c-b">Сотрудник не
+                                    найден</li>
+                              </ng-container>
+
+                              <select [(ngModel)]="selectedEmployee" notFoundText="Список сотрудников пуст" hidden
+                                 name="selectListName">
+                                 <option *ngFor="let employee of employees" [value]="employee">
+                                    {{employee.firstName}} {{employee.lastName}}
+                                 </option>
+                              </select>
+                           </ul>
+                        </div>
+                     </div>
+                     <div class="employee-opportunity__building--select-btn" *ngIf="showDropDown" id="TheSelectButton">
+                        <p (click)="selectEmployee()">Выбрать</p>
+                     </div>
+                  </div>
+
+                  <div class="object-edit__building--selected employee-opportunity__building--selected">
+                     <ul>
+                        <li *ngFor="let employee of selectedEmployees">
+                           <p class="d-f a-i-c j-c-b">
+                              <span>{{employee.firstName}} {{employee.lastName}}</span>
+                              <i class="icon icon-trash" (click)="removeEmployee(employee)"></i>
+                           </p>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+            <div class="employee-create__btn d-f a-i-c j-c-c">
+               <div class="employee-create__btn--item btn-global">
+                  <button id="saveButton" class="btn-global__red"
+                     [disabled]="!supportForm.form.valid || (!isChanged && !isChangedEmployees)" (click)="udpate()">
+                     Сохранить
+                  </button>
+               </div>
+               <div id="cancelButton" class="employee-create__btn--item btn-global btn-global__gray">
+                  <button type="button" (click)="cancel()">Отмена</button>
+               </div>
+            </div>
+         </div>
+      </form>
+   </div>
+</div>

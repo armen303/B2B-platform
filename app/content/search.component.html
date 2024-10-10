@@ -1,0 +1,1069 @@
+<div class="animate_show_up" *ngIf="isLoaded">
+    <div class="search-page">
+        <div class="container">
+            <div class="search-wrong" *ngIf="isSearchQueryChanged">
+                <p>
+                    Запрос был исправлен на «<span>{{correctSearchQuery}}</span>», поскольку по запросу
+                    «<b>{{searchQuery}}</b>» ничего не нашлось
+                </p>
+            </div>
+            <div class="search-wrong">
+                <p>
+                    По запросу «<b>{{correctSearchQuery}}</b>»
+                    {{declensionMaker.getDeclension(totalNumberOfProducts, "найден", "найдено", "найдено")}}
+                    {{totalNumberOfProducts}}
+                    {{declensionMaker.getDeclension(totalNumberOfProducts, "товар", "товара", "товаров")}}
+                </p>
+            </div>
+            <div class="global-title">
+                <h1>
+                    {{correctSearchQuery}} в {{subcategoriesQuantity}}
+                    {{declensionMaker.getDeclension(subcategoriesQuantity, "категории", "категориях", "категориях")}}
+                </h1>
+            </div>
+            <div class="search-categories">
+                <ul class="search-categories__list d-f f-w" *ngIf="!showAllSubcategories && subcategoriesQuantity>4">
+                    <ng-container *ngFor="let subcategory of foundSubcategories; let idx = index">
+                        <li class="search-categories__list--item"
+                            *ngIf="!isSelectedSubcategory(subcategory.id) && getIndex(idx)">
+                            <a href="#" class="d-f a-i-c j-c-c" (click)="selectSubcategory(subcategory.id)">
+                                <p>{{subcategory.name}} <span>({{subcategory.productsQuantity}})</span></p>
+                            </a>
+                        </li>
+                        <li class="search-categories__list--item"
+                            *ngIf="isSelectedSubcategory(subcategory.id) && getIndex(idx)">
+                            <a href="#" class="d-f a-i-c j-c-c active" (click)="unselectSubcategory(subcategory.id)">
+                                <p>{{subcategory.name}} <span>({{subcategory.productsQuantity}})</span></p>
+                            </a>
+                        </li>
+                    </ng-container>
+                    <li class="search-categories__list--item" (click)="subcategoriesQuantityChanged()">
+                        <p class="search-categories__list--item-btn d-f a-i-c j-c-c">
+                            <span>Показать все <i class="icon icon-arrow__right"></i></span>
+                        </p>
+                    </li>
+                </ul>
+                <ul class="search-categories__list d-f f-w" *ngIf="showAllSubcategories || subcategoriesQuantity<5">
+                    <ng-container *ngFor="let subcategory of foundSubcategories">
+                        <li class="search-categories__list--item" *ngIf="!isSelectedSubcategory(subcategory.id)">
+                            <a href="#" class="d-f a-i-c j-c-c" (click)="selectSubcategory(subcategory.id)">
+                                <p>{{subcategory.name}} <span>({{subcategory.productsQuantity}})</span></p>
+                            </a>
+                        </li>
+                        <li class="search-categories__list--item" *ngIf="isSelectedSubcategory(subcategory.id)">
+                            <a href="#" class="d-f a-i-c j-c-c active" (click)="unselectSubcategory(subcategory.id)">
+                                <p>{{subcategory.name}} <span>({{subcategory.productsQuantity}})</span></p>
+                            </a>
+                        </li>
+                    </ng-container>
+                    <li class="search-categories__list--item" (click)="subcategoriesQuantityChanged()"
+                        *ngIf="subcategoriesQuantity>4">
+                        <p class="search-categories__list--item-btn d-f a-i-c j-c-c">
+                            <span><i class="icon icon-arrow__left"></i> Свернуть</span>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="catalog" *ngIf="isLoaded">
+    <div class="container">
+        <div class="catalog-box d-f">
+
+            <!-- catalog sidebar start -->
+            <div class="catalog-box__sidebar">
+
+                <!-- catalog sidebar filters start -->
+                <div class="catalog-box__sidebar--filters" selector="filters" #filtersTab>
+                    <ul>
+                        <li>
+                            <ul class="catalog-box__sidebar--filters-list">
+                                <li class="catalog-box__sidebar--filters-list__item" id="FilterDepot"
+                                    *ngIf="depots && depots.length>0">
+                                    <div class="catalog-box__sidebar--filters-list__item--tab d-f a-i-c j-c-b click-expand"
+                                        data-expand="true">
+                                        <p class="d-f a-i-c">Наличие</p>
+                                        <i class="icon icon-arrow icon-arrow__top"></i>
+                                    </div>
+
+                                    <div class="catalog-box__sidebar--filters-list__item--content expand-block d_none"
+                                        style="display: block;">
+                                        <form action="#" method="get">
+                                            <div class="catalog-box__sidebar--filters-list__item--content-checkbox">
+                                                <div class="catalog-box__sidebar--filters-list__item--content-checkbox__item"
+                                                    *ngFor="let item of depots; let idx = index">
+                                                    <label class="checkbox d-f a-i-c">
+                                                        <input type="checkbox" id="{{ 'depotcheckbox-' + idx }}"
+                                                            [checked]="item.isChecked" name="depot"
+                                                            [disabled]="item.productsQuantity == 0 || isLoading"
+                                                            (change)="depotChanged(item)" hidden />
+                                                        <i
+                                                            class="icon icon-checkmark checkbox-checkmark d-f a-i-c j-c-c"></i>
+                                                        <span class="checkbox-name">
+                                                            {{ item.depot }}
+                                                            ({{ item.productsQuantity }})
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </li>
+                                <li class="catalog-box__sidebar--filters-list__item" id="FilterPrice">
+                                    <div class="catalog-box__sidebar--filters-list__item--tab d-f a-i-c j-c-b click-expand"
+                                        data-expand="false">
+                                        <p class="d-f a-i-c">Цена</p>
+                                        <i class="icon icon-arrow icon-arrow__bottom"></i>
+                                    </div>
+                                    <div class="catalog-box__sidebar--filters-list__item--content expand-block d_none">
+                                        <div class="catalog-box__sidebar--filters-list__item--content-input d-f">
+                                            <div
+                                                class="catalog-box__sidebar--filters-list__item--content-input__item d-f a-i-c">
+                                                <p>от</p>
+                                                <input type="number" id="minPriceInput" name="minPriceInput"
+                                                    step="{{ options.step }}" [min]="price[0]" [max]="maxPrice"
+                                                    [(ngModel)]="shownMinPriceForInput" (blur)="priceRangeChanged()"
+                                                    (keydown.enter)="priceRangeChanged()" />
+                                            </div>
+                                            <div
+                                                class="catalog-box__sidebar--filters-list__item--content-input__item d-f a-i-c">
+                                                <p>до</p>
+                                                <input type="number" name="maxPriceInput" step="{{ options.step }}"
+                                                    [min]="minPrice" [max]="price[1]"
+                                                    [(ngModel)]="shownMaxPriceForInput" (blur)="priceRangeChanged()"
+                                                    (keydown.enter)="priceRangeChanged()" />
+                                            </div>
+                                        </div>
+                                        <ng5-slider id="price-slider" [(value)]="shownMinPrice"
+                                            [(highValue)]="shownMaxPrice" (userChangeEnd)="priceRangeInSliderChanged()"
+                                            [options]="options">
+                                        </ng5-slider>
+                                    </div>
+                                </li>
+
+                                <li class="catalog-box__sidebar--filters-list__item" id="FilterBrand">
+                                    <div class="catalog-box__sidebar--filters-list__item--tab d-f a-i-c j-c-b click-expand"
+                                        data-expand="false">
+                                        <p class="d-f a-i-c">Бренд</p>
+                                        <i class="icon icon-arrow icon-arrow__bottom"></i>
+                                    </div>
+
+                                    <div class="catalog-box__sidebar--filters-list__item--content expand-block d_none">
+                                        <form action="#" method="get">
+                                            <div class="catalog-box__sidebar--filters-list__item--content-checkbox">
+                                                <div class="catalog-box__sidebar--filters-list__item--content-checkbox__item"
+                                                    *ngFor="let item of brands; let idx = index">
+                                                    <label class="checkbox d-f a-i-c">
+                                                        <input type="checkbox" id="{{ 'brandcheckbox-' + idx }}"
+                                                            [checked]="item.isChecked" name="brand"
+                                                            [disabled]="item.number == 0 || isLoading"
+                                                            (change)="brandChanged(item)" hidden />
+                                                        <i
+                                                            class="icon icon-checkmark checkbox-checkmark d-f a-i-c j-c-c"></i>
+                                                        <span class="checkbox-name">
+                                                            {{ item.brand }}
+                                                            ({{ item.productsQuantity }})
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </li>
+                                <li *ngIf="canBeColored " class="catalog-box__sidebar--filters-list__item"
+                                    id="FilterBrand">
+                                    <div class="catalog-box__sidebar--filters-list__item--tab d-f a-i-c j-c-b click-expand"
+                                        data-expand="false">
+                                        <p class="d-f a-i-c">Можно колеровать</p>
+                                        <i class="icon icon-arrow icon-arrow__bottom"></i>
+                                    </div>
+
+                                    <div class="catalog-box__sidebar--filters-list__item--content expand-block d_none">
+                                        <div class="catalog-box__sidebar--filters-list__item--content-checkbox">
+                                            <div
+                                                class="catalog-box__sidebar--filters-list__item--content-checkbox__item">
+                                                <label class="checkbox d-f a-i-c">
+                                                    <input type="radio" id="{{ 'radio2-' + 'canBeColored' }}"
+                                                        [checked]="coloredValueChecked"
+                                                        [disabled]="coloredValueProductsQuantity == 0"
+                                                        (click)="canBeColoredPropertyChanged(true)" hidden />
+                                                    <i class="checkbox-radio"></i>
+                                                    <span class="checkbox-name">
+                                                        Да
+                                                        ({{ coloredValueProductsQuantity }})
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div
+                                                class="catalog-box__sidebar--filters-list__item--content-checkbox__item">
+                                                <label class="checkbox d-f a-i-c">
+                                                    <input type="radio" id="{{ 'radio3-' + 'canBeColored' }}"
+                                                        [checked]="notColoredValueChecked"
+                                                        [disabled]="notColoredValueProductsQuantity == 0"
+                                                        (click)="canBeColoredPropertyChanged(false)" hidden />
+                                                    <i class="checkbox-radio"></i>
+                                                    <span class="checkbox-name">
+                                                        Нет
+                                                        ({{ notColoredValueProductsQuantity }})
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+
+                            </ul>
+                            <div *ngFor="let orderIndex of orderIndexes">
+                                <ul class="catalog-box__sidebar--filters-list" *ngIf="subcategoryId && boolFilters">
+                                    <li *ngFor="let propertyValue of boolFilters; trackBy: trackById ">
+                                        <ul>
+                                            <!--Boolean-->
+                                            <li class="catalog-box__sidebar--filters-list__item"
+                                                *ngIf="(propertyValue.trueValueProductsQuantity>0 || propertyValue.falseValueProductsQuantity)&& propertyValue.orderIndex==orderIndex">
+                                                <div class="catalog-box__sidebar--filters-list__item--tab d-f a-i-c j-c-b click-expand"
+                                                     data-expand="false">
+                                                    <p class="d-f a-i-c">{{ propertyValue.name }}</p>
+                                                    <i class="icon icon-arrow icon-arrow__bottom"></i>
+                                                </div>
+
+                                                <div class="catalog-box__sidebar--filters-list__item--content expand-block d_none">
+                                                    <div class="catalog-box__sidebar--filters-list__item--content-checkbox">
+                                                        <div class="catalog-box__sidebar--filters-list__item--content-checkbox__item">
+                                                            <label class="checkbox d-f a-i-c">
+                                                                <input type="radio" id="{{ 'radio2-' + propertyValue.id }}"
+                                                                       [checked]="propertyValue.isTrueChecked"
+                                                                       [disabled]="propertyValue.trueValueProductsQuantity == 0"
+                                                                       (click)="boolPropertyChanged(propertyValue.id, true)"
+                                                                       hidden />
+                                                                <i class="checkbox-radio"></i>
+                                                                <span class="checkbox-name">
+                                                                    Да
+                                                                    ({{ propertyValue.trueValueProductsQuantity }})
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="catalog-box__sidebar--filters-list__item--content-checkbox__item">
+                                                            <label class="checkbox d-f a-i-c">
+                                                                <input type="radio" id="{{ 'radio3-' + propertyValue.id }}"
+                                                                       [checked]="propertyValue.isFalseChecked"
+                                                                       [disabled]="propertyValue.falseValueProductsQuantity == 0"
+                                                                       (click)="boolPropertyChanged(propertyValue.id, false)"
+                                                                       hidden />
+                                                                <i class="checkbox-radio"></i>
+                                                                <span class="checkbox-name">
+                                                                    Нет
+                                                                    ({{ propertyValue.falseValueProductsQuantity }})
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <ul class="catalog-box__sidebar--filters-list" *ngIf="subcategoryId && intFilters">
+                                    <li *ngFor=" let propertyValue of intFilters; trackBy: trackById ">
+                                        <ul>
+                                            <!--Int-->
+                                            <li class="catalog-box__sidebar--filters-list__item"
+                                                *ngIf=" propertyValue.value[0] != null && propertyValue.value[1] != null && propertyValue.orderIndex==orderIndex">
+                                                <div class="catalog-box__sidebar--filters-list__item--tab d-f a-i-c j-c-b click-expand"
+                                                     data-expand="false">
+                                                    <p class="d-f a-i-c">{{ propertyValue.name }}</p>
+                                                    <i class="icon icon-arrow icon-arrow__bottom"></i>
+                                                </div>
+
+                                                <div class="catalog-box__sidebar--filters-list__item--content expand-block d_none">
+                                                    <div class="catalog-box__sidebar--filters-list__item--content-input d-f">
+                                                        <div class="catalog-box__sidebar--filters-list__item--content-input__item d-f a-i-c">
+                                                            <p>от</p>
+                                                            <input type="number" name="{{ 'minint-' + propertyValue.id }}"
+                                                                   step="5" [min]="propertyValue.value[0]"
+                                                                   [max]="propertyValue.maxValue"
+                                                                   [(ngModel)]="propertyValue.shownMinValueForInput"
+                                                                   (blur)="rangeChanged(propertyValue)"
+                                                                   (keydown.enter)="rangeChanged(propertyValue)" />
+                                                        </div>
+                                                        <div class="catalog-box__sidebar--filters-list__item--content-input__item d-f a-i-c">
+                                                            <p>до</p>
+                                                            <input type="number" name="{{ 'maxint-' + propertyValue.id }}"
+                                                                   step="5" [min]="propertyValue.minValue"
+                                                                   [max]="propertyValue.value[1]"
+                                                                   [(ngModel)]="propertyValue.shownMaxValueForInput"
+                                                                   (blur)="rangeChanged(propertyValue)"
+                                                                   (keydown.enter)="rangeChanged(propertyValue)" />
+                                                        </div>
+                                                    </div>
+                                                    <ng5-slider id="{{ 'sliderint-' + propertyValue.id }}"
+                                                                [(value)]="propertyValue.shownMinValue"
+                                                                [(highValue)]="propertyValue.shownMaxValue"
+                                                                (userChangeEnd)="rangeInSliderChanged(propertyValue)"
+                                                                [options]="getIntOptions(propertyValue.id)"></ng5-slider>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <ul class="catalog-box__sidebar--filters-list" *ngIf="subcategoryId && doubleFilters">
+                                    <li *ngFor=" let propertyValue of doubleFilters; trackBy: trackById ">
+                                        <ul>
+                                            <!--Int-->
+                                            <li class="catalog-box__sidebar--filters-list__item"
+                                                *ngIf=" propertyValue.value[0] != null && propertyValue.value[1] != null && propertyValue.orderIndex==orderIndex ">
+                                                <div class="catalog-box__sidebar--filters-list__item--tab d-f a-i-c j-c-b click-expand"
+                                                     data-expand="false">
+                                                    <p class="d-f a-i-c">{{ propertyValue.name }}</p>
+                                                    <i class="icon icon-arrow icon-arrow__bottom"></i>
+                                                </div>
+
+                                                <div class="catalog-box__sidebar--filters-list__item--content expand-block d_none">
+                                                    <div class="catalog-box__sidebar--filters-list__item--content-input d-f">
+                                                        <div class="catalog-box__sidebar--filters-list__item--content-input__item d-f a-i-c">
+                                                            <p>от</p>
+                                                            <input type="number"
+                                                                   name="{{ 'mindouble-' + propertyValue.id }}" step="5"
+                                                                   [min]="propertyValue.value[0]"
+                                                                   [max]="propertyValue.maxValue"
+                                                                   [(ngModel)]="propertyValue.shownMinValueForInput"
+                                                                   (blur)="rangeChanged(propertyValue)"
+                                                                   (keydown.enter)="rangeChanged(propertyValue)" />
+                                                        </div>
+                                                        <div class="catalog-box__sidebar--filters-list__item--content-input__item d-f a-i-c">
+                                                            <p>до</p>
+                                                            <input type="number"
+                                                                   name="{{ 'maxdouble-' + propertyValue.id }}" step="5"
+                                                                   [min]="propertyValue.minValue"
+                                                                   [max]="propertyValue.value[1]"
+                                                                   [(ngModel)]="propertyValue.shownMaxValueForInput"
+                                                                   (blur)="rangeChanged(propertyValue)"
+                                                                   (keydown.enter)="rangeChanged(propertyValue)" />
+                                                        </div>
+                                                    </div>
+                                                    <ng5-slider id="{{ 'sliderdouble-' + propertyValue.id }}"
+                                                                [(value)]="propertyValue.shownMinValue"
+                                                                [(highValue)]="propertyValue.shownMaxValue"
+                                                                (userChangeEnd)="rangeInSliderChanged(propertyValue)"
+                                                                [options]="getDoubleOptions(propertyValue.id)"></ng5-slider>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <ul class="catalog-box__sidebar--filters-list" *ngIf="subcategoryId && enumFilters">
+                                    <li *ngFor=" let propertyValue of enumFilters; trackBy: trackById ">
+                                        <ul>
+                                            <!--Enum-->
+                                            <li class="catalog-box__sidebar--filters-list__item" *ngIf="propertyValue.orderIndex==orderIndex">
+                                                <div class="catalog-box__sidebar--filters-list__item--tab d-f a-i-c j-c-b click-expand"
+                                                     data-expand="false">
+                                                    <p class="d-f a-i-c">{{ propertyValue.name }}</p>
+                                                    <i class="icon icon-arrow icon-arrow__bottom"></i>
+                                                </div>
+
+                                                <div class="catalog-box__sidebar--filters-list__item--content expand-block d_none">
+                                                    <form action="#" method="get">
+                                                        <div class="catalog-box__sidebar--filters-list__item--content-checkbox">
+                                                            <div class="catalog-box__sidebar--filters-list__item--content-checkbox__item"
+                                                                 *ngFor="let item of propertyValue.values; let idx = index">
+                                                                <label class="checkbox d-f a-i-c">
+                                                                    <input type="checkbox"
+                                                                           id="{{ 'enum-checkbox-' + idx + propertyValue.id }}"
+                                                                           [checked]="item.isChecked" name="enumValue"
+                                                                           [disabled]="item.productsQuantity == 0"
+                                                                           (change)="enumValueChanged(item)" hidden />
+                                                                    <i class="icon icon-checkmark checkbox-checkmark d-f a-i-c j-c-c"></i>
+                                                                    <span class="checkbox-name">
+                                                                        {{ item.value }}
+                                                                        ({{ item.productsQuantity }})
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+
+
+                </div>
+                <!-- catalog sidebar filters end -->
+
+            </div>
+            <!-- catalog sidebar end -->
+            <!-- catalog cards start -->
+            <div class="catalog-box__cards">
+
+                <!-- select filters -->
+                <div class="catalog-box__cards--filter d-f a-i-c" *ngIf="showSelectedFilters">
+                    <div class="catalog-box__cards--filter-title">
+                        <p>ВЫБРАННЫЕ ФИЛЬТРЫ:</p>
+                    </div>
+                    <div class="catalog-box__cards--filter-select d-f f-w a-i-c">
+                        <div class="catalog-box__cards--filter-select__item d-f a-i-c" *ngIf="priceIsChecked">
+                            <p>ЦЕНА:</p>
+                            <span *ngIf="minPrice != undefined && maxPrice == undefined">
+                                От {{ minPrice | fractionSizeSpace }} <i class="icon icon-rub"></i>
+                            </span>
+                            <span *ngIf="maxPrice != undefined && minPrice == undefined">
+                                До {{ maxPrice | fractionSizeSpace }} <i class="icon icon-rub"></i>
+                            </span>
+                            <span *ngIf="maxPrice != undefined && minPrice != undefined">
+                                {{ minPrice | fractionSizeSpace }}
+                                <i class="icon icon-rub"></i> - {{ maxPrice | fractionSizeSpace }} <i
+                                    class="icon icon-rub"></i>
+                            </span>
+                            <i class="icon icon-close" (click)="removePriceFilters()"></i>
+                        </div>
+                        <ng-container *ngIf="brandIsChecked">
+                            <ng-container *ngFor="let brand of brands">
+                                <div class="catalog-box__cards--filter-select__item d-f a-i-c" *ngIf="brand.isChecked">
+                                    <p>Бренд:</p>
+                                    <span>{{ brand.brand }}</span>
+                                    <i class="icon icon-close" (click)="removeBrandFilter(brand)"></i>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="depotIsChecked">
+                            <ng-container *ngFor="let depot of depots">
+                                <div class="catalog-box__cards--filter-select__item d-f a-i-c" *ngIf="depot.isChecked">
+                                    <p>В наличии:</p>
+                                    <span>{{ depot.depot }}</span>
+                                    <i class="icon icon-close" (click)="removeDepotFilter(depot)"></i>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="coloredValueChecked || notColoredValueChecked">
+                            <div class="catalog-box__cards--filter-select__item d-f a-i-c"
+                                *ngIf="coloredValueChecked || notColoredValueChecked">
+                                <span *ngIf="coloredValueChecked">Можно колеровать: Да</span>
+                                <span *ngIf="notColoredValueChecked">Можно колеровать: Нет</span>
+                                <i class="icon icon-close" (click)="removeColoredFilter()"></i>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngFor="let boolFilter of boolFilters">
+                            <div class="catalog-box__cards--filter-select__item d-f a-i-c"
+                                *ngIf="boolFilter.isTrueChecked || boolFilter.isFalseChecked">
+                                <span *ngIf="boolFilter.isTrueChecked">{{ boolFilter.name }}: Да</span>
+                                <span *ngIf="boolFilter.isFalseChecked">{{ boolFilter.name }}: Нет</span>
+                                <i class="icon icon-close" (click)="removeBoolFilter(boolFilter)"></i>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngFor="let enumFilter of enumFilters">
+                            <ng-container *ngIf="enumFilter.isChecked">
+                                <ng-container *ngFor="let item of enumFilter.values">
+                                    <div class="catalog-box__cards--filter-select__item d-f a-i-c"
+                                        *ngIf="item.isChecked">
+                                        <p>{{ enumFilter.name }}:</p>
+                                        <span>{{ item.value }}</span>
+                                        <i class="icon icon-close" (click)="removeEnumFilter(item, enumFilter)"></i>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+
+                        <ng-container *ngFor="let doubleFilter of doubleFilters">
+                            <div class="catalog-box__cards--filter-select__item d-f a-i-c"
+                                *ngIf="doubleFilter.isChecked">
+                                <p>{{ doubleFilter.name }}:</p>
+                                <span *ngIf="doubleFilter.minValue != undefined && doubleFilter.maxValue == undefined">
+                                    От {{ doubleFilter.minValue | fractionSizeSpace }}
+                                </span>
+                                <span *ngIf="doubleFilter.maxValue != undefined && doubleFilter.minValue == undefined">
+                                    До
+                                    {{ doubleFilter.maxValue | fractionSizeSpace }}
+                                </span>
+                                <span *ngIf="doubleFilter.minValue != undefined && doubleFilter.maxValue != undefined">
+                                    {{ doubleFilter.minValue }}
+                                    - {{ doubleFilter.maxValue }}
+                                </span>
+                                <i class="icon icon-close" (click)="removeDoubleFilter(doubleFilter)"></i>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngFor="let intFilter of intFilters">
+                            <div class="catalog-box__cards--filter-select__item d-f a-i-c" *ngIf="intFilter.isChecked">
+                                <p>{{ intFilter.name }}:</p>
+                                <span *ngIf="intFilter.minValue != undefined && intFilter.maxValue == undefined">
+                                    От {{ intFilter.minValue | fractionSizeSpace }}
+                                </span>
+                                <span *ngIf="intFilter.maxValue != undefined && intFilter.minValue == undefined">
+                                    До
+                                    {{ intFilter.maxValue | fractionSizeSpace }}
+                                </span>
+                                <span *ngIf="intFilter.minValue != undefined && intFilter.maxValue != undefined">
+                                    {{ intFilter.minValue }}
+                                    - {{ intFilter.maxValue }}
+                                </span>
+                                <i class="icon icon-close" (click)="removeIntFilter(intFilter)"></i>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="catalog-box__cards--filter-remove" (click)="removeAllFilters()">
+                        <p>Сбросить фильтры</p>
+                    </div>
+                </div>
+
+
+                <!-- tab row -->
+                <div class="catalog-box__cards--tab d-f">
+                    <div class="catalog-box__cards--tab-filters d-f">
+                        <!--<div class="catalog-box__cards--tab-filters__sort catalog-box__cards--tab-filters__item d-f a-i-c">
+            <div class="catalog-box__cards--tab-filters__item--name">
+                <p>Показывать</p>
+            </div>-->
+                        <!--<div class="catalog-box__cards--tab-filters__item--switcher d-f a-i-c">
+                <span (click)="changeShowUnavailable(true)" [class.active]="showUnavailable">Все</span>
+                <span (click)="changeShowUnavailable(false)" [class.active]="!showUnavailable">В наличии</span>
+            </div>-->
+                        <!--</div>-->
+                        <div
+                            class="catalog-box__cards--tab-filters__sort catalog-box__cards--tab-filters__item d-f a-i-c">
+                            <div class="catalog-box__cards--tab-filters__item--name">
+                                <p>Сортировать:</p>
+                            </div>
+                            <div class="catalog-box__cards--tab-filters__item--select select-filter" id="Sorting">
+                                <ng-select [(ngModel)]="sortingType" (change)="sortTypeChange()" [searchable]="false"
+                                    [clearable]="false">
+                                    <ng-option *ngFor="let sortType of allProductSortingTypes" [value]="sortType.key">
+                                        {{ sortType.name }}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div
+                            class="catalog-box__cards--tab-filters__show catalog-box__cards--tab-filters__item d-f a-i-c">
+                            <div class="catalog-box__cards--tab-filters__item--name">
+                                <p>Показывать по:</p>
+                            </div>
+                            <div class="catalog-box__cards--tab-filters__item--select select-filter" id="ShowBy">
+                                <ng-select [(ngModel)]="numberOfProductsInPage" (change)="pageSizeChanged()"
+                                    [searchable]="false" [clearable]="false">
+                                    <ng-option *ngFor="let pageSize of pageSizes" [value]="pageSize"> {{pageSize}}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="catalog-box__cards--tab-filters__switcher d-f a-i-c">
+                            <i id="listProduct"
+                                class=" {{ listingTypeIsRow ? 'icon icon-row d-f a-i-c j-c-c change_active active' : 'icon icon-row d-f a-i-c j-c-c change_active'}}"
+                                (click)="listingTypeSwitcher('row')"></i>
+                            <i id="iconGrid"
+                                class=" {{ !listingTypeIsRow ? 'icon icon-grid d-f a-i-c j-c-c change_active active' : 'icon icon-grid d-f a-i-c j-c-c change_active'}}"
+                                (click)="listingTypeSwitcher('grid')"></i>
+                        </div>
+                    </div>
+                    <div class="catalog-box__cards--tab-pagination d-f a-i-c j-c-c">
+                        <pagination (pageChanged)="goToPage($event)" [itemsPerPage]="numberOfProducts"
+                            [totalItems]="totalNumberOfProducts" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
+                            previousText="&lsaquo;" nextText="&rsaquo;" *ngIf="numbersOfPages.length > 0"></pagination>
+                    </div>
+                </div>
+
+                <div class="catalog-box__cards--list" *ngIf="areProductsLoaded">
+                    <div class="catalog-box__cards--list-box">
+                        <!-- favorites-cards == start -->
+                        <div class="favorites-cards cards d-f f-w">
+                            <div class="cards-product d-f {{listingType === 'grid' ? 'catalog-box__cards--list-box__grid' : 'catalog-box__cards--list-box__row'}}"
+                                *ngFor="let product of products; let i = index">
+
+                                <div class="cards-product__item">
+                                    <div class="cards-product__item--img-row">
+                                        <div class="cards-product__item--img">
+                                            <a href="#" [routerLink]="['/product', product.vendorCode]"
+                                                class="d-f a-i-c j-c-c" id="imageProduct">
+                                                <img *ngIf="product.imageUrl"
+                                                    src="{{ cloudinaryHelper.getImageUrl(product.imageUrl, 266, 266) }}"
+                                                    title="{{ product.name }}" alt="{{ product.name }}"
+                                                    (error)="setBrokenImage($event)" />
+                                                <img *ngIf="product.imageUrl === null"
+                                                    src="/assets/img/product-default-image.jpg" />
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="cards-product__item--info-row">
+                                        <div class="cards-product__item--name" id="NameProduct">
+                                            <a href="#" [routerLink]="['/product', product.vendorCode]"
+                                                title="{{ product.name }}">{{ product.name }}</a>
+                                        </div>
+
+                                        <div class="cards-product__item--price d_none">
+                                            <p class="cards-product__item--price-main">
+                                                <span *ngIf="isValueInteger(product.specialPrice.toFixed(2)*product.quantity)">{{product.specialPrice.toFixed(2)*product.quantity | fractionSizeSpace}} ₽</span>
+                                                <span *ngIf="!isValueInteger(product.specialPrice.toFixed(2)*product.quantity)">{{(product.specialPrice.toFixed(2)*product.quantity).toFixed(2) | fractionSizeSpace}} ₽</span>
+                                            </p>
+                                            <p class="cards-product__item--price-sub">
+                                                <span *ngIf="isValueInteger(product.specialPrice)">{{product.specialPrice | fractionSizeSpace}} ₽</span>
+                                                <span *ngIf="!isValueInteger(product.specialPrice)">{{product.specialPrice.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                                <span class="cards-product__item--price-sub__name">цена за {{product.unitOfMeasurementNameForUnit}}</span>
+                                            </p>
+                                            <p class="cards-product__item--price-sub" *ngIf="product.price > product.specialPrice">
+                                                <span *ngIf="isValueInteger(product.price)">{{product.price | fractionSizeSpace}} ₽</span>
+                                                <span *ngIf="!isValueInteger(product.price)">{{product.price.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                                <span class="cards-product__item--price-sub__name">Розничная цена</span>
+                                            </p>
+                                        </div>
+
+                                        <div class="cards-product__item--vendorcode" id="ArticleNumber">
+                                            <p>Артикул: <span>{{ product.vendorCode }}</span></p>
+                                        </div>
+                                        <ul class="cards-product__item--remainder" id="InStock">
+                                            <li class="d-f a-i-c" *ngIf="product.amountInStock>0">
+                                                <i class="new-icon new-icon-added"></i>
+                                                <!--<h3 class="d-f a-i-c">
+                                            <p>
+                                                В наличии <span>
+                                                    <i class="green_color">{{ (product.amountInStock / product.unitOfMeasurementCoefficient).toFixed(2) }}</i>
+                                                    <span>{{product.unitOfMeasurementName}}</span>
+                                                </span>
+                                            </p>
+
+                                        </h3>
+                                        <div class="basket-print__box d-f a-i-c" *ngIf="product.productDepos.length>1">
+                                            <div class="basket-print__box--link d-f a-i-c">
+                                                <span>Все магазины</span>
+                                            </div>
+                                            <div class="basket-print__box--dropdown">
+                                                <ng-container *ngFor="let productDepot of product.productDepos">
+                                                    <span>
+                                                        <span class="basket-print__box--dropdown-link">{{productDepot.depotName}}</span>
+                                                        <span> {{productDepot.amountInStock}}</span>
+                                                    </span>
+                                                    <br />
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="product.productDepos.length==1">
+                                            <div>
+                                                <span>{{product.productDepos[0].depotName}}</span>
+                                            </div>
+                                        </div>-->
+                                                <!--<div class="tooltip">
+                                            <h3>
+                                                В наличии <span>
+                                                    <i class="green_color">{{isValueInteger(product.amountInStock / product.unitOfMeasurementCoefficient) ? product.amountInStock / product.unitOfMeasurementCoefficient : (product.amountInStock / product.unitOfMeasurementCoefficient).toFixed(2)}}</i>
+                                                </span><span>{{product.unitOfMeasurementName}}</span>
+                                            </h3>
+                                            <div class="tooltip-content">
+                                                <ul class="tooltip-content__list triangle triangle-down">
+                                                    <li *ngFor="let productDepot of product.productDepos">{{productDepot.depotName}} {{productDepot.amountInStock}}</li>
+                                                </ul>
+                                            </div>
+                                        </div>-->
+                                                <!-- <h3>Депо Мытищи</h3> -->
+                                                <!-- <h3>Депо Мытищи</h3> -->
+                                                <div class="tooltip">
+                                                    <h3>
+                                                        В наличии <span>
+                                                            <i
+                                                                class="green_color">{{(product.amountInStock / product.unitOfMeasurementCoefficient).toFixed(2) }}</i>
+                                                        </span><span>{{product.unitOfMeasurementName}}</span>
+                                                    </h3>
+                                                    <div class="tooltip-content" style="text-align: left;">
+                                                        <ul class="tooltip-content__list triangle triangle-down">
+                                                            <li *ngFor="let productDepot of product.productDepos">
+                                                                {{productDepot.depotName}}
+                                                                {{productDepot.amountInStock}}</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="d-f a-i-c"
+                                                *ngIf="product.amountInStock==0 && (product.gamma==3 || product.gamma==2)&& product.deliveryDelay > 0">
+                                                <i class="new-icon new-icon-pending"></i>
+                                                <h3 class="d-f a-i-c">
+                                                    <p>Под заказ.</p>
+                                                </h3>
+                                            </li>
+                                            <li class="d-f a-i-c"
+                                                *ngIf="product.amountInStock==0 && (product.gamma==3 || product.gamma==2)&& product.deliveryDelay > 0">
+                                                <i class="new-icon new-icon-notification_delivery"></i>
+                                                <h3 class="d-f a-i-c">
+                                                    <p>
+                                                        Доставка: от {{product.deliveryDelay}}
+                                                        {{declensionMaker.getDeclensionFrom(product.deliveryDelay, "дня", "дней")}}
+                                                    </p>
+                                                </h3>
+                                            </li>
+                                        </ul>
+
+                                        <div class="cards-product__election d_none">
+                                            <div class="cards-product__election--btn">
+                                                <button *ngIf="canAddToComparison(product.id)"
+                                                    title="Добавить в сравнение"
+                                                    class="icon icon-compare d-f a-i-c j-c-c" id="AddToComparison"
+                                                    data-title="Добавить в сравнение"
+                                                    [disabled]="productAddToComparisonListClicked[i]"
+                                                    (click)="addToComparison(product.id, i)"></button>
+                                                <button *ngIf="!canAddToComparison(product.id)"
+                                                    title="Удалить из сравнения"
+                                                    class="icon icon-compare icon-favorite__active d-f a-i-c j-c-c"
+                                                    id="RemoveFromComparison" data-title="Удалить из сравнения"
+                                                    [disabled]="productRemoveFromComparisonListClicked[i]"
+                                                    (click)="removeProductFromComparison(product.id, i)"></button>
+                                            </div>
+
+                                            <div class="cards-product__election--btn">
+                                                <button *ngIf="!isFavoriteProduct(product.id)"
+                                                    title="Добавить в избранное" (click)="addToFavorite(product.id)"
+                                                    class="icon icon-favorite d-f a-i-c j-c-c" id="AddToFavorites"
+                                                    data-title="Добавить в избранное"></button>
+                                                <button *ngIf="isFavoriteProduct(product.id)"
+                                                    title="Удалить из списка избранных"
+                                                    (click)="removeFromFavorite(product.id)"
+                                                    class="icon icon-favorite icon-favorite__active d-f a-i-c j-c-c"
+                                                    id="RemoveFromFavorites"
+                                                    data-title="Удалить из списка избранных"></button>
+                                            </div>
+
+                                            <div class="cards-product__election--btn">
+                                                <button *ngIf="!isProductInTemplate(product.id)"
+                                                    class="icon icon-template d-f a-i-c j-c-c" id="AddToTemplate"
+                                                    data-title="Добавить в шаблон"
+                                                    (click)="addOrderTemplate(product.id, product.shipmentMultiplicity, product.name, product.amountInStock)"></button>
+                                                <button *ngIf="isProductInTemplate(product.id)"
+                                                    class="icon icon-template icon-favorite__active d-f a-i-c j-c-c"
+                                                    id="AddToTemplate" data-title="Добавить в шаблон"
+                                                    (click)="addOrderTemplate(product.id, product.shipmentMultiplicity, product.name, product.amountInStock)"></button>
+                                            </div>
+                                        </div>
+
+                                        <div class="cards-product__item--counter d_none a-i-c">
+                                            <div class="cards-product__item--counter-increment">
+                                                <app-product-counter
+                                                    productCounterMin="{{ product.shipmentMultiplicity }}"
+                                                    productCounterMax="{{ product.amountInStock }}"
+                                                    productCounterStep="{{ product.shipmentMultiplicity }}"
+                                                    productCounterQuantity="{{ product.quantity }}"
+                                                    (increment)="increment(product, product.quantity)"
+                                                    (decrement)="decrement(product,product.quantity)"
+                                                    (changeNumber)="changeNumber($event, product)"
+                                                    (error)="errorMethod()">
+                                                </app-product-counter>
+                                            </div>
+                                            <div class="cards-product__item--counter-btn btn-global">
+                                                <button class="btn-global__red"
+                                                    (click)="addToBasket(product.id, product.quantity, product.canSelectOffer)">
+                                                    <ng-container *ngIf="product.amountInStock>0">В КОРЗИНУ
+                                                    </ng-container>
+                                                    <ng-container *ngIf="product.amountInStock ==0">ПОД ЗАКАЗ
+                                                    </ng-container>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="cards-product__item--conut-row cards-product__item--conut-grid">
+                                    <div class="cards-product__item--price">
+                                        <p class="cards-product__item--price-main">
+                                            <span *ngIf="isValueInteger(product.specialPrice.toFixed(2)*product.quantity)">{{product.specialPrice.toFixed(2)*product.quantity | fractionSizeSpace}} ₽</span>
+                                            <span *ngIf="!isValueInteger(product.specialPrice.toFixed(2)*product.quantity)">{{(product.specialPrice.toFixed(2)*product.quantity).toFixed(2) | fractionSizeSpace}} ₽</span>
+                                        </p>
+                                        <p class="cards-product__item--price-sub">
+                                            <span *ngIf="isValueInteger(product.specialPrice)">{{product.specialPrice | fractionSizeSpace}} ₽</span>
+                                            <span *ngIf="!isValueInteger(product.specialPrice)">{{product.specialPrice.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                            <span class="cards-product__item--price-sub__name">цена за {{product.unitOfMeasurementNameForUnit}}</span>
+                                        </p>
+                                        <p class="cards-product__item--price-sub" *ngIf="product.price > product.specialPrice">
+                                            <span *ngIf="isValueInteger(product.price)">{{product.price | fractionSizeSpace}} ₽</span>
+                                            <span *ngIf="!isValueInteger(product.price)">{{product.price.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                            <span class="cards-product__item--price-sub__name">Розничная цена</span>
+                                        </p>
+                                    </div>
+
+                                    <!-- cards-product__item--select == start -->
+                                    <!-- <div class="cards-product__item--select">
+                           <div class="cards-product__item--select-title">
+                              <p>Фасовка:</p>
+                           </div>
+                           <div class="select-filter sort-select__filter">
+                              <ng-select>
+                                 <ng-option>
+                                    Фасовка
+                                 </ng-option>
+                              </ng-select>
+                           </div>
+                        </div> -->
+                                    <!-- cards-product__item--select == end -->
+                                    <div class="cards-product__item--counter d-f">
+                                        <div class="cards-product__item--counter-increment">
+                                            <app-product-counter productCounterMin="{{ product.shipmentMultiplicity }}"
+                                                productCounterMax="{{ product.amountInStock }}"
+                                                productCounterStep="{{ product.shipmentMultiplicity }}"
+                                                productCounterQuantity="{{ product.quantity }}"
+                                                (increment)="increment(product, product.quantity)"
+                                                (decrement)="decrement(product,product.quantity)"
+                                                (changeNumber)="changeNumber($event, product)" (error)="errorMethod()">
+                                            </app-product-counter>
+                                        </div>
+                                        <div class="cards-product__item--counter-btn btn-global">
+                                            <button class="btn-global__red" id="addToBasketProduct"
+                                                (click)="addToBasket(product.id, product.quantity, product.canSelectOffer)">
+                                                <ng-container *ngIf="product.amountInStock>0">В КОРЗИНУ</ng-container>
+                                                <ng-container *ngIf="product.amountInStock ==0">ПОД ЗАКАЗ</ng-container>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="cards-product__election d_none">
+                                        <div class="cards-product__election--btn">
+                                            <button *ngIf="canAddToComparison(product.id)" title="Добавить в сравнение"
+                                                class="icon icon-compare d-f a-i-c j-c-c"
+                                                data-title="Добавить в сравнение"
+                                                [disabled]="productAddToComparisonListClicked[i]"
+                                                (click)="addToComparison(product.id, i)"></button>
+                                            <button *ngIf="!canAddToComparison(product.id)" title="Удалить из сравнения"
+                                                class="icon icon-compare icon-favorite__active d-f a-i-c j-c-c"
+                                                data-title="Удалить из сравнения"
+                                                [disabled]="productRemoveFromComparisonListClicked[i]"
+                                                (click)="removeProductFromComparison(product.id, i)"></button>
+                                        </div>
+
+                                        <div class="cards-product__election--btn">
+                                            <button *ngIf="!isFavoriteProduct(product.id)" title="Добавить в избранное"
+                                                (click)="addToFavorite(product.id)"
+                                                class="icon icon-favorite d-f a-i-c j-c-c"
+                                                data-title="Добавить в избранное"></button>
+                                            <button *ngIf="isFavoriteProduct(product.id)"
+                                                title="Удалить из списка избранных"
+                                                (click)="removeFromFavorite(product.id)"
+                                                class="icon icon-favorite icon-favorite__active d-f a-i-c j-c-c"
+                                                data-title="Удалить из списка избранных"></button>
+                                        </div>
+
+                                        <div class="cards-product__election--btn">
+                                            <button *ngIf="!isProductInTemplate(product.id)"
+                                                class="icon icon-template d-f a-i-c j-c-c"
+                                                data-title="Добавить в шаблон"
+                                                (click)="addOrderTemplate(product.id, product.shipmentMultiplicity, product.name, product.amountInStock)"></button>
+                                            <button *ngIf="isProductInTemplate(product.id)"
+                                                class="icon icon-template icon-favorite__active d-f a-i-c j-c-c"
+                                                data-title="Добавить в шаблон"
+                                                (click)="addOrderTemplate(product.id, product.shipmentMultiplicity, product.name, product.amountInStock)"></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- product__new icon == start -->
+                                <div class="cards-product__new">
+                                    <span class="d-f a-i-c j-c-c newProductTooltip"
+                                        *ngFor="let marketingTag of sortMarketingTags(product.productMarketingTags)"
+                                        [style.background]="marketingTag.backgroundColor"
+                                        [style.color]="marketingTag.foregroundColor">
+                                        {{ marketingTag.name }}
+                                        <p class="newProductTooltipContentDescription" hidden>
+                                            {{marketingTag.description}}</p>
+                                    </span>
+                                </div>
+                                <!-- product__new icon == end -->
+
+                            </div>
+                        </div>
+                        <!-- favorites-cards == end -->
+                    </div>
+                </div>
+
+                <!-- плейсхолдер для столбцов -->
+                <div *ngIf="!areProductsLoaded && listingType === 'grid'" class="g-vertical-placeholder">
+                    <article class="product-article product-article--type-1 g-cols"
+                        *ngFor="let ghost of [1, 2, 3, 4, 5]">
+                        <svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 285 598"
+                            style="enable-background:new 0 0 285 598;" xml:space="preserve">
+                            <style type="text/css">
+                                .st0 {
+                                    fill-rule: evenodd;
+                                    clip-rule: evenodd;
+                                    fill: #F3F3F3;
+                                }
+                            </style>
+                            <g>
+                                <path class="st0" d="M262,18H23c-2.2,0-4,1.8-4,4v239c0,2.2,1.8,4,4,4h239c2.2,0,4-1.8,4-4V22C266,19.8,264.2,18,262,18z
+             M171,136.2c1,0,1.8,0.5,2.4,1.4v0l3.4,5.1l-5.8,8.8l-5.8-8.8l3.4-5.1C169.2,136.7,170.1,136.2,171,136.2L171,136.2z M156.1,101.3
+            c5.5,0,10,4.5,10,10s-4.5,10-10,10c-5.5,0-10-4.5-10-10S150.6,101.3,156.1,101.3z M122.1,121.6c0.6-0.9,1.5-1.4,2.4-1.4
+            c1,0,1.8,0.5,2.4,1.4l10.4,15.8l-5.6,10.5l-4.1-7.7c-0.9-1.7-3-2.3-4.7-1.4c-0.6,0.3-1.1,0.8-1.4,1.4l-4.1,7.7l-5.6-10.5
+            L122.1,121.6L122.1,121.6z M163.8,180.3c-0.5,0.9-1.4,1.3-2.5,1.3H87.6c-1.1,0-2-0.5-2.5-1.3c-0.5-0.9-0.4-1.9,0.2-2.8l22-33.4
+            l6.9,13c0.9,1.7,3,2.3,4.7,1.4c0.6-0.3,1.1-0.8,1.4-1.4l4.1-7.7l4.1,7.7c0.9,1.7,3,2.3,4.7,1.4c0.6-0.3,1.1-0.8,1.4-1.4l6.9-13
+            l22,33.4C164.2,178.4,164.3,179.5,163.8,180.3L163.8,180.3z M199.9,180.3c-0.5,0.9-1.4,1.3-2.5,1.3h-26.6c0.7-2.7,0.3-5.5-1.3-8
+            L157.2,155l3.9-5.9l7,10.7c1.1,1.6,3.2,2.1,4.8,1c0.4-0.3,0.7-0.6,1-1l7-10.7l18.7,28.4C200.3,178.4,200.3,179.5,199.9,180.3
+            L199.9,180.3z" />
+
+
+
+
+
+
+
+                                <rect x="20" y="281" class="st0" width="230" height="32" />
+
+
+
+
+
+
+
+                                <rect x="20" y="321" class="st0" width="156" height="32" />
+
+
+
+
+
+
+
+                                <rect x="20" y="385" class="st0" width="161" height="16" />
+
+
+
+
+
+
+
+                                <rect x="20" y="409" class="st0" width="191" height="16" />
+
+
+
+
+
+
+
+                                <rect x="20" y="466" class="st0" width="245" height="45" />
+
+
+
+
+
+
+
+                                <rect y="523" class="st0" width="285" height="2" />
+
+
+
+
+
+
+
+                                <circle class="st0" cx="57" cy="555" r="18" />
+
+
+
+
+
+
+
+                                <circle class="st0" cx="142" cy="555" r="18" />
+
+
+
+
+
+
+
+                                <circle class="st0" cx="229" cy="556" r="18" />
+
+
+
+
+
+
+
+                                <circle class="st0" cx="229" cy="556" r="18" />
+
+
+
+
+
+
+
+                            </g>
+                        </svg>
+                    </article>
+                </div>
+                <!-- /плейсхолдер для столбцов -->
+                <!-- плейсхолдер для списка -->
+                <div *ngIf="!areProductsLoaded && listingType === 'row'">
+                    <br>
+                    <article class="product-article " *ngFor="let ghost of [1, 2, 3, 4, 5]">
+                        <content-loader class="d_block" height="327" width="1073" speed="2" primaryColor="#f3f3f3"
+                            secondaryColor="#ecebeb">
+                            <svg:rect x="369" y="130" rx="4" ry="4" width="133" height="20" />
+                            <svg:rect x="369" y="28" rx="4" ry="4" width="355" height="56" />
+                            <svg:rect x="50" y="50" rx="1" ry="1" width="240" height="240" />
+                            <svg:rect x="369" y="160" rx="4" ry="4" width="183" height="20" />
+                            <svg:rect x="369" y="220" rx="4" ry="4" width="45" height="45" />
+                            <svg:rect x="424" y="220" rx="4" ry="4" width="45" height="45" />
+                            <svg:rect x="479" y="220" rx="4" ry="4" width="45" height="45" />
+                        </content-loader>
+                    </article>
+                </div>
+                <!-- /плейсхолдер для списка -->
+
+                <div class="catalog-box__cards--pagination d-f a-i-c j-c-b">
+
+                    <div class="catalog-box__cards--pagination-count">
+                        <p>
+                            Показано <span *ngIf="totalNumberOfProducts!=0"> {{skipNumberOfProducts + 1}} - </span>
+                            {{products.length + skipNumberOfProducts < totalNumberOfProducts ? products.length + skipNumberOfProducts : totalNumberOfProducts}}
+                            из {{ totalNumberOfProducts }}
+                        </p>
+                    </div>
+
+                    <div class="catalog-box__cards--pagination-show d-f a-i-c j-c-c"
+                        *ngIf="(products.length + skipNumberOfProducts < totalNumberOfProducts? products.length + skipNumberOfProducts: totalNumberOfProducts) < totalNumberOfProducts"
+                        (click)="showMore()">
+                        <i class="icon icon-repeat"></i>
+                        <p>ПОКАЗАТЬ ЕЩЕ</p>
+                    </div>
+
+                    <div class="catalog-box__cards--pagination-number d-f a-i-c j-c-c">
+                        <pagination (pageChanged)="goToPage($event)" [itemsPerPage]="numberOfProducts"
+                            [totalItems]="totalNumberOfProducts" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
+                            previousText="&lsaquo;" nextText="&rsaquo;" *ngIf="numbersOfPages.length > 0"></pagination>
+                    </div>
+
+                </div>
+
+                <div class="catalog-box__cards--search d-f j-c-b" *ngIf="isUserLoggedIn">
+                    <form class="catalog-box__cards--search-box">
+                        <div class="catalog-box__cards--search-box__title">
+                            <h2 class="catalog-box__cards--search-box__title--main">не Нашли, что искали?</h2>
+                            <p class="catalog-box__cards--search-box__title--text">Отправьте название товара, бренда или
+                                ссылку на него.</p>
+                        </div>
+                        <div class="catalog-box__cards--search-box__area d-f">
+                            <div class="catalog-box__cards--search-box__area--text">
+                                <input placeholder="Название, бренд или ссылка на товар" [(ngModel)]="userMessageText"
+                                    name="TextInputName" />
+                            </div>
+                            <div class="catalog-box__cards--search-box__area--btn btn-global">
+                                <button class="btn-global__red"
+                                    [disabled]="userMessageText == null || userMessageText.length==0"
+                                    (click)="sendMessageForNotFountProduct()">отправить</button>
+                            </div>
+                        </div>
+                        <div class="catalog-box__cards--search-box__ready d-f a-i-c" *ngIf="showThanksMessage">
+                            <i class="new-icon new-icon-added"></i>
+                            <p class="catalog-box__cards--search-box__ready--text">Спасибо, что помогаете нам стать
+                                лучше!</p>
+                        </div>
+                    </form>
+
+                    <div class="catalog-box__cards--search-img">
+                        <img src="../../assets/img/catalog/search/search.png" alt="img">
+                    </div>
+                </div>
+            </div>
+            <!-- catalog cards end -->
+
+        </div>
+    </div>
+</div>

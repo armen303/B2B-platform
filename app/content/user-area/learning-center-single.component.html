@@ -1,0 +1,91 @@
+﻿   <!-- crumb == start -->
+<div class="container animate_show_up">
+    <div class="crumb">
+        <ul class="crumb-list d-f f-w a-i-c">
+            <li class="crumb-list__item">
+                <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+            </li>
+            <li class="crumb-list__item">−</li>
+            <li class="crumb-list__item">
+                <a href="#" [routerLink]="['/user/learning-center']" class="crumb-list__item--link">Обучение</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="global-title">
+        <h1>Обучение </h1>
+    </div>
+</div>
+<!-- crumb == end -->
+
+
+<div class="learning animate_show_up" *ngIf="isLoaded">
+    <div class="container">
+        <div class="learning-list d-f f-w">
+            <div class="learning-list__item">
+                <div class="learning-list__item--box d-f">
+                    <div class="learning-list__item--box-img">
+                        <img src="{{event.image}}" alt="img" />
+                    </div>
+                    <div class="learning-list__item--box-info">
+                        <p class="learning-list__item--box-info__tag">
+                            {{getTags(event.tags)}}
+                        </p>
+                        <p class="learning-list__item--box-info__title">
+                            {{event.name}}
+                        </p>
+                        <p class="learning-list__item--box-info__description" [innerHTML]="event.description | safeHtml">
+                        </p>
+                        <a href="#" *ngIf="!event.isRegistrated" (click)="register()" class="learning-list__item--box-info__btn learning-list__item--box-info__btn--go">
+                            Я
+                            ХОЧУ ПОЙТИ
+                        </a>
+                        <a href="#" *ngIf="event.isRegistrated" (click)="cancel()" class="learning-list__item--box-info__btn learning-list__item--box-info__btn--undo">ОТМЕНИТЬ ЗАПИСЬ</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="learning-list__info d-f ">
+                <div class="learning-list__info--item d-f a-i-c">
+                    <div class="learning-list__info--item-img">
+                        <img src="../../../assets/img/learning/Group.svg" alt="img">
+                    </div>
+                    <div class="learning-list__info--item-text">
+                        <p class="learning-list__info--item-text__title">Дата и время мероприятия</p>
+                        <p *ngIf="oneDayEvent(event)" class="learning-list__info--item-text__date">
+                            {{getDateString(event.startDate)}} <br />
+                            с {{getTimeString(event.startDate)}} до {{getTimeString(event.endDate)}}
+                        </p>
+                        <p *ngIf="!oneDayEvent(event)" class="learning-list__info--item-text__date">
+                            c {{getDateString(event.startDate)}} {{getTimeString(event.startDate)}}
+                            до {{getDateString(event.endDate)}} {{getTimeString(event.endDate)}}
+                        </p>
+                    </div>
+                </div>
+                <div class="learning-list__info--item d-f a-i-c">
+                    <div class="learning-list__info--item-img">
+                        <img src="../../../assets/img/learning/Group-2.svg" alt="img">
+                    </div>
+                    <div class="learning-list__info--item-text">
+                        <p class="learning-list__info--item-text__title">Длительность</p>
+                        <p *ngIf="isPeriodInHour(minutesCount(event))" class="learning-list__info--item-text__date">{{minutesCount(event)/60}}   {{declensionMaker.getDeclension(minutesCount(event)/60, "час", "часа", "часов")}}</p>
+                        <p *ngIf="!isPeriodInHour(minutesCount(event))" class="learning-list__info--item-text__date">{{minutesCount(event)}}   {{declensionMaker.getDeclension(minutesCount(event), "минута", "минуты", "минут")}}</p>
+                    </div>
+                </div>
+                <div class="learning-list__info--item d-f a-i-c">
+                    <div class="learning-list__info--item-img">
+                        <img src="../../../assets/img/learning/Group-1.svg" alt="img">
+                    </div>
+                    <div class="learning-list__info--item-text">
+                        <p class="learning-list__info--item-text__title">Спикер</p>
+                        <p class="learning-list__info--item-text__date">{{event.speaker}}</p>
+                        <p class="learning-list__info--item-text__description">
+                            {{event.speakerPosition}}<span *ngIf="event.speakerUrl">, </span> <br />
+                            <a *ngIf="event.speakerUrl" [attr.href]="event.speakerUrl" class="learning-list__info--item-text__description--link"> {{getShortUrl(event.speakerUrl)}}</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

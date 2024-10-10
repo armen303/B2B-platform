@@ -1,0 +1,198 @@
+@import '../styles/base/shared';
+
+.support {
+    margin-top: 34px;
+    margin-bottom: 70px;
+    
+    .bg-br {
+        padding: 30px;
+        
+        @include sm {
+            padding: 30px 15px;
+        }
+        
+    }
+    
+    &-box {
+        &__list {
+            margin: 0 -8px;
+            margin-bottom: 18px;
+            
+            @include sm {
+                margin: 0 0 18px 0;
+                display: block;
+            }
+            
+            &--item {
+                width: 50%;
+                padding: 0 8px;
+                
+                @include sm {
+                    width: 100%;
+                    padding: 0;
+                    
+                    & + & {
+                        margin-top: 25px;
+                    }
+                }
+                
+                &-title {
+                    font: 15px $Bold;
+                    color: $third_color;
+                    text-transform: uppercase;
+                    margin-bottom: 17px;
+                }
+                
+                &-items {
+                    margin-top: 30px;
+                    
+                    input {
+                        @include wh(100%, 40px);
+                        padding: 10px 13px;
+                        display: block;
+                        font: 15px $Regular;
+                        color: $second_color;
+                        
+                        &::placeholder {
+                            font: 15px $Regular;
+                            color: rgba(47, 64, 69, 0.5);
+                        }
+                    }
+                    
+                    &.sort-select__filter {
+                        .ng-select-container {
+                            height: 41px;
+                            border: solid 1px rgba(#c7d0d3, .5);
+                        }
+                        
+                        .ng-arrow-wrapper {
+                            border-left: 1px solid transparent;
+                        }
+                        
+                        .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input, .ng-has-value .ng-placeholder {
+                            opacity: 0;
+                            display: none;
+                        }
+                        
+                        .ng-option-label, .ng-placeholder {
+                            color: #4F565A;
+                        }
+                    }
+                }
+            }
+        }
+        
+        &__textarea {
+            margin-bottom: 20px;
+            
+            textarea {
+                @include wh(100%, 121px);
+                font: 15.5px/1.48 $Regular;
+                color: $second_color;
+                
+                &::placeholder {
+                    font: 15.5px/1.48 $Regular;
+                    color: rgba(47, 64, 69, 0.5);
+                    
+                    @include sm {
+                        font-size: 12px;
+                    }
+                }
+            }
+        }
+        
+        &__files {
+            margin-bottom: 23px;
+            
+            &--list {
+                margin: 0 -4px;
+                
+                &-item {
+                    padding: 4px;
+                    
+                    label {
+                        padding: 10px 12px;
+                        border-radius: 5px;
+                        background-color: rgba(#ebeced, .5);
+                        
+                        p {
+                            font: 13px/1 $Regular;
+                            color: $second_color;
+                        }
+                    }
+                }
+                
+                &-add {
+                    label {
+                        cursor: pointer;
+                        
+                        .icon-file {
+                            font-size: 18px;
+                            color: rgba(#3a5057, .5);
+                            margin-right: 13px;
+                        }
+                    }
+                }
+                
+                &-added {
+                    label {
+                        position: relative;
+                        padding-right: 30px;
+                        
+                        .icon-file_added {
+                            font-size: 14px;
+                            margin-right: 12px;
+                            color: rgba($second_color, .5);
+                        }
+                        
+                        .icon-close {
+                            font-size: 8px;
+                            right: 10px;
+                            color: rgba(#3a5057, .5);
+                        }
+                    }
+                }
+                
+                &-info {
+                    font: 15.5px $Regular;
+                    color: rgba(47, 64, 69, 0.5);
+                }
+            }
+        }
+        
+        &__btn {
+            @include wh(179px, 45px);
+            margin-bottom: 44px;
+            
+            @include sm {
+                width: 100%;
+            }
+        }
+        
+        &__text {
+            max-width: 835px;
+            margin: auto;
+            padding: 0 10px;
+            font: 21px/1.21 $Light;
+            color: $second_color;
+            text-align: center;
+            
+            @include sm {
+                font-size: 16px;
+                padding: 0;
+            }
+            
+            a {
+                border-bottom: .5px solid var(--global_color);
+                line-height: 1;
+                display: inline-block;
+                transition: $transition;
+                
+                &:hover {
+                    color: $green_color;
+                    border-bottom: .5px solid $green_color;
+                }
+            }
+        }
+    }
+}

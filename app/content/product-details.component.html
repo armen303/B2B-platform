@@ -1,0 +1,1120 @@
+<div *ngIf="isLoaded">
+
+    <!-- crumb == start -->
+    <div class="container animate_show_up">
+        <div class="crumb">
+            <ul class="crumb-list d-f f-w a-i-c" id="PathProduct">
+                <li class="crumb-list__item">
+                    <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+                </li>
+                <li class="crumb-list__item">−</li>
+                <li class="crumb-list__item">
+                    <a href="#" class="crumb-list__item--link" [routerLink]="['/catalog-list']">Каталог</a>
+                </li>
+                <li class="crumb-list__item">−</li>
+                <li class="crumb-list__item">
+                    <a href="#" class="crumb-list__item--link" (click)="goTo(product.subcategory.category.group.id)">
+                        {{product.subcategory.category.group.name}}
+                    </a>
+                </li>
+                <li class="crumb-list__item">−</li>
+                <li class="crumb-list__item">
+                    <a href="#" class="crumb-list__item--link"
+                       [routerLink]="['/catalog', product.subcategory.category.id]">{{ product.subcategory.category.name }}</a>
+                </li>
+                <li class="crumb-list__item">−</li>
+                <li class="crumb-list__item">
+                    <a href="#" class="crumb-list__item--link"
+                       [routerLink]="['/catalog',product.subcategory.category.id,product.subcategory.id]">{{ product.subcategory.name }}</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="global-title" id="globalTitle">
+            <h1>{{ product.name }}</h1>
+        </div>
+    </div>
+    <!-- crumb == end -->
+
+
+
+    <div class="product-details">
+        <div class="product-details__topbar" id="productDetailsTopBar">
+            <div class="container">
+                <div class="product-details__topbar--box d-f a-i-c j-c-b">
+                    <div class="product-details__topbar--box-info d-f a-i-c">
+                        <div class="product-details__topbar--box-info__img">
+                            <img *ngIf="product.mainImage === null" src="../../assets/img/product/default-big.png"
+                                 alt="img" />
+                            <img *ngIf="product.mainImage !== null"
+                                 [src]="cloudinaryHelper.getImageUrl(product.mainImage.imageURL, 112, 110)"
+                                 (error)="brokenImage(largeImage)" #largeImage />
+                        </div>
+                        <div class="product-details__topbar--box-info__name">
+                            <p>
+                                {{product.name}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="product-details__topbar--box-main d-f a-i-c">
+                        <div class="product-details__info--cnt-add__price--main product-details__info--cnt-add__main--pallet-price product-details__topbar--box-main__price">
+                            <p class="zero">
+                                <span *ngIf="isValueInteger(priceToShow)">{{priceToShow | fractionSizeSpace}} ₽</span>
+                                <span *ngIf="!isValueInteger(priceToShow)">{{priceToShow.toFixed(2) | fractionSizeSpace}} ₽</span>
+                            </p>
+                        </div>
+                        <div class="product-details__topbar--box-main__btn d-f">
+                            <app-product-counter productCounterMin="{{product.shipmentMultiplicity}}"
+                                                 productCounterMax="{{product.amountInStock}}"
+                                                 productCounterStep="{{product.shipmentMultiplicity}}"
+                                                 productCounterQuantity="{{product.quantity}}" (increment)="increment(product)"
+                                                 (decrement)="decrement(product)" (changeNumber)="changeNumber($event, product)"
+                                                 (error)="errorMethod()">
+                            </app-product-counter>
+                            <div class="product-details__topbar--box-main__btn--all">
+                                <button [disabled]="isDiscontinued" (click)="addToBasket(product.id, product.quantity)"
+                                        id="addToBasket">
+                                    <span>
+                                        <ng-container *ngIf="!isDiscontinued && product.amountInStock>0">
+                                            добавить В корзину
+                                        </ng-container>
+                                        <ng-container *ngIf="!isDiscontinued && product.amountInStock ==0">
+                                            ПОД ЗАКАЗ
+                                        </ng-container>
+                                        <ng-container *ngIf="isDiscontinued">снят с продажи</ng-container>
+                                    </span>
+                                    <i class="new-icon new-icon-basket d_none"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="product-details__selection">
+                <ul class="product-details__selection--list d-f a-i-c">
+                    <li class="product-details__selection--list-item">
+                        <a href="#" class="d-f a-i-c" id="addOrderTemplateButton"
+                           (click)="addOrderTemplate(product.id)">
+                            <i *ngIf="!isProductInTemplate()" class="new-icon new-icon-patterns"></i>
+                            <i *ngIf="isProductInTemplate()" class="new-icon new-icon-patterns active"></i>
+                            <span>В шаблон</span>
+                        </a>
+                    </li>
+                    <li class="product-details__selection--list-item">
+                        <a href="#" class="d-f a-i-c" id="addToComparisonButton" *ngIf="canAddToComparison()"
+                           (click)="addToComparison()">
+                            <i class="new-icon new-icon-comparison"></i>
+                            <span>Сравнить</span>
+                        </a>
+                        <a href="#" class="d-f a-i-c" *ngIf="!canAddToComparison()"
+                           (click)="removeProductFromComparison()">
+                            <i class="new-icon new-icon-comparison active"></i>
+                            <span>В сравнении</span>
+                        </a>
+                    </li>
+                    <li class="product-details__selection--list-item">
+                        <a href="#" class="d-f a-i-c" id="addToFavoriteButton" *ngIf="!isFavoriteProduct()"
+                           (click)="addToFavorite(product.id)">
+                            <i class="new-icon new-icon-favorites"></i>
+                            <span>В избранное</span>
+                        </a>
+                        <a href="#" class="d-f a-i-c" id="removeFromFavoriteButton" *ngIf="isFavoriteProduct()"
+                           (click)="removeFromFavorite(product.id)">
+                            <i class="new-icon new-icon-favorites active"></i>
+                            <span>В избранном</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="product-details__info d-f j-c-b">
+                <div class="product-details__info--img d-f">
+                    <div class="product-details__info--img-list" *ngIf="product.imageModel.length>0">
+                        <ngx-slick-carousel class="slick-carousel productDetailsList d_block"
+                                            [config]="productDetailsList">
+                            <div ngxSlickItem *ngFor="let image of product.imageModel">
+                                <div class="product-details__info--img-list__item" id="Smallimage"
+                                     *ngIf="product.imageModel != null && product.imageModel.length > 0">
+                                    <img [src]="cloudinaryHelper.getImageUrl(image.imageURL, 120, 120)"
+                                         (error)="setBrokenImage($event)" alt="img" />
+                                </div>
+                            </div>
+                        </ngx-slick-carousel>
+                    </div>
+                    <div class="product-details__info--img-main">
+                        <ngx-slick-carousel class="slick-carousel productDetailsMain d_block"
+                                            [config]="productDetailsMain">
+                            <div ngxSlickItem *ngFor="let image of product.imageModel">
+                                <div class="product-details__info--img-main__box">
+                                    <img *ngIf="image === null" src="../../assets/img/product/default-big.png"
+                                         alt="img" />
+                                    <img *ngIf="image !== null"
+                                         [src]="cloudinaryHelper.getImageUrl(image.imageURL, 1000, 1000)"
+                                         (error)="brokenImage(largeImage)" #largeImage />
+                                    <a data-fancybox="gallery"
+                                       [attr.href]="cloudinaryHelper.getImageUrl(image.imageURL, 2000, 2000)"
+                                       class="product-details__info--img-main__box--zoom d-f a-i-c j-c-c">
+                                        <p class="d-f a-i-c" id="Increase">
+                                            <i class="new-icon new-icon-search"></i>
+                                            <span>Увеличить</span>
+                                        </p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div ngxSlickItem *ngIf="product.imageModel.length==0">
+                                <div class="product-details__info--img-main__box" id="image">
+                                    <img src="../../assets/img/product/default-big.png" alt="img" />
+                                </div>
+                            </div>
+                        </ngx-slick-carousel>
+                        <div class="product-details__info--img-main__icon"
+                             *ngIf="product.canBeColored || product.canBeCut || product.isFragile || product.isUnliftable || product.isOversized">
+                            <ul class="tooltip-list product-details__info--img-main__icon--list d-f">
+                                <li class="tooltip-list__item product-details__info--img-main__icon--list-item d-f a-i-c j-c-c"
+                                    id="Tinted" *ngIf="product.canBeColored">
+                                    <i class="new-icon new-icon__tinted"></i>
+                                    <p class="triangle triangle-down tooltip-list__item--content">Колеруется</p>
+                                </li>
+                                <!--<li class="tooltip-list__item product-details__info--img-main__icon--list-item d-f a-i-c j-c-c"
+                                    id="CanCut" *ngIf="product.canBeCut">
+                                    <i class="new-icon new-icon__saw"></i>
+                                    <p class="triangle triangle-down tooltip-list__item--content">Можно распилить</p>
+                                </li>-->
+                                <li class="tooltip-list__item product-details__info--img-main__icon--list-item d-f a-i-c j-c-c"
+                                    id="Fragile" *ngIf="product.isFragile">
+                                    <i class="new-icon new-icon__fragile"></i>
+                                    <p class="triangle triangle-down tooltip-list__item--content">Хрупкий</p>
+                                </li>
+                                <li class="tooltip-list__item product-details__info--img-main__icon--list-item d-f a-i-c j-c-c"
+                                    id="Unmanageable" *ngIf="product.isUnliftable">
+                                    <i class="new-icon new-icon__heavy"></i>
+                                    <p class="triangle triangle-down tooltip-list__item--content">Неподъемный</p>
+                                </li>
+                                <!--<li class="tooltip-list__item product-details__info--img-main__icon--list-item d-f a-i-c j-c-c" id = "CanBeRented">
+                                    <i class="new-icon new-icon__rent"></i>
+                                    <p class="triangle triangle-down tooltip-list__item--content">Можно арендовать</p>
+                                </li>-->
+                                <li class="tooltip-list__item product-details__info--img-main__icon--list-item d-f a-i-c j-c-c"
+                                    id="Oversized" *ngIf="product.isOversized">
+                                    <i class="new-icon new-icon__oversized"></i>
+                                    <p class="triangle triangle-down tooltip-list__item--content">Негабаритный</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-details__info--specifications">
+                    <div class="product-details__info--specifications__unit"
+                         *ngIf="product.primaryAttributeCodeProduct!=null">
+                        <p class="product-details__info--specifications__unit--title">
+                            {{product.primaryAttributeCodeProduct.name}}
+                        </p>
+                        <div class="product-details__info--specifications__unit--list d-f f-w">
+                            <button [disabled]="value.disabled"
+                                    class="product-details__info--specifications__unit--list-btn change_active"
+                                    [className]="value.value == product.primaryAttributeCodeProduct.currentValue ? 'product-details__info--specifications__unit--list-btn change_active active' : 'product-details__info--specifications__unit--list-btn change_active'"
+                                    *ngFor="let value of product.primaryAttributeCodeProduct.allValues"
+                                    (click)="goToOfferProduct(product.offerId,product.primaryAttributeCodeProduct.id, value.value )">
+                                {{value.value}}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-details__info--specifications__unit"
+                         *ngIf="product.secondaryAttributeCodeProduct!=null">
+                        <p class="product-details__info--specifications__unit--title">
+                            {{product.secondaryAttributeCodeProduct.name}}
+                        </p>
+                        <div class="product-details__info--specifications__unit--list d-f f-w">
+                            <button [disabled]="value.disabled"
+                                    class="product-details__info--specifications__unit--list-btn change_active"
+                                    [className]="value.value == product.secondaryAttributeCodeProduct.currentValue ? 'product-details__info--specifications__unit--list-btn change_active active' : 'product-details__info--specifications__unit--list-btn change_active'"
+                                    *ngFor="let value of product.secondaryAttributeCodeProduct.allValues"
+                                    (click)="goToOfferProductSecond(product.offerId,product.secondaryAttributeCodeProduct.id, value.value)">
+                                {{value.value}}
+                            </button>
+                        </div>
+                    </div>
+                    <ul class="product-details__info--specifications-list" id="specifications">
+                        <li class="product-details__info--specifications-list__item d-f j-c-b" id="article"
+                            *ngIf="product.vendorCode">
+                            <span class="product-details__info--specifications-list__item--type"
+                                  style="background-color: #FFFFFF">Артикул</span>
+                            <span class="product-details__info--specifications-list__item--box zero"
+                                  style="background-color: #FFFFFF">{{ product.vendorCode }}</span>
+                        </li>
+                        <li class="product-details__info--specifications-list__item d-f j-c-b" id="brand"
+                            *ngIf="product.brand">
+                            <span class="product-details__info--specifications-list__item--type"
+                                  style="background-color: #FFFFFF">
+                                Бренд
+                            </span>
+                            <span class="product-details__info--specifications-list__item--box"
+                                  style="background-color: #FFFFFF">
+                                <span class="product-details__info--specifications-list__item--box-name"
+                                      *ngIf="!product.anyProductsWithBrandInSubcategory"> {{ product.brand }}</span>
+                                <a class="product-details__info--specifications-list__item--box-link"
+                                   *ngIf="product.anyProductsWithBrandInSubcategory" href="#"
+                                   (click)="goToCatalogWithProperty('brands', product.brand )"> {{ product.brand }}</a>
+
+                            </span>
+                        </li>
+                        <li class="product-details__info--specifications-list__item d-f j-c-b" id="country"
+                            *ngIf="product.countryOfOrigin">
+                            <span class="product-details__info--specifications-list__item--type"
+                                  style="background-color: #FFFFFF">Страна производства</span>
+                            <span class="product-details__info--specifications-list__item--box"
+                                  style="background-color: #FFFFFF">
+                                <span class="product-details__info--specifications-list__item--box-name">{{ product.countryOfOrigin }}</span></span>
+                        </li>
+                        <ng-container *ngFor="let property of product.propertiesValues; let i=index">
+                            <li class="product-details__info--specifications-list__item d-f j-c-b"
+                                *ngIf="property.name && property.value && i < 5">
+                                <span class="product-details__info--specifications-list__item--type"
+                                      style="background-color: #FFFFFF">
+                                    {{ property.name }}
+                                </span>
+                                <span class="product-details__info--specifications-list__item--box"
+                                      style="background-color: #FFFFFF">
+                                    <ng-container *ngFor="let propertyValue of property.values; let ind=index">
+                                        <span class="product-details__info--specifications-list__item--box-name"
+                                              *ngIf="!propertyValue.hasAnyProducts && ind<property.values.length-1">
+                                            {{propertyValue.value}};
+                                        </span>
+                                        <span class="product-details__info--specifications-list__item--box-name"
+                                              *ngIf="!propertyValue.hasAnyProducts && ind>=property.values.length-1">
+                                            {{propertyValue.value}}
+                                        </span>
+                                        <a class="product-details__info--specifications-list__item--box-link"
+                                           *ngIf="propertyValue.hasAnyProducts && ind<property.values.length-1"
+                                           href="#"
+                                           (click)="goToCatalogWithProperty(property.propertyId,propertyValue.value )">{{propertyValue.value}};</a>
+                                        <a class="product-details__info--specifications-list__item--box-link"
+                                           *ngIf="propertyValue.hasAnyProducts && ind>=property.values.length-1"
+                                           href="#"
+                                           (click)="goToCatalogWithProperty(property.propertyId,propertyValue.value )">{{propertyValue.value}}</a>
+                                    </ng-container>
+                                </span>
+                            </li>
+                        </ng-container>
+                    </ul>
+                    <a *ngIf="product.propertiesValues.length > 4" href="#"
+                       (click)="specific.scrollIntoView({ behavior: 'smooth', block: 'start' })"
+                       class="product-details__info--specifications-link">Все характеристики</a>
+                </div>
+                <div class="product-details__info--cnt">
+                    <div class="product-details__info--cnt-specifications a-i-c j-c-b d_none">
+                        <div class="product-details__info--specifications-list__item d-f j-c-b">
+                            <span class="product-details__info--specifications-list__item--type"
+                                  style="background-color: #FFFFFF">Артикул</span>
+                            <span class="product-details__info--specifications-list__item--box zero"
+                                  style="background-color: #FFFFFF">{{product.vendorCode}}</span>
+                        </div>
+                        <a href="#" (click)="specific.scrollIntoView({ behavior: 'smooth', block: 'start' })"
+                           class="product-details__info--specifications-link">Все характеристики</a>
+                    </div>
+                    <div class="product-details__info--cnt-add">
+                        <div class="product-details__info--cnt-add__unit new-scrollbar"
+                             *ngIf="product.unitOfMeasurements.length>1 && !product.canBeColored">
+                            <div class="product-details__info--cnt-add__unit--list d-f a-i-c f-n-w" id="unit">
+                                <p>Цена за:</p>
+                                <button class="change_active"
+                                        [className]="unitOfMeasurement.id==selectedUnitOfMeasurement.id ? 'active' : ''"
+                                        *ngFor="let unitOfMeasurement of product.unitOfMeasurements"
+                                        (click)="selectMeasurement(unitOfMeasurement)">
+                                    {{unitOfMeasurement.nameForView}}
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-details__info--cnt-add__price" id="price"
+                             *ngIf="product.price && product.unitOfMeasurements.length>1 && !product.canBeColored">
+                            <div class="product-details__info--cnt-add__price--main d-f a-i-c">
+                                <p class="zero">
+                                    <ng-container *ngIf="isValueInteger(selectedUnitOfMeasurement.price)">{{selectedUnitOfMeasurement.price | fractionSizeSpace}} ₽</ng-container>
+                                    <ng-container *ngIf="!isValueInteger(selectedUnitOfMeasurement.price)">{{selectedUnitOfMeasurement.price.toFixed(2) | fractionSizeSpace}} ₽</ng-container>
+                                </p>
+                                <span *ngIf="product.price > product.specialPrice && ((product.price * sellingUnitOfMeasurement.coefficient - product.specialPrice)*100 / product.price * sellingUnitOfMeasurement.coefficient)>=1">-{{((product.price * sellingUnitOfMeasurement.coefficient - product.specialPrice)*100 / product.price * sellingUnitOfMeasurement.coefficient) | number:'1.0-0'}}%</span>
+                            </div>
+                            <h3 class="d-f a-i-c" *ngIf="product.price > product.specialPrice">
+                                <p class="zero">
+                                    <ng-container *ngIf="isValueInteger(product.price / sellingUnitOfMeasurement.coefficient * selectedUnitOfMeasurement.coefficient)">{{product.price / sellingUnitOfMeasurement.coefficient * selectedUnitOfMeasurement.coefficient | fractionSizeSpace}} ₽</ng-container>
+                                    <ng-container *ngIf="!isValueInteger(product.price / sellingUnitOfMeasurement.coefficient * selectedUnitOfMeasurement.coefficient)">{{(product.price / sellingUnitOfMeasurement.coefficient * selectedUnitOfMeasurement.coefficient).toFixed(2) | fractionSizeSpace}} ₽</ng-container>
+                                </p><span>Розничная цена</span>
+                            </h3>
+                            <h3 class="d-f a-i-c" *ngIf="product.marketPrice>0 && product.price > product.specialPrice">
+                                <p class="zero">
+                                    <ng-container *ngIf="isValueInteger(product.marketPrice / sellingUnitOfMeasurement.coefficient * selectedUnitOfMeasurement.coefficient)">{{product.marketPrice / sellingUnitOfMeasurement.coefficient * selectedUnitOfMeasurement.coefficient | fractionSizeSpace}} ₽</ng-container>
+                                    <ng-container *ngIf="!isValueInteger(product.marketPrice / sellingUnitOfMeasurement.coefficient * selectedUnitOfMeasurement.coefficient)">{{(product.marketPrice / sellingUnitOfMeasurement.coefficient * selectedUnitOfMeasurement.coefficient).toFixed(2) | fractionSizeSpace}} ₽</ng-container>
+                                </p><span>Цена рынка</span>
+                            </h3>
+                        </div>
+                        <div class="product-details__info--cnt-add__main">
+
+                            <ng-container *ngIf="!product.canBeColored">
+                                <div class="product-details__info--cnt-add__main--pallet new-scrollbar"
+                                     *ngIf="product.unitOfMeasurements.length>1">
+                                    <table>
+                                        <thead>
+                                            <tr class="d-f a-i-c">
+                                                <ng-container *ngFor="let unitOfMeasurement of product.unitOfMeasurements">
+                                                    <th *ngIf="unitOfMeasurement.isSellingUnit" class="d-f a-i-c j-c-c">
+                                                        {{unitOfMeasurement.name}}
+                                                    </th>
+
+                                                </ng-container>
+                                                <ng-container *ngFor="let unitOfMeasurement of product.unitOfMeasurements">
+                                                    <th class="d-f a-i-c j-c-c"
+                                                        *ngIf="unitOfMeasurement.isMainUnit && !unitOfMeasurement.isSellingUnit">
+                                                        {{unitOfMeasurement.name}}
+                                                    </th>
+                                                </ng-container>
+                                                <ng-container *ngFor="let unitOfMeasurement of product.unitOfMeasurements">
+                                                    <th class="d-f a-i-c j-c-c"
+                                                        *ngIf="!unitOfMeasurement.isSellingUnit && !unitOfMeasurement.isMainUnit && unitOfMeasurement.isShipmentAvaliable">
+                                                        {{unitOfMeasurement.name}}
+                                                    </th>
+
+                                                </ng-container>
+                                                <ng-container *ngFor="let unitOfMeasurement of product.unitOfMeasurements">
+                                                    <th class="d-f a-i-c j-c-c"
+                                                        *ngIf="!unitOfMeasurement.isSellingUnit && !unitOfMeasurement.isMainUnit && !unitOfMeasurement.isShipmentAvaliable">
+                                                        {{unitOfMeasurement.name}}
+                                                    </th>
+                                                </ng-container>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="d-f a-i-c">
+                                                <ng-container *ngFor="let unitOfMeasurement of product.unitOfMeasurements">
+                                                    <td *ngIf="unitOfMeasurement.isSellingUnit">
+                                                        <app-product-counter productCounterMax="{{product.amountInStock}}"
+                                                                             productCounterMin="{{product.shipmentMultiplicity}}"
+                                                                             productCounterStep="{{product.shipmentMultiplicity}}"
+                                                                             productCounterQuantity="{{product.quantity%1!=0?product.quantity.toFixed(3) : product.quantity.toFixed(0)}}"
+                                                                             (increment)="increment(product)"
+                                                                             (decrement)="decrement(product)"
+                                                                             (changeNumber)="changeNumber($event, product)"
+                                                                             (error)="errorMethod()">
+                                                        </app-product-counter>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container *ngFor="let unitOfMeasurement of product.unitOfMeasurements">
+                                                    <td class="square"
+                                                        *ngIf="unitOfMeasurement.isMainUnit && !unitOfMeasurement.isSellingUnit">
+                                                        <app-product-counter productCounterMax="{{product.amountInStock}}"
+                                                                             productCounterMin="{{product.shipmentMultiplicity}}"
+                                                                             productCounterStep="{{product.shipmentMultiplicity}}"
+                                                                             productCounterQuantity="{{(product.quantity * product.shipmentMultiplicity / unitOfMeasurement.coefficient * sellingUnitOfMeasurement.coefficient)%1!=0?(product.quantity * product.shipmentMultiplicity / unitOfMeasurement.coefficient * sellingUnitOfMeasurement.coefficient).toFixed(3): (product.quantity * product.shipmentMultiplicity / unitOfMeasurement.coefficient * sellingUnitOfMeasurement.coefficient).toFixed(0)}}"
+                                                                             (increment)="increment(product)"
+                                                                             (decrement)="decrement(product)"
+                                                                             (changeNumber)="changeNumberForMain($event, product)"
+                                                                             (error)="errorMethod()">
+                                                        </app-product-counter>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container *ngFor="let unitOfMeasurement of product.unitOfMeasurements">
+                                                    <td class="square"
+                                                        *ngIf="!unitOfMeasurement.isMainUnit && !unitOfMeasurement.isSellingUnit && unitOfMeasurement.isShipmentAvaliable">
+                                                        <app-product-counter productCounterMax="{{product.amountInStock}}"
+                                                                             productCounterMin="{{product.shipmentMultiplicity}}"
+                                                                             productCounterStep="{{product.shipmentMultiplicity}}"
+                                                                             productCounterQuantity="{{(product.quantity * product.shipmentMultiplicity / unitOfMeasurement.coefficient * sellingUnitOfMeasurement.coefficient)%1!=0?(product.quantity * product.shipmentMultiplicity / unitOfMeasurement.coefficient * sellingUnitOfMeasurement.coefficient).toFixed(3): (product.quantity * product.shipmentMultiplicity / unitOfMeasurement.coefficient * sellingUnitOfMeasurement.coefficient).toFixed(0)}}"
+                                                                             (increment)="increment(product)"
+                                                                             (decrement)="decrement(product)"
+                                                                             (changeNumber)="changeNumberForUnit($event, product, unitOfMeasurement.coefficient)"
+                                                                             (error)="errorMethod()">
+                                                        </app-product-counter>
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container *ngFor="let unitOfMeasurement of product.unitOfMeasurements">
+                                                    <td class="d-f a-i-c j-c-c"
+                                                        *ngIf="!unitOfMeasurement.isSellingUnit && !unitOfMeasurement.isMainUnit && !unitOfMeasurement.isShipmentAvaliable">
+                                                        <span class="zero"
+                                                              *ngIf="(product.quantity *(sellingUnitOfMeasurement.coefficient/unitOfMeasurement.coefficient) * product.shipmentMultiplicity )% 1 != 0">{{(product.quantity *(sellingUnitOfMeasurement.coefficient/unitOfMeasurement.coefficient) * product.shipmentMultiplicity).toFixed(3)| fractionSizeSpace}}</span>
+                                                        <span class="zero"
+                                                              *ngIf="(product.quantity *(sellingUnitOfMeasurement.coefficient/unitOfMeasurement.coefficient) * product.shipmentMultiplicity )% 1 == 0">{{(product.quantity *(sellingUnitOfMeasurement.coefficient/unitOfMeasurement.coefficient)* product.shipmentMultiplicity).toFixed(2)| fractionSizeSpace}}</span>
+                                                    </td>
+                                                </ng-container>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </ng-container>
+                            <div class="product-details__info--cnt-add__main--title d-f a-i-c"
+                                 *ngIf="!product.canBeColored">
+                                <i class="new-icon new-icon-info"></i>
+                                <p>Продается <span>{{product.sellingUnitName}}</span></p>
+                            </div>
+                            <div class="product-details__info--cnt-add__price">
+                                <div class="product-details__info--cnt-add__price--main product-details__info--cnt-add__main--pallet-price d-f a-i-c"
+                                     id="PriceAll">
+                                    <p class="zero">
+                                        <ng-container *ngIf="isValueInteger(product.specialPrice * product.quantity)">{{product.specialPrice * product.quantity | fractionSizeSpace}} ₽</ng-container>
+                                        <ng-container *ngIf="!isValueInteger(product.specialPrice * product.quantity)">{{(product.specialPrice * product.quantity).toFixed(2) | fractionSizeSpace}} ₽</ng-container>
+                                    </p>
+                                    <span *ngIf="(product.unitOfMeasurements == null || product.unitOfMeasurements.length<=1) && product.price > product.specialPrice && ((product.price * sellingUnitOfMeasurement.coefficient - product.specialPrice)*100 / product.price * sellingUnitOfMeasurement.coefficient)>=1">-{{((product.price * sellingUnitOfMeasurement.coefficient - product.specialPrice)*100 / product.price * sellingUnitOfMeasurement.coefficient) | number:'1.0-0'}}%</span>
+                                </div>
+                                <h3 class="d-f a-i-c"
+                                    *ngIf="product.price > product.specialPrice && product.unitOfMeasurements.length==1">
+                                    <p class="zero">
+                                        <ng-container *ngIf="isValueInteger(product.price / sellingUnitOfMeasurement.coefficient * selectedUnitOfMeasurement.coefficient)">{{product.price / sellingUnitOfMeasurement.coefficient * selectedUnitOfMeasurement.coefficient | fractionSizeSpace}} ₽</ng-container>
+                                        <ng-container *ngIf="!isValueInteger(product.price / sellingUnitOfMeasurement.coefficient * selectedUnitOfMeasurement.coefficient)">{{(product.price / sellingUnitOfMeasurement.coefficient * selectedUnitOfMeasurement.coefficient).toFixed(2) | fractionSizeSpace}} ₽</ng-container>
+                                    </p><span>Розничная цена</span>
+                                </h3>
+                                <h3 class="d-f a-i-c"
+                                    *ngIf="product.marketPrice!=0 && product.price > product.specialPrice && product.unitOfMeasurements.length==1">
+                                    <p class="zero">
+                                        <ng-container *ngIf="isValueInteger(product.marketPrice / sellingUnitOfMeasurement.coefficient * selectedUnitOfMeasurement.coefficient)">{{product.marketPrice / sellingUnitOfMeasurement.coefficient * selectedUnitOfMeasurement.coefficient | fractionSizeSpace}} ₽</ng-container>
+                                        <ng-container *ngIf="!isValueInteger(product.marketPrice / sellingUnitOfMeasurement.coefficient * selectedUnitOfMeasurement.coefficient)">{{(product.marketPrice / sellingUnitOfMeasurement.coefficient * selectedUnitOfMeasurement.coefficient).toFixed(2) | fractionSizeSpace}} ₽</ng-container>
+                                    </p><span>Цена рынка</span>
+                                </h3>
+                                <h3 class="d-f a-i-c"
+                                    *ngIf="isNeedColoring && product.canBeColored && (product.tintType==2 ||product.tintType==3) && product.anyTintCatalog && product.volumeLitre > 0">
+                                    <p class="zero">
+                                        <ng-container *ngIf="isValueInteger(product.tintPrice)">{{product.tintPrice | fractionSizeSpace}} ₽</ng-container>
+                                        <ng-container *ngIf="!isValueInteger(product.tintPrice)">{{product.tintPrice.toFixed(2) | fractionSizeSpace}} ₽</ng-container>
+                                    </p><span>Итоговая стоимость колеровки</span>
+                                </h3>
+                            </div>
+
+                            <div class="product-details__info--cnt-add__tint"
+                                 *ngIf="product.canBeColored && product.anyTintCatalog && product.volumeLitre > 0 && (product.tintType==2 || product.tintType==3)">
+                                <label class="checkbox checkbox-switch d-f a-i-c">
+                                    <input type="checkbox" [(ngModel)]="isNeedColoring" hidden
+                                           (change)="changeIsNeedColoring()" />
+                                    <span class="checkbox-switch__slider">да</span>
+                                    <p class="checkbox-switch__text">
+                                        Колеровка
+                                        <ng-container *ngIf="isValueInteger(product.tintPriceForUnit)">{{product.tintPriceForUnit | fractionSizeSpace}}</ng-container>
+                                        <ng-container *ngIf="!isValueInteger(product.tintPriceForUnit)">{{product.tintPriceForUnit.toFixed(2) | fractionSizeSpace}}</ng-container>
+                                        ₽ за литр
+                                    </p>
+                                </label>
+                                <div class="product-details__info--cnt-add__tint--area" *ngIf="isNeedColoring">
+                                    <div class="product-details__info--cnt-add__tint--area-box d-f a-i-c j-c-b">
+                                        <div class="product-details__info--cnt-add__tint--area-box__main required">
+                                            <p class="required-tooltip d_none" *ngIf="colorCode=='' && isNeedColoring">
+                                                Укажите код цвета
+                                            </p>
+                                            <input type="text" placeholder="Код цвета" [(ngModel)]="colorCode"
+                                                   maxlength="25">
+                                        </div>
+                                        <a href="#" (click)="openModalColoring()"
+                                           class="product-details__info--cnt-add__tint--area-box__link">
+                                            Каталоги цветов
+                                        </a>
+                                    </div>
+                                    <div class="product-details__info--cnt-add__tint--area-warning d-f a-i-c"
+                                         *ngIf="colorCode=='' && isNeedColoring">
+                                        <i class="new-icon new-icon-warning"></i>
+                                        <p>Возможен разнотон</p>
+                                    </div>
+                                    <div class="product-details__info--cnt-add__tint--area-warning d-f a-i-c">
+                                        <i class="new-icon new-icon-warning"></i>
+                                        <p>Колерованная краска возврату и обмену<br /> не подлежит</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="product-details__info--cnt-add__tint"
+                                 *ngIf="product.canBeColored && product.tintType==1 && product.anyTintCatalog">
+                                <div class="product-details__info--cnt-add__tint--area-warning d-f a-i-c">
+                                    <p>По вопросам колеровки краски базы С обращайтесь к вашему менеджеру</p>
+                                </div>
+                            </div>
+
+                            <div class="product-details__info--cnt-add__tint"
+                                 *ngIf="product.canBeColored && !product.anyTintCatalog">
+                                <div class="product-details__info--cnt-add__tint--area-warning d-f a-i-c">
+                                    <p>Для оформления колеровки данного товара обратитесь к вашему менеджеру</p>
+                                </div>
+                            </div>
+
+                            <div class="product-details__info--cnt-add__main--title d-f a-i-c"
+                                 *ngIf="product.canBeColored && product.anyTintCatalog && product.tintType!=1">
+                                <i class="new-icon new-icon-info"></i>
+                                <p>Продается <span>{{product.sellingUnitName}}</span></p>
+                            </div>
+
+                            <div class="product-details__info--cnt-add__main--btn d-f">
+                                <app-product-counter productCounterMax="{{product.amountInStock}}"
+                                                     productCounterMin="{{product.shipmentMultiplicity}}"
+                                                     productCounterStep="{{product.shipmentMultiplicity}}"
+                                                     productCounterQuantity="{{product.quantity%1!=0?product.quantity.toFixed(3) :product.quantity}}"
+                                                     (increment)="increment(product)" (decrement)="decrement(product)"
+                                                     (changeNumber)="changeNumber($event, product)" (error)="errorMethod()"
+                                                     *ngIf="product.unitOfMeasurements.length==1 || product.canBeColored">
+                                    >
+                                </app-product-counter>
+                                <div class="product-details__info--cnt-add__main--btn-box" id="addButton">
+                                    <button [disabled]="isDiscontinued || (product.canBeColored && isNeedColoring && (colorCode==''||colorCode==null) && product.anyTintCatalog && (product.tintType==2 || product.tintType==3) && product.volumeLitre > 0)"
+                                            (click)="addToBasket(product.id, product.quantity)" id="addToBasket">
+                                        <ng-container *ngIf="!isDiscontinued && product.amountInStock>0">
+                                            добавить В корзину
+                                        </ng-container>
+                                        <ng-container *ngIf="!isDiscontinued && product.amountInStock == 0">
+                                            ПОД ЗАКАЗ
+                                        </ng-container>
+                                        <ng-container *ngIf="isDiscontinued">снят с продажи</ng-container>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="product-details__info--cnt-tint"
+                         *ngIf="product.canBeColored && product.anyTintCatalog && product.volumeLitre > 0 && product.tintType!=1">
+                        <div class="product-details__info--cnt-tint__box d-f f-w a-i-c j-c-b"
+                             *ngFor="let orderItem of orderItems">
+                            <div class="product-details__info--cnt-tint__box--main d-f a-i-c">
+                                <div class="product-details__info--cnt-tint__box--main-img">
+                                    <img *ngIf="orderItem.mainImageUrl === null"
+                                         src="../../assets/img/product/default-big.png" alt="img" />
+                                    <img *ngIf="orderItem.mainImageUrl !== null"
+                                         [src]="cloudinaryHelper.getImageUrl(orderItem.mainImageUrl, 1000, 1000)"
+                                         (error)="brokenImage(largeImage)" #largeImage />
+                                </div>
+                                <div class="product-details__info--cnt-tint__box--main-name">
+                                    <p>Номер цвета</p>
+                                    <span *ngIf="orderItem.tintColor!=null">{{orderItem.tintColor}}</span>
+                                    <span *ngIf="orderItem.tintColor==null">Без колеровки</span>
+                                </div>
+                            </div>
+                            <div class="product-details__info--cnt-tint__box--main-count d-f a-i-c j-c-b">
+                                <app-product-counter productCounterMax="{{orderItem.amountInStock}}"
+                                                     productCounterMin="{{orderItem.shipmentMultiplicity}}"
+                                                     productCounterStep="{{orderItem.shipmentMultiplicity}}"
+                                                     productCounterQuantity="{{orderItem.quantity%1!=0?orderItem.quantity.toFixed(3) :orderItem.quantity}}"
+                                                     (increment)="incrementQuantity(orderItem.quantity, orderItem.shipmentMultiplicity, orderItem.id)"
+                                                     (decrement)="decrementQuantity(orderItem.quantity, orderItem.shipmentMultiplicity, orderItem.id)"
+                                                     (changeNumber)="changeOrderItemNumber($event, orderItem.id)"
+                                                     (error)="errorMethod()">
+                                    >
+                                </app-product-counter>
+                                <i class="new-icon new-icon-basket-check"></i>
+                                <i class="new-icon new-icon-delete" (click)="removeOrderItem(orderItem.id)"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-details__info--cnt-box">
+                        <ul>
+                            <li *ngIf="product.amountInStock>0" id="added">
+                                <h3 class="d-f a-i-c">
+                                    <i class="new-icon new-icon-added"></i>
+                                    <p>В наличии</p>
+                                    <span>
+                                        {{isValueInteger(product.amountInStock / selectedUnitOfMeasurement.coefficient) ? product.amountInStock / selectedUnitOfMeasurement.coefficient : (product.amountInStock / selectedUnitOfMeasurement.coefficient).toFixed(2)}}
+                                        {{unitNameAmountInStock}}
+                                    </span>
+                                </h3>
+                                <h3 class="product-details__info--cnt-box__depo d-f a-i-c" *ngFor="let productDepot of product.productDepos">
+                                    <p>{{productDepot.depotName}}</p>
+                                    <span> {{product.productDepos.length>1 ? productDepot.amountInStock:""}} {{product.productDepos.length>1 ? productDepot.unitName:""}}</span>
+                                </h3>
+                            </li>
+                            <li class="d-f a-i-c"
+                                *ngIf="product.amountInStock==0 && (product.gamma==3  || product.gamma==2 )&& product.deliveryDelay > 0"
+                                id="pending">
+                                <i class="new-icon new-icon-pending"></i>
+                                <h3 class="d-f a-i-c">
+                                    <p>Под заказ.</p>
+                                </h3>
+                            </li>
+                            <li class="d-f a-i-c"
+                                *ngIf="product.amountInStock==0 && (product.gamma==3  || product.gamma==2 )&& product.deliveryDelay > 0"
+                                id="delivery">
+                                <i class="new-icon new-icon-notification_delivery"></i>
+                                <h3 class="d-f a-i-c">
+                                    <p>
+                                        Доставка: от {{product.deliveryDelay}}
+                                        {{declensionMaker.getDeclensionFrom(product.deliveryDelay, "дня", "дней")}}
+                                    </p>
+                                </h3>
+                            </li>
+                            <li *ngIf="product.amountInStock>0 && !isDiscontinued" class="d-f a-i-c">
+                                <i class="new-icon new-icon-notification_delivery"></i>
+                                <h3 class="d-f a-i-c">
+                                    <p>Доставка курьером:</p>
+                                    <strong> от 5 часов</strong>
+                                </h3>
+                            </li>
+                            <li *ngIf="product.amountInStock>0 && !isDiscontinued" class="d-f a-i-c">
+                                <i class="new-icon new-icon-showroom"></i>
+                                <h3 class="d-f a-i-c">
+                                    <p>Самовывоз: сегодня</p>
+                                </h3>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-details__blocks">
+                <div class="product-details__blocks--list d-f">
+                    <ng-container *ngIf="analogues.length>0">
+                        <a *ngIf="!isDiscontinued && product.amountInStock>0" href="#" (click)="analog2.scrollIntoView({behavior: 'smooth', block: 'start'})"
+                           class="product-details__blocks--list-item d-f" id="analog2">
+                            <i class="new-icon new-icon__replace"></i>
+                            <div class="product-details__blocks--list-item__text">
+                                <p>Аналоги данного товара</p>
+                                <span>Подобные товары<br> из одной категории</span>
+                            </div>
+                        </a>
+                        <a *ngIf="!isDiscontinued && product.amountInStock ==0" href="#" (click)="analog1.scrollIntoView({behavior: 'smooth', block: 'start'})"
+                           class="product-details__blocks--list-item d-f" id="analog1">
+                            <i class="new-icon new-icon__replace"></i>
+                            <div class="product-details__blocks--list-item__text">
+                                <p>Аналоги данного товара</p>
+                                <span>Подобные товары<br> из одной категории</span>
+                            </div>
+                        </a>
+                    </ng-container>
+                    <a href="#" (click)="specific.scrollIntoView({behavior: 'smooth', block: 'start'})"
+                       class="product-details__blocks--list-item d-f" id="specificIcon">
+                        <i class="new-icon new-icon__info"></i>
+                        <div class="product-details__blocks--list-item__text">
+                            <p>Характеристики и описание</p>
+                            <span>Посмотреть характеристики,<br> описание и обзоры</span>
+                        </div>
+                    </a>
+
+                    <a href="#" (click)="certificate.scrollIntoView({behavior: 'smooth', block: 'start'})"
+                       class="product-details__blocks--list-item d-f" id="certificate">
+                        <i class="new-icon new-icon__certificate"></i>
+                        <div class="product-details__blocks--list-item__text">
+                            <p>Сертификаты качества</p>
+                            <span>Посмотреть сертификаты,<br> инструкции и обзоры</span>
+                        </div>
+                    </a>
+                    <ng-container *ngIf="relatedProducts.length>0">
+                        <a href="#" *ngIf="!isDiscontinued && product.amountInStock>0" (click)="related1.scrollIntoView({behavior: 'smooth', block: 'start'})"
+                           class="product-details__blocks--list-item d-f">
+                            <i class="new-icon new-icon__related"></i>
+                            <div class="product-details__blocks--list-item__text">
+                                <p>Сопутствующие товары</p>
+                                <span>Посмотреть что с этим<br> товаром обычно покупают</span>
+                            </div>
+                        </a>
+                        <a href="#" *ngIf="!isDiscontinued && product.amountInStock ==0" (click)="related2.scrollIntoView({behavior: 'smooth', block: 'start'})"
+                           class="product-details__blocks--list-item d-f">
+                            <i class="new-icon new-icon__related"></i>
+                            <div class="product-details__blocks--list-item__text">
+                                <p>Сопутствующие товары</p>
+                                <span>Посмотреть что с этим<br> товаром обычно покупают</span>
+                            </div>
+                        </a>
+                    </ng-container>
+                </div>
+            </div>
+            <div #related1>
+                <div class="product-details__related" *ngIf="relatedProducts.length>0 && !isDiscontinued && product.amountInStock>0">
+                    <div  class="second-title">
+                        <h2>с этим товаром обычно покупают</h2>
+                    </div>
+                    <div  class="product-slider">
+                        <div class="product-slider__list">
+                            <ngx-slick-carousel class="slick-carousel d_block" [config]="productSlider">
+                                <div ngxSlickItem *ngFor="let relatedProduct of relatedProducts">
+                                    <div class="product-slider__list--item">
+                                        <a href="#" class="product-slider__list--item-img"
+                                           [routerLink]="['/product', relatedProduct.vendorCode]">
+                                            <img *ngIf="relatedProduct.mainImage === null"
+                                                 src="../../assets/img/product/default-big.png" alt="img" />
+                                            <img *ngIf="relatedProduct.mainImage !== null"
+                                                 [src]="cloudinaryHelper.getImageUrl(relatedProduct.mainImage.imageURL, 400, 400)"
+                                                 (error)="brokenImage(largeImage)" #largeImage />
+                                        </a>
+                                        <div class="product-slider__list--item-description">
+                                            <h3 class="d-f a-i-c">
+                                                <span class="zero">
+                                                    <span *ngIf="isValueInteger(relatedProduct.price)">{{relatedProduct.price | fractionSizeSpace}} ₽</span>
+                                                    <span *ngIf="!isValueInteger(relatedProduct.price)">{{relatedProduct.price.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                                </span>
+                                                <i class="new-icon new-icon-basket"
+                                                   (click)="addToBasket(relatedProduct.id, 1)"></i>
+                                            </h3>
+                                            <a href="#" class="line-clamp line-clamp_3"
+                                               [routerLink]="['/product', relatedProduct.vendorCode]">
+                                                {{relatedProduct.name}}
+                                            </a>
+                                        </div>
+                                        <ul class="cards-product__item--remainder product-slider__list--item-remainder">
+                                            <li class="d-f a-i-c">
+                                                <i *ngIf="relatedProduct.amountInStock>0" class="new-icon new-icon-added"></i>
+                                                <i *ngIf="relatedProduct.amountInStock==0" class="new-icon new-icon-pending"></i>
+                                                <h3 class="d-f a-i-c tooltip" *ngIf="relatedProduct.amountInStock>0">
+                                                    <p>В наличии</p>
+                                                    <div class="tooltip-content">
+                                                        <ul class="tooltip-content__list triangle triangle-down">
+                                                            <li *ngFor="let productDepot of relatedProduct.productDepots">{{productDepot.depotName}} {{productDepot.amountInStock}}</li>
+                                                        </ul>
+                                                    </div>
+                                                </h3>
+                                                <h3 class="d-f a-i-c" *ngIf="relatedProduct.amountInStock==0">
+                                                    <p>Под заказ</p>
+                                                </h3>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </ngx-slick-carousel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div #analog1>
+                <div  *ngIf="analogues.length>0 && !isDiscontinued && product.amountInStock ==0" class="product-details__analog">
+                    <div class="second-title">
+                        <h2>Другие товары из категории {{ product.subcategory.name}}</h2>
+                    </div>
+                    <div class="product-slider">
+                        <div class="product-slider__list">
+                            <ngx-slick-carousel class="slick-carousel d_block" [config]="productSlider">
+                                <div ngxSlickItem *ngFor="let sameProduct of analogues">
+                                    <div class="product-slider__list--item">
+                                        <a href="#" class="product-slider__list--item-img"
+                                           [routerLink]="['/product', sameProduct.vendorCode]">
+                                            <img *ngIf="sameProduct.mainImage === null"
+                                                 src="../../assets/img/product/default-big.png" alt="img" />
+                                            <img *ngIf="sameProduct.mainImage !== null"
+                                                 [src]="cloudinaryHelper.getImageUrl(sameProduct.mainImage.imageURL, 400, 400)"
+                                                 (error)="brokenImage(largeImage)" #largeImage />
+                                        </a>
+                                        <div class="product-slider__list--item-description">
+                                            <h3 class="d-f a-i-c">
+                                                <span class="zero">
+                                                    <span *ngIf="isValueInteger(sameProduct.price)">{{sameProduct.price | fractionSizeSpace}} ₽</span>
+                                                    <span *ngIf="!isValueInteger(sameProduct.price)">{{sameProduct.price.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                                </span>
+                                                <i class="new-icon new-icon-basket" id="AddBasketSuch"
+                                                   (click)="addToBasket(sameProduct.id, sameProduct.shipmentMultiplicity)"></i>
+                                            </h3>
+                                            <a href="#" class="line-clamp line-clamp_3"
+                                               [routerLink]="['/product', sameProduct.vendorCode]">
+                                                {{sameProduct.name}}
+                                            </a>
+                                        </div>
+                                        <ul class="cards-product__item--remainder product-slider__list--item-remainder">
+                                            <li class="d-f a-i-c">
+                                                <i *ngIf="sameProduct.amountInStock>0" class="new-icon new-icon-added"></i>
+                                                <i *ngIf="sameProduct.amountInStock==0" class="new-icon new-icon-pending"></i>
+                                                <h3 class="d-f a-i-c tooltip" *ngIf="sameProduct.amountInStock>0">
+                                                    <p>В наличии</p>
+                                                    <div class="tooltip-content">
+                                                        <ul class="tooltip-content__list triangle triangle-down">
+                                                            <li *ngFor="let productDepot of sameProduct.productDepots">{{productDepot.depotName}} {{productDepot.amountInStock}}</li>
+                                                        </ul>
+                                                    </div>
+                                                </h3>
+                                                <h3 class="d-f a-i-c" *ngIf="sameProduct.amountInStock==0">
+                                                    <p>Под заказ</p>
+                                                </h3>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </ngx-slick-carousel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="product-details__specific" #specific id="specific">
+                <div class="second-title">
+                    <h2>Характеристики и описание</h2>
+                </div>
+                <div class="product-details__specific--box d-f">
+                    <div class="product-details__specific--box-all product-details__specific--box-content">
+                        <div class="product-details__specific--title">
+                            <h3>Все Характеристики</h3>
+                        </div>
+                        <ul class="product-details__specific--box-all__list">
+                            <li class="product-details__info--specifications-list__item d-f j-c-b"
+                                *ngIf="product.vendorCode">
+                                <span class="product-details__info--specifications-list__item--type"
+                                      style="background-color: #F7F8F9">Артикул</span>
+                                <span class="product-details__info--specifications-list__item--box zero"
+                                      style="background-color: #F7F8F9">{{ product.vendorCode }}</span>
+                            </li>
+                            <li class="product-details__info--specifications-list__item d-f j-c-b"
+                                *ngIf="product.brand">
+                                <span class="product-details__info--specifications-list__item--type"
+                                      style="background-color: #F7F8F9">
+                                    Бренд
+                                </span>
+                                <span class="product-details__info--specifications-list__item--box"
+                                      style="background-color: #F7F8F9">
+                                    <span class="product-details__info--specifications-list__item--box-name"
+                                          *ngIf="!product.anyProductsWithBrandInSubcategory"> {{ product.brand }}</span>
+                                    <a class="product-details__info--specifications-list__item--box-link"
+                                       *ngIf="product.anyProductsWithBrandInSubcategory" href="#"
+                                       (click)="goToCatalogWithProperty('brands', product.brand )">
+                                        {{ product.brand }}
+                                    </a>
+                                </span>
+                            </li>
+                            <li class="product-details__info--specifications-list__item d-f j-c-b" id="country"
+                                *ngIf="product.countryOfOrigin">
+                                <span class="product-details__info--specifications-list__item--type"
+                                      style="background-color: #F7F8F9">Страна производства</span>
+                                <span class="product-details__info--specifications-list__item--box"
+                                      style="background-color: #F7F8F9">
+                                      <span class="product-details__info--specifications-list__item--box-name">{{ product.countryOfOrigin }}</span></span>
+                            </li>
+                            <ng-container *ngFor="let property of product.propertiesValues; let i=index">
+                                <li *ngIf="property.name && property.values.length>0"
+                                    class="product-details__info--specifications-list__item d-f j-c-b">
+                                    <span class="product-details__info--specifications-list__item--type"
+                                          style="background-color: #F7F8F9">{{ property.name }}</span>
+                                    <span class="product-details__info--specifications-list__item--box"
+                                          style="background-color: #F7F8F9">
+                                        <ng-container *ngFor="let propertyValue of property.values; let ind=index">
+                                            <span class="product-details__info--specifications-list__item--box-name"
+                                                  *ngIf="!propertyValue.hasAnyProducts && ind<property.values.length-1">
+                                                {{propertyValue.value}};
+                                            </span>
+                                            <span class="product-details__info--specifications-list__item--box-name"
+                                                  *ngIf="!propertyValue.hasAnyProducts && ind>=property.values.length-1">
+                                                {{propertyValue.value}}
+                                            </span>
+                                            <a class="product-details__info--specifications-list__item--box-link"
+                                               *ngIf="propertyValue.hasAnyProducts && ind<property.values.length-1"
+                                               href="#"
+                                               (click)="goToCatalogWithProperty(property.propertyId,propertyValue.value )">{{propertyValue.value}};</a>
+                                            <a class="product-details__info--specifications-list__item--box-link"
+                                               *ngIf="propertyValue.hasAnyProducts && ind>=property.values.length-1"
+                                               href="#"
+                                               (click)="goToCatalogWithProperty(property.propertyId,propertyValue.value )">{{propertyValue.value}}</a>
+                                        </ng-container>
+                                    </span>
+                                </li>
+                            </ng-container>
+                        </ul>
+                    </div>
+                    <div class="product-details__specific--box-text product-details__specific--box-content">
+                        <div class="product-details__specific--box-text__description"
+                             *ngIf="product.description!=null && product.description.length>0">
+                            <div class="product-details__specific--title">
+                                <h3>Описание</h3>
+                            </div>
+                            <div class="product-details__specific--box-text__description--info"
+                                 [innerHTML]="product.description"></div>
+                        </div>
+
+                        <div class="product-details__specific--box-text__certificates" #certificate>
+                            <div class="product-details__specific--title">
+                                <h3>Сертификаты</h3>
+                            </div>
+                            <p *ngIf="product.sertificationNotRequired">Не подлежит обязательной сертификации</p>
+                            <p *ngIf="!product.sertificationNotRequired">Подлежит обязательной сертификации</p>
+                            <ul class="d-f f-w a-i-c">
+                                <li *ngFor="let certificate of certificates">
+                                    <a href="#" class="download-file d-f a-i-c" target="_blank"
+                                       (click)="goToCertificate(certificate.url)">
+                                        <i class="new-icon new-icon-fileDownload"></i>
+                                        <span>{{certificate.name}}{{certificate.extension}}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-details__specific--inaccuracies" id="inaccuracies">
+                    <a href="#" (click)="openModalInaccuracies()">Сообщить о неточности в описании</a>
+                    <p>
+                        Информация о технических характеристиках, комплекте поставки, стране изготовления, внешнем виде
+                        и
+                        цвете товара носит справочный характер и основывается на последних доступных к моменту
+                        публикации
+                        сведениях
+                    </p>
+                </div>
+            </div>
+
+            <div #analog2>
+                <div *ngIf="analogues.length>0 && !isDiscontinued && product.amountInStock>0"  class="product-details__analog">
+                    <div class="second-title">
+                        <h2>Другие товары из категории {{ product.subcategory.name}}</h2>
+                    </div>
+                    <div class="product-slider">
+                        <div class="product-slider__list">
+                            <ngx-slick-carousel class="slick-carousel d_block" [config]="productSlider">
+                                <div ngxSlickItem *ngFor="let sameProduct of analogues">
+                                    <div class="product-slider__list--item">
+                                        <a href="#" class="product-slider__list--item-img"
+                                           [routerLink]="['/product', sameProduct.vendorCode]">
+                                            <img *ngIf="sameProduct.mainImage === null"
+                                                 src="../../assets/img/product/default-big.png" alt="img" />
+                                            <img *ngIf="sameProduct.mainImage !== null"
+                                                 [src]="cloudinaryHelper.getImageUrl(sameProduct.mainImage.imageURL, 400, 400)"
+                                                 (error)="brokenImage(largeImage)" #largeImage />
+                                        </a>
+                                        <div class="product-slider__list--item-description">
+                                            <h3 class="d-f a-i-c">
+                                                <span class="zero">
+                                                    <span *ngIf="isValueInteger(sameProduct.price)">{{sameProduct.price | fractionSizeSpace}} ₽</span>
+                                                    <span *ngIf="!isValueInteger(sameProduct.price)">{{sameProduct.price.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                                </span>
+                                                <i class="new-icon new-icon-basket" id="AddBasketSuch"
+                                                   (click)="addToBasket(sameProduct.id, sameProduct.shipmentMultiplicity)"></i>
+                                            </h3>
+                                            <a href="#" class="line-clamp line-clamp_3"
+                                               [routerLink]="['/product', sameProduct.vendorCode]">
+                                                {{sameProduct.name}}
+                                            </a>
+                                        </div>
+                                        <ul class="cards-product__item--remainder product-slider__list--item-remainder">
+                                            <li class="d-f a-i-c">
+                                                <i *ngIf="sameProduct.amountInStock>0" class="new-icon new-icon-added"></i>
+                                                <i *ngIf="sameProduct.amountInStock==0" class="new-icon new-icon-pending"></i>
+                                                <h3 class="d-f a-i-c tooltip" *ngIf="sameProduct.amountInStock>0">
+                                                    <p>В наличии</p>
+                                                    <div class="tooltip-content">
+                                                        <ul class="tooltip-content__list triangle triangle-down">
+                                                            <li *ngFor="let productDepot of sameProduct.productDepots">{{productDepot.depotName}} {{productDepot.amountInStock}}</li>
+                                                        </ul>
+                                                    </div>
+                                                </h3>
+                                                <h3 class="d-f a-i-c" *ngIf="sameProduct.amountInStock==0">
+                                                    <p>Под заказ</p>
+                                                </h3>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </ngx-slick-carousel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div #related2>
+                <div *ngIf="relatedProducts.length>0 && !isDiscontinued && product.amountInStock ==0" class="product-details__related">
+                    <div  class="second-title">
+                        <h2>с этим товаром обычно покупают</h2>
+                    </div>
+                    <div class="product-slider">
+                        <div class="product-slider__list">
+                            <ngx-slick-carousel class="slick-carousel d_block" [config]="productSlider">
+                                <div ngxSlickItem *ngFor="let relatedProduct of relatedProducts">
+                                    <div class="product-slider__list--item">
+                                        <a href="#" class="product-slider__list--item-img"
+                                           [routerLink]="['/product', relatedProduct.vendorCode]">
+                                            <img *ngIf="relatedProduct.mainImage === null"
+                                                 src="../../assets/img/product/default-big.png" alt="img" />
+                                            <img *ngIf="relatedProduct.mainImage !== null"
+                                                 [src]="cloudinaryHelper.getImageUrl(relatedProduct.mainImage.imageURL, 400, 400)"
+                                                 (error)="brokenImage(largeImage)" #largeImage />
+                                        </a>
+                                        <div class="product-slider__list--item-description">
+                                            <h3 class="d-f a-i-c">
+                                                <span class="zero">
+                                                    <span *ngIf="isValueInteger(relatedProduct.price)">{{relatedProduct.price | fractionSizeSpace}} ₽</span>
+                                                    <span *ngIf="!isValueInteger(relatedProduct.price)">{{relatedProduct.price.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                                </span>
+                                                <i class="new-icon new-icon-basket"
+                                                   (click)="addToBasket(relatedProduct.id, 1)"></i>
+                                            </h3>
+                                            <a href="#" class="line-clamp line-clamp_3"
+                                               [routerLink]="['/product', relatedProduct.vendorCode]">
+                                                {{relatedProduct.name}}
+                                            </a>
+                                        </div>
+                                        <ul class="cards-product__item--remainder product-slider__list--item-remainder">
+                                            <li class="d-f a-i-c">
+                                                <i *ngIf="relatedProduct.amountInStock>0" class="new-icon new-icon-added"></i>
+                                                <i *ngIf="relatedProduct.amountInStock==0" class="new-icon new-icon-pending"></i>
+                                                <h3 class="d-f a-i-c tooltip" *ngIf="relatedProduct.amountInStock>0">
+                                                    <p>В наличии</p>
+                                                    <div class="tooltip-content">
+                                                        <ul class="tooltip-content__list triangle triangle-down">
+                                                            <li *ngFor="let productDepot of relatedProduct.productDepots">{{productDepot.depotName}} {{productDepot.amountInStock}}</li>
+                                                        </ul>
+                                                    </div>
+                                                </h3>
+                                                <h3 class="d-f a-i-c" *ngIf="relatedProduct.amountInStock==0">
+                                                    <p>Под заказ</p>
+                                                </h3>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </ngx-slick-carousel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-details__professional" id="professional">
+                <div class="second-title">
+                    <h2>МаксиПРО — все необходимое для профессионала</h2>
+                </div>
+                <div class="product-details__professional--list d-f f-w j-c-b">
+                    <div class="product-details__professional--list-item d-f">
+                        <div class="product-details__professional--list-item__img">
+                            <img src="../../assets/img/home/details/1.png" alt="img">
+                        </div>
+                        <div class="product-details__professional--list-item__text">
+                            <h3>Удобная доставка</h3>
+                            <p>
+                                Экспресс / за 1 час по г. Мытищи<br> Стандартная / за 5 час по г. Москва и МО<br> Точно
+                                ко
+                                времени /
+                                привезут в нужный час
+                            </p>
+                        </div>
+                    </div>
+                    <div class="product-details__professional--list-item d-f">
+                        <div class="product-details__professional--list-item__img">
+                            <img src="../../assets/img/home/details/2.png" alt="img">
+                        </div>
+                        <div class="product-details__professional--list-item__text">
+                            <h3>Складские возможности</h3>
+                            <p>
+                                30 000 квадратных метров<br> 17 000 товаров всегда в наличии<br> 65 000 позиций под
+                                заказ
+                            </p>
+                        </div>
+                    </div>
+                    <div class="product-details__professional--list-item d-f">
+                        <div class="product-details__professional--list-item__img">
+                            <img src="../../assets/img/home/details/3.png" alt="img">
+                        </div>
+                        <div class="product-details__professional--list-item__text">
+                            <h3>Индивидуальные цены</h3>
+                            <p>Объектное и индивидуальное ценообразование<br> и настраиваемый каталог</p>
+                        </div>
+                    </div>
+                    <div class="product-details__professional--list-item d-f">
+                        <div class="product-details__professional--list-item__img">
+                            <img src="../../assets/img/home/details/4.png" alt="img">
+                        </div>
+                        <div class="product-details__professional--list-item__text">
+                            <h3>Единое окно для всех услуг</h3>
+                            <p>Интеграция с ERP-системой и возможность<br> разграничения прав сотрудников</p>
+                        </div>
+                    </div>
+                    <div class="product-details__professional--list-item d-f">
+                        <div class="product-details__professional--list-item__img">
+                            <img src="../../assets/img/home/details/5.png" alt="img">
+                        </div>
+                        <div class="product-details__professional--list-item__text">
+                            <h3>Персональный менеджер</h3>
+                            <p>Выделенный менеджер, доступный<br> ежедневно для вас с 8 до 20</p>
+                        </div>
+                    </div>
+                    <div class="product-details__professional--list-item d-f">
+                        <div class="product-details__professional--list-item__img">
+                            <img src="../../assets/img/home/details/6.png" alt="img">
+                        </div>
+                        <div class="product-details__professional--list-item__text">
+                            <h3>Отсрочка платежа</h3>
+                            <p>Отсрочка платежа до 30 дней*<br> и удобные формы оплаты</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

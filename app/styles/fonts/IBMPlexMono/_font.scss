@@ -1,0 +1,18 @@
+// FONT FAMILY NAME AS VARS
+$monoSemibold: 'IBMPlexMono-SemiBold',
+sans-serif; // 600
+
+$monoRegular: 'IBMPlexMono-Regular',
+sans-serif; // normal
+
+$font-path:'/assets/fonts/IBMPlexMono/';
+$list: 'IBMPlexMono-SemiBold''IBMPlexMono-Regular';
+
+@each $name in $list {
+    $src: $font-path + $name;
+
+    @font-face {
+        src: url($src + '.ttf') format('truetype');
+        font-family: $name;
+    }
+}

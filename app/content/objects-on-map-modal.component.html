@@ -1,0 +1,149 @@
+<div class="objects-modal">
+
+
+    <i (click)="dialogRef.close()" class="icon icon-close icon-close__map d-f a-i-c j-c-c"></i>
+
+
+    <div #objectsContent class="objects-modal__content">
+        <div class="objects-modal__content--block scrollbar">
+            <div class="objects-modal__content--block-areas" #addingWindow [hidden]="!isAdding || !canAddObject">
+                <i class="icon icon-close icon-close__areas" (click)="closeAddingWindow()"></i>
+                <div class="objects-modal__content--block-areas__title">
+                    <h3>ДОБАВИТЬ НОВЫЙ ОБЪЕКТ</h3>
+                    <p class="d-f">
+                        <i class="icon icon-exclamatory "></i>
+                        <span>Укажите на карте фактическое местоположение объекта и его адрес</span>
+                    </p>
+                </div>
+                <form #objectForm="ngForm" class="objects-modal__content--block-areas__box" name="objectNameArea"
+                      novalidate>
+                    <div class="objects-modal__content--block-areas__box--list d-f f-n-w">
+                        <div class="objects-modal__content--block-areas__box--list-item">
+                            <p>Название объекта*</p>
+                            <div [class.required]="fieldIsEmpty(nameOfObj) && isAddingButtonTouched">
+                                <input #nameOfObj="ngModel" type="text" name="nameInput" id="object-name"
+                                       [(ngModel)]="nameToAdding" required>
+                                <h3 class="required-tooltip d_none">заполнение обязательно</h3>
+                            </div>
+                        </div>
+                        <div class="objects-modal__content--block-areas__box--list-item objects-modal__content--block-areas__box--list-other">
+                            <p>Площадь объекта</p>
+                            <input type="text" #areaRef="ngModel" placeholder="0.00" name="areaInput" id="object-square"
+                                   (input)="setCorrectArea($event.target)" [(ngModel)]="areaToAdding">
+                        </div>
+                    </div>
+                    <div class="objects-modal__content--block-areas__box--list">
+                        <div class="objects-modal__content--block-areas__box--list-item">
+                            <p>Адрес объекта*</p>
+                            <div [class.required]="geoAddressIsEmpty && fieldIsEmpty(addressOfObj) && isAddingButtonTouched">
+                                <input #addressOfObj="ngModel" type="text" name="address"
+                                       (change)="searchAddedAddress()" (keydown)="keyDownInputAddressEvent()"
+                                       [(ngModel)]="inputAddress" [hidden]="matchesGeo"
+                                       id="address" required />
+                                <input #addressRefMatchesGeo type="text" name="addressDisabled"
+                                       [(ngModel)]="geoAddress" (change)="searchGeoAddress()" (keydown)="keyDownInputAddressEvent()" [hidden]="!matchesGeo" id="addressDisabled" required />
+                                <h3 class="required-tooltip d_none">заполнение обязательно</h3>
+                            </div>
+                            <label class="checkbox objects-modal__content--block-areas__box--list-item__checkbox d-i-f a-i-c">
+                                <input type="checkbox" hidden [checked]="matchesGeo" name="matchesGeo"
+                                       (click)="matchesGeoChanged()" id="object-match-geolocation" />
+                                <i class="icon icon-checkmark checkbox-checkmark d-f a-i-c j-c-c"></i>
+                                <span class="checkbox-name">Метка на карте совпадает с указанным адресом</span>
+                                <div class="tooltip-icon icon icon-quest tooltip">
+                                    <div class="tooltip-content">
+                                        <ul class="tooltip-content__list triangle triangle-down">
+                                            <li class="d-f a-i-c j-c-b">
+                                                Адрес объекта будет привязан к метке на карте
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="objects-modal__content--block-areas__box--list d-f f-n-w">
+                        <div class="objects-modal__content--block-areas__box--list-item">
+                            <p>Склад</p>
+                            <input type="text" name="warehouseInput" id="object-stock" [(ngModel)]="warehouseToAdding">
+                        </div>
+                        <div class="objects-modal__content--block-areas__box--list-item">
+                            <p>Офис</p>
+                            <input type="text" name="officeInput" id="object-office" [(ngModel)]="officeToAdding">
+                        </div>
+                        <div class="objects-modal__content--block-areas__box--list-item">
+                            <p>Квартира</p>
+                            <input type="text" name="object-appartament" id="object-appartament"
+                                   [(ngModel)]="appartmentToAdding">
+                        </div>
+                    </div>
+                    <div class="objects-modal__content--block-areas__box--list">
+                        <div class="objects-modal__content--block-areas__box--list-item objects-modal__areas--box-list__textarea">
+                            <p>Описание объекта</p>
+                            <textarea name="objectDescription" id="object-description"
+                                      [(ngModel)]="descriptionToAdding"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- object-info-bar -->
+            <div class="objects-modal__content--block-areas" #infoWindow [hidden]="!isShowingInfo">
+                <i class="icon icon-close icon-close__areas" (click)="closeInfoWindow()"></i>
+                <div class="objects-modal__content--block-areas__title">
+                    <h3 #objectName>{{name}}</h3>
+                </div>
+                <form class="objects-modal__content--block-areas__box" name="objectNameArea">
+                    <div class="objects-modal__content--block-areas__box--list  ">
+                        <div class="objects-modal__content--block-areas__box--list-item">
+                            <p>Площадь объекта</p>
+                            <span *ngIf="!isEditing" #objectArea>{{area}}</span><span *ngIf="!isEditing"> м2</span>
+                            <input type="number" required name="area" id="areaInput" [(ngModel)]="newArea"
+                                   *ngIf="isEditing" />
+                        </div>
+                    </div>
+                    <div class="objects-modal__content--block-areas__box--list  ">
+                        <div class="objects-modal__content--block-areas__box--list-item">
+                            <p> Адрес объекта</p>
+                            <span #objectAddress>{{address}}</span>
+                        </div>
+                    </div>
+                    <div class="objects-modal__content--block-areas__box--list">
+                        <div class="objects-modal__content--block-areas__box--list-item objects-modal__areas--box-list__textarea">
+                            <p>Описание</p>
+                            <span class="description" *ngIf="!isEditing" #objectDesc>{{description}}</span>
+                            <textarea *ngIf="isEditing" name="description" id="descriptionTextarea"
+                                      [(ngModel)]="newDescription"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div #addingButton [hidden]="!isAdding || !canAddObject" class="objects-modal__content--block-areas__box--btn d-f j-c-c">
+            <div class="objects-modal__content--block-areas__box--btn-item btn-global">
+                <button type="button" class="btn-global__red" (click)="create()">
+                    Добавить объект
+                </button>
+            </div>
+        </div>
+        <div #deleteButton [hidden]="!isShowingInfo || !isMaster" class="objects-modal__content--block-areas__box--btn d-f j-c-c">
+            <div class="objects-modal__content--block-areas__box--btn-item btn-global">
+                <button type="button" class="btn-global__red" (click)="remove()">
+                    Удалить
+                </button>
+            </div>
+        </div>
+        <!-- <div *ngIf="!isEditing" class="objects-modal__content--block-areas__box--btn d-f j-c-c">
+        <div *ngIf="!isEditing && hasAccess"
+            class="objects-modal__content--block-areas__box--btn-item btn-global">
+            <button class="btn-global__red" (click)="goToUpdate()">Изменить</button>
+        </div>
+        <div *ngIf="!isEditing && isMaster"
+            class="objects-modal__content--block-areas__box--btn-item btn-global">
+            <button class="btn-global__red" (click)="remove()">Удалить</button>
+        </div>
+    </div> -->
+    </div>
+
+    <div id="map" frameborder="0" allowfullscreen="true" class="objects-modal__map"></div>
+
+</div>

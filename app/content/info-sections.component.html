@@ -1,0 +1,25 @@
+<!-- crumb == start -->
+<div class="container animate_show_up">
+   <div class="crumb">
+      <ul class="crumb-list d-f f-w a-i-c">
+         <li class="crumb-list__item">
+            <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">{{infoTypeName}}</li>
+      </ul>
+   </div>
+
+   <div class="global-title">
+      <h1>{{infoTypeName}}</h1>
+   </div>
+</div>
+<!-- crumb == end -->
+
+<br>
+
+<div class="container animate_show_up">
+   <div class="bg-br" style="padding: 20px;" [innerHTML]="infoSection?.content | safeHtml"></div>
+</div>
+
+<br>

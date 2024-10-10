@@ -1,0 +1,366 @@
+<!-- crumb == start -->
+<div class="container animate_show_up">
+   <div class="crumb">
+      <ul class="crumb-list d-f f-w a-i-c">
+         <li class="crumb-list__item">
+            <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">Сравнение</li>
+      </ul>
+   </div>
+
+   <div class="global-title">
+      <h1>Сравнение</h1>
+   </div>
+</div>
+<!-- crumb == end -->
+
+<div *ngIf="isLoaded">
+   <div class="container">
+      <div class="empty" *ngIf="subCategories !=null && subCategories!='undefined' && subCategories.length == 0">
+         <div class="empty__content d-f a-i-c j-c-b f-w">
+            <div class="empty__text">
+               <div class="empty__text--title">
+                  <h2>Список сравнения товаров пуст</h2>
+                  <p>
+                     Перейдите в <a href="#" [routerLink]="['/catalog']">каталог</a>, выбирайте товары и
+                     добавляйте
+                     в
+                     сравнение.
+                  </p>
+               </div>
+               <div class="empty__text--btn btn-global">
+                  <a href="#" [routerLink]="['/catalog']" class="btn-global__red">Перейти в каталог</a>
+               </div>
+            </div>
+            <div class="empty__img d-f j-c-c a-i-c">
+               <img src="/assets/img/favorite-not-found.jpg" alt="img">
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="compare-fixed__top" [class.compare-fixed__top--visible]="fixedBar === true" *ngIf="isLoaded">
+   <div class="compare">
+      <div class="container">
+         <!-- Если нет ни одного продукта то вырисовывает блок пустышку-->
+         <!-- /Если нет ни одного продукта то вырисовывает блок пустышку-->
+         <div class="compare-box d-f compareLineHover"
+            *ngIf="subCategories !=null && subCategories!='undefined' && subCategories.length > 0">
+            <div class="compare-box__sidebar">
+               <div class="compare-box__sidebar--select">
+                  <form action="/" method="get">
+                     <div class="compare-box__sidebar--select-title">
+                        <p>Выберите категорию:</p>
+                     </div>
+                     <div class="dropdown">
+                        <div
+                           class="compare-box__sidebar--select-name d-f a-i-c dropdown-select window-click click-expand"
+                           data-expand="false">
+                           <div class="dropdown-select__arrow d-f a-i-c j-c-b">
+                              <span class="dropdown-select__selected subcategoryName">{{selectedSubcategory}}</span>
+                              <i
+                                 class="dropdown-select__counter d-f a-i-c j-c-c subcategoryNameCount">{{selectedSubcategoryProducts}}</i>
+                           </div>
+                           <i class="icon icon-arrow icon-arrow__bottom d-f a-i-c j-c-c"></i>
+                        </div>
+                        <ul class="dropdown-list expand-block d_none scrollbar">
+                           <ng-container *ngFor="let subCategory of subCategories; let currentElement = index">
+                              <li class="dropdown-list__item d-f a-i-c j-c-b"
+                                 [class.active]="subCategory.id === productsComparisonGroupId">
+                                 <p class="dropdown-list__item--name"
+                                    (click)="getCurrentItem(subCategory.id, subCategory.subcategoryId, $event)">
+                                    {{ subCategory.subcategoryName}}
+                                 </p>
+                                 <i class="icon icon-trash" (click)="removeGroup(subCategory.id)"></i>
+                              </li>
+                           </ng-container>
+
+                           <select [(ngModel)]="productsComparisonGroupId" hidden
+                              (ngModelChange)="showProducts(productsComparisonGroupId)" name="subCategory">
+                              <option *ngFor="let subCategory of subCategories" [value]="subCategory.id">
+                                 {{ subCategory.subcategoryName}}
+                              </option>
+                           </select>
+                        </ul>
+                     </div>
+                     <ul class="compare-box__sidebar--select-radiobutton">
+                        <li class="compare-box__sidebar--select-radiobutton__item">
+                           <label class="checkbox d-f a-i-c">
+                              <input type="radio" class="radio d_none" id="radio-0" name="compare" value="1"
+                                 [checked]="showAll" (click)="showAllProperties(true)" />
+                              <i class="checkbox-radio d-f a-i-c j-c-c"></i>
+                              <span class="checkbox-name">Все характеристики</span>
+                           </label>
+                        </li>
+                        <li class="compare-box__sidebar--select-radiobutton__item">
+                           <label class="checkbox d-f a-i-c">
+                              <input type="radio" class="radio d_none" id="radio-1" name="compare" value="2"
+                                 [checked]="!showAll" (click)="showAllProperties(false)" class="d_none" />
+                              <i class="checkbox-radio d-f a-i-c j-c-c"></i>
+                              <span class="checkbox-name">Только отличия</span>
+                           </label>
+                        </li>
+                     </ul>
+                  </form>
+               </div>
+            </div>
+
+            <div class="compare-box__content">
+               <!-- slickConfigFixedTop -->
+               <ngx-slick-carousel class="slick-carousel slickConfigFixedTop d_block" [config]="slickConfigFixedTop">
+                  <div ngxSlickItem *ngFor="let item of owlCarouselStartedItemsQuan">
+                     <div class="compare-box__content--slide">
+                        <div class="compare-box__content--slide-item">
+                           <div class="cards-product__item compare-fixed__top--cards">
+                              <div class="compare-fixed__top--cards-name d-f">
+                                 <div class="cards-product__item--name">
+                                    <a href="#" [routerLink]="['/product', item.vendorCode]"
+                                       title="{{ item.name }}">{{ item.name }}</a>
+                                 </div>
+                                 <div class="cards-product__item--img">
+                                    <a class="d-f a-i-c j-c-c" [routerLink]="['/product', item.vendorCode]"
+                                       title="{{ item.name }}">
+                                       <img *ngIf="!item.mainImage" src="/assets/img/product-default-image.jpg" />
+                                       <img *ngIf="item.mainImage"
+                                          src="{{cloudinaryHelper.getImageUrl(item.mainImage.imageURL,262,262)}}"
+                                          (error)="setBrokenImage($event)" title="{{ item.name }}"
+                                          alt="{{ item.name }}" />
+                                    </a>
+                                 </div>
+                              </div>
+
+                              <div class="compare-fixed__top--cards-price">
+                                 <div class="cards-product__item--price" *ngIf="item.price">
+                                     <p class="cards-product__item--price-main">
+                                         <span *ngIf="isValueInteger(item.price)">{{item.price | fractionSizeSpace}} ₽</span>
+                                         <span *ngIf="!isValueInteger(item.price)">{{item.price.toFixed(2) | fractionSizeSpace}} ₽</span>
+                                     </p>
+                                 </div>
+                              </div>
+                              <div class="cards-product__item--counter d-f">
+                                 <div class="cards-product__item--counter-increment">
+                                    <app-product-counter productCounterMax="{{item.amountInStock}}"
+                                       productCounterMin="{{item.shipmentMultiplicity}}"
+                                       productCounterStep="{{item.shipmentMultiplicity}}"
+                                       productCounterQuantity="{{item.quantity}}" (increment)="increment(item)"
+                                       (decrement)="decrement(item)" (changeNumber)="changeNumber($event, item)"
+                                       (error)="errorMethod()">
+                                    </app-product-counter>
+                                 </div>
+                                 <div class="cards-product__item--counter-btn btn-global">
+                                    <button class="btn-global__red" (click)="addToBasket(item.id, item.quantity)"
+                                       id="AddBasket" [disabled]="item.price == 0 || item.status == 2">
+                                       <ng-container
+                                          *ngIf="item.price != 0 && item.status != 2 && item.amountInStock>0">
+                                          В
+                                          КОРЗИНУ
+                                       </ng-container>
+                                       <span *ngIf="item.price != 0 && item.status != 2 && item.amountInStock ==0">
+                                          ПОД
+                                          ЗАКАЗ
+                                       </span>
+                                       <ng-container *ngIf="item.price == 0 || item.status == 2">
+                                          СНЯТ С
+                                          ПРОДАЖИ
+                                       </ng-container>
+                                    </button>
+                                 </div>
+                              </div>
+
+                              <div class="cards-product__item--remove" (click)="removeFromList(item.id)">
+                                 <i class="icon icon-trash"></i>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </ngx-slick-carousel>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+
+
+
+
+<div class="compare" *ngIf="isLoaded">
+   <div class="container">
+      <div class="compare-box d-f compareLineHover"
+         *ngIf="subCategories !=null && subCategories!='undefined' && subCategories.length > 0">
+         <div class="compare-box__sidebar">
+            <div class="compare-box__sidebar--select">
+               <form action="/" method="get">
+                  <div class="compare-box__sidebar--select-title" id="SelectedCategory">
+                     <p>Выберите категорию:</p>
+                  </div>
+                  <div class="dropdown">
+                     <div class="compare-box__sidebar--select-name d-f a-i-c dropdown-select window-click click-expand"
+                        id="Dropdown" data-expand="false">
+                        <div class="dropdown-select__arrow d-f a-i-c j-c-b">
+                           <span class="dropdown-select__selected subcategoryName">{{selectedSubcategory}}</span>
+                           <i
+                              class="dropdown-select__counter d-f a-i-c j-c-c subcategoryNameCount">{{selectedSubcategoryProducts}}</i>
+                        </div>
+                        <i class="icon icon-arrow icon-arrow__bottom d-f a-i-c j-c-c"></i>
+                     </div>
+                     <ul class="dropdown-list expand-block d_none scrollbar">
+                        <ng-container *ngFor="let subCategory of subCategories; let currentElement = index">
+                           <li class="dropdown-list__item d-f a-i-c j-c-b"
+                              [class.active]="subCategory.id === productsComparisonGroupId">
+                              <p class="dropdown-list__item--name subcategoryName"
+                                 (click)="getCurrentItem(subCategory.id, subCategory.subcategoryId, $event)">
+                                 {{ subCategory.subcategoryName}}
+                              </p>
+                              <i class="icon icon-trash" (click)="removeGroup(subCategory.id)"></i>
+                           </li>
+                        </ng-container>
+
+                        <select [(ngModel)]="productsComparisonGroupId" hidden
+                           (ngModelChange)="showProducts(productsComparisonGroupId)" name="subCategory">
+                           <option *ngFor="let subCategory of subCategories" [value]="subCategory.id">
+                              {{ subCategory.subcategoryName}}
+                           </option>
+                        </select>
+                     </ul>
+                  </div>
+                  <ul class="compare-box__sidebar--select-radiobutton">
+                     <li class="compare-box__sidebar--select-radiobutton__item">
+                        <label class="checkbox d-f a-i-c">
+                           <input type="radio" class="radio d_none" id="radio-0" name="compare" value="1"
+                              [checked]="showAll" (click)="showAllProperties(true)" />
+                           <i class="checkbox-radio d-f a-i-c j-c-c"></i>
+                           <span class="checkbox-name">Все характеристики</span>
+                        </label>
+                     </li>
+                     <li class="compare-box__sidebar--select-radiobutton__item">
+                        <label class="checkbox d-f a-i-c">
+                           <input type="radio" class="radio d_none" id="radio-1" name="compare" value="2"
+                              [checked]="!showAll" (click)="showAllProperties(false)" />
+                           <i class="checkbox-radio d-f a-i-c j-c-c"></i>
+                           <span class="checkbox-name">Только отличия</span>
+                        </label>
+                     </li>
+                  </ul>
+               </form>
+            </div>
+            <div class="compare-box__sidebar--list ">
+               <div class="compare-box__sidebar--list-price compare-box__sidebar--list-title" *ngIf="showPriceProperty"
+                  id="showPriceProperty">
+                  <p>Цена</p>
+               </div>
+
+               <div class="compare-box__sidebar--list-item">
+                  <div class="compare-box__sidebar--list-item__title compare-box__sidebar--list-title"
+                     id="Specifications">
+                     <p>Характеристики</p>
+                  </div>
+                  <ul class="jsHover">
+                     <li class="jsHoverItem" *ngIf="showBrandProperty">
+                        <h3>Бренд</h3>
+                     </li>
+                     <ng-container *ngFor="let property of properties; let i = index">
+                        <li class="jsHoverItem line-clamp line-clamp_2" *ngIf="property.showProperty">
+                           <span class="d_none">{{ property.name }}</span>
+                           <p>{{ property.name }}</p>
+                        </li>
+                     </ng-container>
+                  </ul>
+               </div>
+            </div>
+         </div>
+
+         <div class="compare-box__content">
+            <!-- slickConfignContnet -->
+            <ngx-slick-carousel class="slick-carousel slickConfignContnet d_block" [config]="slickConfignContnet">
+               <div ngxSlickItem *ngFor="let item of owlCarouselStartedItemsQuan">
+                  <div class="compare-box__content--slide">
+                     <div class="compare-box__content--slide-item">
+                        <div class="cards-product__item">
+                           <div class="cards-product__item--img">
+                              <a class="d-f a-i-c j-c-c" [routerLink]="['/product', item.vendorCode]"
+                                 title="{{ item.name }}">
+                                 <img *ngIf="!item.mainImage" src="/assets/img/product-default-image.jpg" />
+                                 <img *ngIf="item.mainImage"
+                                    src="{{cloudinaryHelper.getImageUrl(item.mainImage.imageURL,262,262)}}"
+                                    (error)="setBrokenImage($event)" />
+                              </a>
+                           </div>
+                           <div class="cards-product__item--name" id="NameProduct">
+                              <a href="#" [routerLink]="['/product', item.vendorCode]"
+                                 title="{{ item.name }}">{{ item.name }}</a>
+                           </div>
+                           <div class="cards-product__item--price" *ngIf="item.price" id="PriceProduct">
+                               <p class="cards-product__item--price-main">
+                                   <span *ngIf="isValueInteger(item.price)">{{item.price | fractionSizeSpace}} ₽</span>
+                                   <span *ngIf="!isValueInteger(item.price)">{{item.price.toFixed(2) | fractionSizeSpace}} ₽</span>
+                               </p>
+                           </div>
+                           <div class="cards-product__item--name" id="Unit">
+                              <p>
+                                 Единица измерения: {{item.sellingUnitName}}
+                              </p>
+                           </div>
+                           <div class="cards-product__item--counter d-f">
+                              <div class="cards-product__item--counter-increment">
+                                 <app-product-counter productCounterMax="{{item.amountInStock}}"
+                                    productCounterMin="{{item.shipmentMultiplicity}}"
+                                    productCounterStep="{{item.shipmentMultiplicity}}"
+                                    productCounterQuantity="{{item.quantity}}" (increment)="increment(item)"
+                                    (decrement)="decrement(item)" (changeNumber)="changeNumber($event, item)"
+                                    (error)="errorMethod()">
+                                 </app-product-counter>
+                              </div>
+                              <div class="cards-product__item--counter-btn btn-global">
+                                 <button class="btn-global__red" (click)="addToBasket(item.id, item.quantity)"
+                                    id="AddBasket" [disabled]="item.price == 0 || item.status == 2">
+                                    <ng-container *ngIf="item.price != 0 && item.status != 2 && item.amountInStock>0">
+                                       В
+                                       КОРЗИНУ
+                                    </ng-container>
+                                    <ng-container *ngIf="item.price != 0 && item.status != 2 && item.amountInStock ==0">
+                                       ПОД
+                                       ЗАКАЗ
+                                    </ng-container>
+                                    <ng-container *ngIf="item.price == 0 || item.status == 2">
+                                       СНЯТ С ПРОДАЖИ
+                                    </ng-container>
+                                 </button>
+                              </div>
+                           </div>
+                           <div class="cards-product__item--remove" (click)="removeFromList(item.id)"
+                              id="DeleteProduct">
+                              <i class="icon icon-trash"></i>
+                           </div>
+                        </div>
+                        <div class="compare-box__content--slide-item__list">
+                           <div class="compare-box__content--slide-item__list--specifications d_none">
+                              <p>Характеристики</p>
+                           </div>
+                           <ul class="jsHover">
+                              <li class="jsHoverItem" *ngIf="showBrandProperty">
+                                 <h3 class="d_none">Бренд</h3>
+                                 <h4> {{ item.brand }} </h4>
+                              </li>
+                              <ng-container *ngFor="let property of properties; let i = index">
+                                 <li class="jsHoverItem line-clamp line-clamp_2" *ngIf="property.showProperty">
+                                    <h3 class="d_none">{{ property.name }}</h3>
+                                    <span class="d_none">{{ getPropertyValue(property.name, item) }}</span>
+                                    <p>{{ getPropertyValue(property.name, item) }}</p>
+                                 </li>
+                              </ng-container>
+                           </ul>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </ngx-slick-carousel>
+         </div>
+      </div>
+   </div>
+</div>

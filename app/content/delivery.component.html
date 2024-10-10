@@ -1,0 +1,778 @@
+﻿<!-- crumb == start -->
+<div class="container animate_show_up">
+	<div class="crumb">
+		<ul class="crumb-list d-f f-w a-i-c">
+			<li class="crumb-list__item">
+				<a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+			</li>
+			<li class="crumb-list__item">−</li>
+			<li class="crumb-list__item">Доставка</li>
+		</ul>
+	</div>
+
+	<div class="global-title">
+		<h1>Доставка</h1>
+	</div>
+</div>
+
+<!--crumb == end-->
+<div class="delivery">
+	<div class="container">
+		<!--info -- start-->
+		<div class="delivery-info d-f">
+			<div class="delivery-info__area">
+				<h3 class="delivery-info__title">Введите город получения или выберите зону на карте</h3>
+				<div class="delivery-info__area--city d-f f-w">
+					<p>Город получения</p>
+					<input type="text" [(ngModel)]="city" (change)="cityChanged()" (keyDown.enter)="cityChanged()">
+					<a href="#" (click)="openModalDeliveryMap()" class="delivery-info__area--city-modal d_none a-i-c">
+						<i class="new-icon new-icon-on-map"></i>
+						<span>Выбрать зону доставки на карте</span>
+					</a>
+				</div>
+			</div>
+			<div class="delivery-info__area">
+				<div class="delivery-info__check--facilities d-f a-i-c">
+					<h3 class="delivery-info__title">Выберите тип транспортного средства</h3>
+					<label class="checkbox checkbox-switch d-f a-i-c">
+						<input type="checkbox" hidden (change)="unloadingChange()" />
+						<span class="checkbox-switch__slider">да</span>
+						<p class="checkbox-switch__text d-f a-i-c">
+							Разгрузка манипулятором <i class="new-icon new-icon-whole d_none"></i>
+						</p>
+					</label>
+				</div>
+				<div class="delivery-info__check--capacity">
+					<p>Грузоподъемность:</p>
+					<div class="delivery-info__check--capacity-btn d-f f-w a-i-c">
+						<button class="change_active" (click)="capacityChanged(1)" id="capacity-1">до 10 кг</button>
+						<button class="change_active" (click)="capacityChanged(2)" id="capacity-2">до 500 кг</button>
+						<button class="change_active" (click)="capacityChanged(3)" id="capacity-3">до 1,5 т</button>
+						<button class="change_active" (click)="capacityChanged(4)" id="capacity-4">до 3,5 т</button>
+						<button class="change_active" (click)="capacityChanged(5)" id="capacity-5">до 5 т</button>
+						<button class="change_active" (click)="capacityChanged(6)" id="capacity-6">до 10 т</button>
+						<button class="change_active" (click)="capacityChanged(7)" id="capacity-7">до 20 т</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--info -- end-->
+		<!--zone -- start-->
+		<div class="delivery-zones d-f">
+			<div class="delivery-zones__box delivery-zones__map">
+				<h3 class="delivery-zones__box--title">Зоны доставки</h3>
+				<div class="delivery-zones__box--map">
+					<div id="map" style="width: 100%; height: 100%" frameborder="0" allowfullscreen="true"></div>
+				</div>
+			</div>
+			<div class="delivery-zones__box delivery-zones__info">
+				<h3 class="delivery-zones__box--title">Стоимость и варианты доставки</h3>
+				<div class="delivery-zones__box--info">
+					<div class="delivery-zones__box--info-table">
+						<h3 #zoneDisabled class="delivery-zones__box--info-table__title" [hidden]="deliveryEnabled">
+							<p>Зона не определена </p>
+							<a href="#" class="delivery-zones__box--info-table__title--link"
+								(click)="goTo('deliveryInAnoterCity')">Узнать стоимость доставки</a>
+						</h3>
+						<h3 #zone class="delivery-zones__box--info-table__title" [hidden]="!deliveryEnabled">
+							<p>Зона <span #zoneNumberRef>{{zoneNumber}}</span> </p>
+						</h3>
+
+						<ul class="delivery-zones__box--info-table__list">
+							<li class="delivery-zones__box--info-table__list--item d-f j-c-b">
+								<a href="#" #courierDeliveryName [hidden]="!courierDeliveryEnabled"
+									class="delivery-zones__box--info-table__list--item-name" (click)="goTo('courierDelivery')">
+									Курьерская
+									доставка
+								</a>
+								<p #courierDeliveryNameDisabled [hidden]="courierDeliveryEnabled"
+									class="delivery-zones__box--info-table__list--item-name disabled">
+									Курьерская
+									доставка
+								</p>
+								<span class="delivery-zones__box--info-table__list--item-line"></span>
+								<p class="delivery-zones__box--info-table__list--item-price disabled">
+									<span #courierDelivery [hidden]="!courierDeliveryEnabled" class="zero">300 ₽</span>
+									<span #courierDeliveryDisabled [hidden]="courierDeliveryEnabled"
+										class="disabled">недоступна</span>
+								</p>
+							</li>
+							<li class="delivery-zones__box--info-table__list--item d-f j-c-b">
+								<p #dayDeliveryName [hidden]="!deliveryEnabled"
+									class="delivery-zones__box--info-table__list--item-name d-f a-i-c">
+									<a href="#" class="delivery-zones__box--info-table__list--item-name__link"
+										(click)="goTo('dayDelivery')">Доставка в течение дня</a>
+									<i class="new-icon new-icon-info tooltip">
+										<ul class="tooltip-content tooltip-content__list triangle triangle-down">
+											<li class="d-f a-i-c j-c-b">
+												Доставка в 9-часовой интервал
+											</li>
+										</ul>
+									</i>
+								</p>
+								<p #dayDeliveryNameDisabled [hidden]="deliveryEnabled"
+									class="delivery-zones__box--info-table__list--item-name disabled">
+									Доставка в течение дня
+									<i class="new-icon new-icon-info tooltip"></i>
+								</p>
+								<span class="delivery-zones__box--info-table__list--item-line"></span>
+								<p class="delivery-zones__box--info-table__list--item-price disabled">
+									<span #dayDelivery [hidden]="!deliveryEnabled" class="zero">
+										от
+										{{dayDeliveryPrice}}
+									</span>
+									<span #dayDeliveryDisabled [hidden]="deliveryEnabled" class="disabled">недоступна</span>
+								</p>
+							</li>
+							<li class="delivery-zones__box--info-table__list--item d-f j-c-b">
+								<p #fiveHoursDeliveryName [hidden]="!deliveryEnabled"
+									class="delivery-zones__box--info-table__list--item-name d-f a-i-c">
+									<a href="#" class="delivery-zones__box--info-table__list--item-name__link"
+										(click)="goTo('fiveHoursDelivery')">Доставка в течение 5 часов</a>
+									<i class="new-icon new-icon-info tooltip">
+										<ul class="tooltip-content tooltip-content__list triangle triangle-down">
+											<li class="d-f a-i-c j-c-b">
+												Доставка в 5-часовой интервал
+											</li>
+										</ul>
+									</i>
+								</p>
+								<p #fiveHoursDeliveryNameDisabled [hidden]="deliveryEnabled"
+									class="delivery-zones__box--info-table__list--item-name disabled">
+									Доставка в течение 5 часов
+									<i class="new-icon new-icon-info tooltip"></i>
+								</p>
+								<span class="delivery-zones__box--info-table__list--item-line"></span>
+								<p class="delivery-zones__box--info-table__list--item-price">
+									<span #fiveHoursDelivery [hidden]="!deliveryEnabled" class="zero">
+										от
+										{{fiveHoursDeliveryPrice}}
+									</span>
+									<span #fiveHoursDeliveryDisabled [hidden]="deliveryEnabled"
+										class="disabled">недоступна</span>
+								</p>
+							</li>
+							<li class="delivery-zones__box--info-table__list--item d-f j-c-b">
+								<a href="#" #exactTimeDeliveryName [hidden]="!deliveryEnabled"
+									class="delivery-zones__box--info-table__list--item-name"
+									(click)="goTo('exactTimeDelivery')">Доставка точно ко времени</a>
+								<p #exactTimeDeliveryNameDisabled [hidden]="deliveryEnabled"
+									class="delivery-zones__box--info-table__list--item-name disabled">
+									Доставка точно ко
+									времени
+								</p>
+								<span class="delivery-zones__box--info-table__list--item-line"></span>
+								<p class="delivery-zones__box--info-table__list--item-price">
+									<span #exactTimeDelivery [hidden]="!deliveryEnabled" class="zero">
+										от
+										{{exactTimeDeliveryPrice}}
+									</span>
+									<span #exactTimeDeliveryDisabled [hidden]="deliveryEnabled"
+										class="disabled">недоступна</span>
+								</p>
+							</li>
+						</ul>
+					</div>
+					<div class="delivery-zones__box--info-color">
+						<ul class="delivery-zones__box--info-color__list d-f f-w">
+							<li class="delivery-zones__box--info-color__list--item d-f a-i-c">
+								<div class="delivery-zones__box--info-color__list--item-content"
+									style="background-color:#6BC85B;"></div>
+								<p class="delivery-zones__box--info-color__list--item-text">— Зона 1</p>
+							</li>
+							<li class="delivery-zones__box--info-color__list--item d-f a-i-c">
+								<div class="delivery-zones__box--info-color__list--item-content"
+									style="background-color:#F1C2DD;"></div>
+								<p class="delivery-zones__box--info-color__list--item-text">— Зона 4</p>
+							</li>
+							<li class="delivery-zones__box--info-color__list--item d-f a-i-c">
+								<div class="delivery-zones__box--info-color__list--item-content"
+									style="background-color: #FFECA0;"></div>
+								<p class="delivery-zones__box--info-color__list--item-text">— Зона 2</p>
+							</li>
+							<li class="delivery-zones__box--info-color__list--item d-f a-i-c">
+								<div class="delivery-zones__box--info-color__list--item-content"
+									style="background-color: #CCD589;"></div>
+								<p class="delivery-zones__box--info-color__list--item-text">— Зона 5</p>
+							</li>
+							<li class="delivery-zones__box--info-color__list--item d-f a-i-c">
+								<div class="delivery-zones__box--info-color__list--item-content"
+									style="background-color: #C4E7EF;"></div>
+								<p class="delivery-zones__box--info-color__list--item-text">— Зона 3</p>
+							</li>
+							<li class="delivery-zones__box--info-color__list--item d-f a-i-c">
+								<div class="delivery-zones__box--info-color__list--item-content"
+									style="background-color: #D1D5E7;"></div>
+								<p class="delivery-zones__box--info-color__list--item-text">— Зона 6</p>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--zone -- end-->
+		<!--detailed -- start-->
+		<div class="delivery-detailed" id="rates">
+			<!--САМОВЫВОЗ start-->
+			<div class="delivery-detailed__removal">
+				<div class="second-title">
+					<h2>САмовывоз</h2>
+				</div>
+				<div class="delivery-detailed__removal--box d-f">
+					<div class="delivery-detailed__removal--box-list">
+						<div class="delivery-detailed__title d-f a-i-c">
+							<h3>Шоурум Мытищи</h3>
+						</div>
+						<div class="delivery-detailed__removal--box-info delivery-detailed__box">
+							<h3 class="delivery-detailed__removal--box-info__title">Шоурум работает на самовывоз</h3>
+							<div class="delivery-detailed__removal--box-info__list d-f">
+								<div class="delivery-detailed__removal--box-info__list--item">
+									<p>Адрес</p>
+									<span>МО, г. Мытищи, улица Мира, вл 42, стр 1.</span>
+								</div>
+								<div class="delivery-detailed__removal--box-info__list--item">
+									<p>Время работы шоурума:</p>
+									<span>Ежедневно с 8:00 до 20:00</span>
+								</div>
+							</div>
+							<a href="https://yandex.ru/maps/10740/mytischi/house/ulitsa_mira_vl42s1/Z04YcQZhTUEBQFtvfXVzc3ViZw==/?ll=37.712698%2C55.922592&z=17" class="delivery-detailed__removal--box-info__link d-f a-i-c" target="_blank">Открыть на
+								Яндекс Картах
+								<i class="new-icon new-icon-newTab"></i> </a>
+						</div>
+					</div>
+					<div class="delivery-detailed__removal--box-list">
+						<div class="delivery-detailed__title d-f a-i-c">
+							<h3>Шоурум Елино </h3>
+						</div>
+						<div class="delivery-detailed__removal--box-info delivery-detailed__box">
+							<h3 class="delivery-detailed__removal--box-info__title">Шоурум работает на самовывоз</h3>
+							<div class="delivery-detailed__removal--box-info__list d-f">
+								<div class="delivery-detailed__removal--box-info__list--item">
+									<p>Адрес</p>
+									<span>МО, г. Солнечногорск, М-10, 35-й километр, 1 (д. Елино)</span>
+								</div>
+								<div class="delivery-detailed__removal--box-info__list--item">
+									<p>Время работы шоурума:</p>
+									<span>Ежедневно с 8:00 до 20:00</span>
+								</div>
+							</div>
+							<a href="https://yandex.ru/maps/1/moscow-and-moscow-oblast/house/m_10_rossiya_35_y_kilometr_1/Z04YdABhTUEFQFtvfXV4cH1hbA==/?ll=37.271274%2C55.990892&z=19" class="delivery-detailed__removal--box-info__link d-f a-i-c" target="_blank">Открыть на
+								Яндекс Картах
+								<i class="new-icon new-icon-newTab"></i> </a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--САМОВЫВОЗ end-->
+
+			<!--КУРЬЕРСКАЯ ДОСТАВКА start-->
+			<div class="delivery-detailed__courier" id="courierDelivery">
+				<div class="second-title">
+					<h2>Подробные тарифы на доставку</h2>
+				</div>
+				<div class="delivery-detailed__title d-f a-i-c">
+					<h3>Курьерская доставка</h3>
+					<div class="delivery-detailed__title--info d-f f-w a-i-c">
+						<p>Интервалы:</p>
+						<span>с 9 до 21</span>
+						<span>с 15 до 22</span>
+						<span>с 20 до 00</span>
+					</div>
+				</div>
+
+				<div class="delivery-detailed__courier--info d-f">
+					<div class="delivery-detailed__courier--info-box delivery-detailed__box">
+						<div class="delivery-detailed__courier--info-box__btn">
+							<span class="delivery-detailed__btn">Курьером</span>
+						</div>
+						<ul class="delivery-detailed__courier--info-box__list">
+							<li class="delivery-detailed__courier--info-box__list--item d-f j-c-b">
+								<p class="delivery-detailed__courier--info-box__list--item-name">
+									Зона 1 (внутри МКАД)
+								</p>
+								<span class="delivery-detailed__courier--info-box__list--item-line"></span>
+								<p class="delivery-detailed__courier--info-box__list--item-price zero">300 ₽</p>
+							</li>
+						</ul>
+					</div>
+					<div class="delivery-detailed__courier--info-text">
+						<p>Доступна для заказа товаров с суммарным весом <strong>не более 10 кг</strong></p>
+					</div>
+				</div>
+			</div>
+			<!--КУРЬЕРСКАЯ ДОСТАВКА end-->
+
+			<!--table-->
+			<!--ЭКСПРЕСС-ДОСТАВКА start-->
+			<div class="delivery-detailed__table">
+				<div class="delivery-detailed__title d-f a-i-c">
+					<h3>Экспресс-доставка</h3>
+					<div class="delivery-detailed__title--info d-f f-w a-i-c">
+						<p>В течение 1 часа с момента заказа. Только в пределах г. Мытищи</p>
+					</div>
+				</div>
+
+				<div class="delivery-detailed__table--info delivery-detailed__box">
+					<div class="delivery-detailed__table--info-box">
+						<div class="delivery-detailed__table--info-box__main scrollbar">
+							<table>
+								<thead>
+									<tr>
+										<th class="sticky btn">
+											<span class="delivery-detailed__btn">Экспресс</span>
+										</th>
+										<th>0,5 тонны</th>
+										<th>1,5 тонны</th>
+										<th>3,5 тонны</th>
+										<th>5 тонн</th>
+										<th>10 тонн</th>
+										<th>20 тонн</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="sticky semibold">Мытищи</td>
+										<td><span class="zero">1 826 ₽</span></td>
+										<td><span class="zero">2 719 ₽</span></td>
+										<td><span class="disabled">Недоступен</span></td>
+										<td><span class="disabled">Недоступен</span></td>
+										<td><span class="disabled">Недоступен</span></td>
+										<td><span class="disabled">Недоступен</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--ЭКСПРЕСС-ДОСТАВКА end-->
+			<!--ДОСТАВКА В ТЕЧЕНИЕ ДНЯ start-->
+			<div class="delivery-detailed__table" id="dayDelivery">
+				<div class="delivery-detailed__title d-f a-i-c">
+					<h3>Доставка в течение дня</h3>
+					<div class="delivery-detailed__title--info d-f f-w a-i-c">
+						<p>Интервалы:</p>
+						<span>с 9 до 18</span>
+						<span>с 13 до 22</span>
+						<span>с 15 до 24</span>
+					</div>
+				</div>
+
+				<div class="delivery-detailed__table--info delivery-detailed__box">
+					<div class="delivery-detailed__table--info-box">
+						<div class="delivery-detailed__table--info-box__main new-scrollbar">
+							<table>
+								<thead>
+									<tr>
+										<th class="sticky btn">
+											<span class="delivery-detailed__btn">В течение дня</span>
+										</th>
+										<th>0,5 тонны</th>
+										<th>1,5 тонны</th>
+										<th>3,5 тонны</th>
+										<th>5 тонн</th>
+										<th>10 тонн</th>
+										<th class="tons-icon center">
+											<i class="new-icon new-icon-whole newProductTooltip tooltip">
+												<p class="newProductTooltipContentDescription" hidden>
+													Разгрузка краном манипулятором
+												</p>
+											</i>
+										</th>
+										<th>20 тонн</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="sticky semibold">Зона 1</td>
+										<td><span class="zero">850 ₽</span></td>
+										<td><span class="zero">1 400 ₽</span></td>
+										<td><span class="zero">2 639 ₽</span></td>
+										<td><span class="zero">4 260 ₽</span></td>
+										<td><span class="zero">6 400 ₽</span></td>
+										<td class="center"><span class="disabled zero">15 590 ₽</span></td>
+										<td><span class="zero">13 000 ₽</span></td>
+									</tr>
+									<tr>
+										<td class="sticky semibold">Зона 2</td>
+										<td><span class="zero">1100 ₽</span></td>
+										<td><span class="zero">1 850 ₽</span></td>
+										<td><span class="zero">3 100 ₽</span></td>
+										<td><span class="zero">4 700 ₽</span></td>
+										<td><span class="zero">7 439 ₽</span></td>
+										<td class="center"><span class="disabled zero">16 400 ₽</span></td>
+										<td><span class="zero">13 800 ₽</span></td>
+									</tr>
+									<tr>
+										<td class="sticky semibold">Зона 3</td>
+										<td><span class="zero">1 350 ₽</span></td>
+										<td><span class="zero">2 200 ₽</span></td>
+										<td><span class="zero">3 550 ₽</span></td>
+										<td><span class="zero">5 150 ₽</span></td>
+										<td><span class="zero">8 389 ₽</span></td>
+										<td class="center"><span class="disabled zero">17 550 ₽</span></td>
+										<td><span class="zero">16 500 ₽</span></td>
+									</tr>
+									<tr>
+										<td class="sticky semibold">Зона 4</td>
+										<td><span class="zero">1 650 ₽</span></td>
+										<td><span class="zero">2 650 ₽</span></td>
+										<td><span class="zero">4 279 ₽</span></td>
+										<td><span class="zero">6 050 ₽</span></td>
+										<td><span class="zero">9 698 ₽</span></td>
+										<td class="center"><span class="disabled zero">18 800 ₽</span></td>
+										<td><span class="zero">17 600 ₽</span></td>
+									</tr>
+									<tr>
+										<td class="sticky semibold">Зона 5</td>
+										<td><span class="zero">2 100 ₽</span></td>
+										<td><span class="zero">2 979 ₽</span></td>
+										<td><span class="zero">4 919 ₽</span></td>
+										<td><span class="zero">7 100 ₽</span></td>
+										<td><span class="zero">11 100 ₽</span></td>
+										<td class="center"><span class="disabled zero">20 850 ₽</span></td>
+										<td><span class="zero">18 700 ₽</span></td>
+									</tr>
+									<tr>
+										<td class="sticky semibold">Зона 6</td>
+										<td><span class="zero">2 699 ₽</span></td>
+										<td><span class="zero">4 419 ₽</span></td>
+										<td><span class="zero">6 350 ₽</span></td>
+										<td><span class="zero">8 100 ₽</span></td>
+										<td><span class="zero">12 100 ₽</span></td>
+										<td class="center"><span class="disabled zero">21 970 ₽</span></td>
+										<td><span class="zero">19 800 ₽</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--ДОСТАВКА В ТЕЧЕНИЕ ДНЯ end-->
+			<!--ДОСТАВКА В ТЕЧЕНИЕ 5 ЧАСОВ start-->
+			<div class="delivery-detailed__table" id="fiveHoursDelivery">
+				<div class="delivery-detailed__title d-f a-i-c">
+					<h3>Доставка в течение 5 часов</h3>
+					<div class="delivery-detailed__title--info d-f f-w a-i-c">
+						<p>Интервалы:</p>
+						<span>с 8 до 13</span>
+						<span>с 13 до 18</span>
+						<span>с 18 до 24</span>
+					</div>
+				</div>
+
+				<div class="delivery-detailed__table--info delivery-detailed__box">
+					<div class="delivery-detailed__table--info-box">
+						<div class="delivery-detailed__table--info-box__main new-scrollbar">
+							<table>
+								<thead>
+									<tr>
+										<th class="sticky btn">
+											<span class="delivery-detailed__btn">В течение 5 часов</span>
+										</th>
+										<th>0,5 тонны</th>
+										<th>1,5 тонны</th>
+										<th>3,5 тонны</th>
+										<th>5 тонн</th>
+										<th>10 тонн</th>
+										<th>20 тонн</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="sticky semibold">Зона 1</td>
+										<td><span class="zero">1 000 ₽</span></td>
+										<td><span class="zero">1 660 ₽</span></td>
+										<td><span class="zero">3 100 ₽</span></td>
+										<td><span class="zero">5 019 ₽</span></td>
+										<td><span class="zero">7 600 ₽</span></td>
+										<td><span class="disabled">Недоступен</span></td>
+									</tr>
+									<tr>
+										<td class="sticky semibold">Зона 2</td>
+										<td><span class="zero">1 300 ₽</span></td>
+										<td><span class="zero">2 159 ₽</span></td>
+										<td><span class="zero">3 650 ₽</span></td>
+										<td><span class="zero">5 519 ₽</span></td>
+										<td><span class="zero">8 800 ₽</span></td>
+										<td><span class="disabled">Недоступен</span></td>
+									</tr>
+									<tr>
+										<td class="sticky semibold">Зона 3</td>
+										<td><span class="zero">1 600 ₽</span></td>
+										<td><span class="zero">2 619 ₽</span></td>
+										<td><span class="zero">4 200 ₽</span></td>
+										<td><span class="zero">6 050 ₽</span></td>
+										<td><span class="zero">9 900 ₽</span></td>
+										<td><span class="disabled">Недоступен</span></td>
+									</tr>
+									<tr>
+										<td class="sticky semibold">Зона 4</td>
+										<td><span class="zero">1 950 ₽</span></td>
+										<td><span class="zero">3 149 ₽</span></td>
+										<td><span class="zero">5 050 ₽</span></td>
+										<td><span class="zero">7 119 ₽</span></td>
+										<td><span class="zero">11 100 ₽</span></td>
+										<td><span class="disabled">Недоступен</span></td>
+									</tr>
+									<tr>
+										<td class="sticky semibold">Зона 5</td>
+										<td><span class="zero">2 500 ₽</span></td>
+										<td><span class="zero">3 619 ₽</span></td>
+										<td><span class="zero">5 800 ₽</span></td>
+										<td><span class="zero">8 339 ₽</span></td>
+										<td><span class="zero">13 200 ₽</span></td>
+										<td><span class="disabled">Недоступен</span></td>
+									</tr>
+									<tr>
+										<td class="sticky semibold">Зона 6</td>
+										<td><span class="zero">3 250 ₽</span></td>
+										<td><span class="zero">5 169 ₽</span></td>
+										<td><span class="zero">7 450 ₽</span></td>
+										<td><span class="zero">9 550 ₽</span></td>
+										<td><span class="zero">14 300 ₽</span></td>
+										<td><span class="disabled">Недоступен</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--ДОСТАВКА В ТЕЧЕНИЕ 5 ЧАСОВ end-->
+			<!--ДОСТАВКА ТОЧНО КО ВРЕМЕНИ start-->
+			<div class="delivery-detailed__table" id="exactTimeDelivery">
+				<div class="delivery-detailed__title d-f a-i-c">
+					<h3>Доставка Точно ко времени</h3>
+					<div class="delivery-detailed__title--info">
+						<p>Круглосуточно к желаемому часу</p>
+					</div>
+				</div>
+
+				<div class="delivery-detailed__table--info delivery-detailed__box">
+					<div class="delivery-detailed__table--info-box">
+						<div class="delivery-detailed__table--info-box__main new-scrollbar">
+							<table>
+								<thead>
+									<tr>
+										<th class="sticky btn">
+											<span class="delivery-detailed__btn">
+												Точно ко
+												времени
+											</span>
+										</th>
+										<th>0,5 тонны</th>
+										<th>1,5 тонны</th>
+										<th>3,5 тонны</th>
+										<th>5 тонн</th>
+										<th>10 тонн</th>
+										<th>20 тонн</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="sticky semibold">Зона 1</td>
+										<td><span class="zero">1 400 ₽</span> </td>
+										<td><span class="zero">2 324 ₽</span></td>
+										<td><span class="zero">4 279 ₽</span></td>
+										<td><span class="zero">6 059 ₽</span></td>
+										<td><span class="zero">11 300 ₽</span></td>
+										<td><span class="disabled">Недоступен</span></td>
+									</tr>
+									<tr>
+										<td class="sticky semibold">Зона 2</td>
+										<td><span class="zero">1 800 ₽</span> </td>
+										<td><span class="zero">2 999 ₽</span></td>
+										<td><span class="zero">5 100 ₽</span></td>
+										<td><span class="zero">7 669 ₽</span></td>
+										<td><span class="zero">12 300 ₽</span></td>
+										<td><span class="disabled">Недоступен</span></td>
+									</tr>
+									<tr>
+										<td class="sticky semibold">Зона 3</td>
+										<td><span class="zero">2 290 ₽</span> </td>
+										<td><span class="zero">3 619 ₽</span></td>
+										<td><span class="zero">5 850 ₽</span></td>
+										<td><span class="zero">8 439 ₽</span></td>
+										<td><span class="zero">13 800 ₽</span></td>
+										<td><span class="disabled">Недоступен</span></td>
+									</tr>
+									<tr>
+										<td class="sticky semibold">Зона 4</td>
+										<td><span class="zero">2 749 ₽</span> </td>
+										<td><span class="zero">4 429 ₽</span></td>
+										<td><span class="zero">6 979 ₽</span></td>
+										<td><span class="zero">10 000 ₽</span></td>
+										<td><span class="zero">15 700 ₽</span></td>
+										<td><span class="disabled">Недоступен</span></td>
+									</tr>
+									<tr>
+										<td class="sticky semibold">Зона 5</td>
+										<td><span class="zero">3 490 ₽</span> </td>
+										<td><span class="zero">5 050 ₽</span></td>
+										<td><span class="zero">8 039 ₽</span></td>
+										<td><span class="zero">11 650 ₽</span></td>
+										<td><span class="zero">18 400 ₽</span></td>
+										<td><span class="disabled">Недоступен</span></td>
+									</tr>
+									<tr>
+										<td class="sticky semibold">Зона 6</td>
+										<td><span class="zero">4 549 ₽</span> </td>
+										<td><span class="zero">7 359 ₽</span></td>
+										<td><span class="zero">10 369 ₽</span></td>
+										<td><span class="zero">13 400 ₽</span></td>
+										<td><span class="zero">20 000 ₽</span></td>
+										<td><span class="disabled">Недоступен</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--ДОСТАВКА ТОЧНО КО ВРЕМЕНИ end-->
+			<div class="delivery-detailed__tariffs">
+				<div class="delivery-detailed__info d-f">
+					<div class="delivery-detailed__info--box delivery-detailed__box">
+						<h3>Зоны доставки</h3>
+						<p>
+							Доставляем по Москве, МО и ближайшим городам. Если вам нужна доставка в другой
+							город, <a href="#">
+								утончите стоимость у менеджера
+								МаксиПРО
+							</a>
+						</p>
+					</div>
+					<div class="delivery-detailed__info--box delivery-detailed__box">
+						<h3>Стоимость доставки </h3>
+						<p>
+							Стоимость доставки зависит от габаритов, веса, объема товара, вида и грузоподъемности
+							транспорта,
+							адреса и количества точек для разгрузки. Все тарифы включают <br> НДС 20%
+						</p>
+					</div>
+					<div class="delivery-detailed__info--box delivery-detailed__box">
+						<h3>Дополнительные услуги </h3>
+						<p>
+							Разгрузка, пронос свыше 50 метров и подъем товара на этаж оплачиваются
+							отдельно. Разгрузка из машины оплачивается как подъем на первый этаж
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!--detailed -- end-->
+		<div class="delivery-city" id="deliveryInAnoterCity">
+			<div class="second-title delivery-city__title">
+				<h2>Нужна доставка в другой город?</h2>
+				<p>Отправьте запрос на расчет доставки вашему менеджеру</p>
+			</div>
+
+			<div class="delivery-city__box" *ngIf="isUserLoggedIn">
+				<form #deliveryRequestFormForAuthorized="ngForm" class="delivery-city__box--form d-f f-w">
+					<div class="delivery-city__box--form-area d-f">
+						<div class="delivery-city__box--form-area__list" [class.required]="fieldIsEmpty(cityRef)">
+							<input #cityRef="ngModel" type="text" placeholder="Город" [(ngModel)]="cityForRequest" name="city"
+								class="delivery-city__box--form-area__city delivery-city__box--form-area__input" id="city"
+								required>
+							<h3 class="required-tooltip d_none">заполнение обязательно</h3>
+						</div>
+
+						<div class="dropdown">
+							<div class="d-f a-i-c dropdown-select window-click click-expand" data-expand="false">
+								<div class="dropdown-select__arrow dropdown-select__area d-f a-i-c j-c-b">
+									<input type="text" name="managersSearchText" autocomplete="off" [(ngModel)]="selectedWeight"
+										class="input-expand border-0">
+								</div>
+								<i class="icon icon-arrow icon-arrow__bottom d-f a-i-c j-c-c "></i>
+							</div>
+							<ul class="compare-box__sidebar--select-list dropdown-list expand-block d_none scrollbar">
+								<ng-container *ngFor="let weight of weights">
+									<li class="dropdown-list__item" [class.active]="selectedWeight === weight"
+										(click)="weightChange(weight)">
+										<p>{{ weight }} </p>
+									</li>
+								</ng-container>
+
+								<select hidden [(ngModel)]="selectedWeight" notFoundText="Список весов пуст"
+									name="selectListName">
+									<option *ngFor="let weight of weights" [value]="weight">
+										{{weight}}
+									</option>
+								</select>
+							</ul>
+						</div>
+						<div class="delivery-city__box--form-btn btn-global">
+							<button class="btn-global__red" (click)="calculateDeliveryPrice()">отправить</button>
+						</div>
+					</div>
+				</form>
+				<div class="delivery-city__box--img ">
+					<img src="../../assets/img/delivery/car.png" alt="car">
+				</div>
+			</div>
+
+
+			<div class="delivery-city__box" *ngIf="!isUserLoggedIn">
+				<form #deliveryRequestForm="ngForm" class="delivery-city__box--form d-f">
+					<div class="delivery-city__box--form-area d-f f-w">
+						<div class="delivery-city__box--form-area__list delivery-city__box--form-area__list--mob"
+							[class.required]="fieldIsEmpty(nameRef)">
+							<input #nameRef="ngModel" type="text" placeholder="Имя" [(ngModel)]="name" name="nameInput"
+								class="delivery-city__box--form-area__name delivery-city__box--form-area__input" id="name"
+								required>
+							<h3 class="required-tooltip d_none">заполнение обязательно</h3>
+						</div>
+						<div class="delivery-city__box--form-area__list delivery-city__box--form-area__list--mob"
+							[class.required]="phoneFieldIsEmpty(phoneRef) || (phoneNumber && phoneNumber.length<10)">
+							<input #phoneRef="ngModel" (keydown)="phoneTouchedEvent()" type="text" placeholder="Телефон"
+								[(ngModel)]="phoneNumber" name="phone"
+								class="delivery-city__box--form-area__phone delivery-city__box--form-area__input" id="phone"
+								prefix="+7" mask="(000) 000 00 00" required>
+							<h3 class="required-tooltip d_none">заполнение обязательно</h3>
+						</div>
+						<div class="delivery-city__box--form-area__list" [class.required]="fieldIsEmpty(cityRef)">
+							<input #cityRef="ngModel" type="text" placeholder="Город" [(ngModel)]="cityForRequest" name="city"
+								class="delivery-city__box--form-area__city delivery-city__box--form-area__input" id="city"
+								required>
+							<h3 class="required-tooltip d_none">заполнение обязательно</h3>
+						</div>
+						<div class="dropdown">
+							<div class="d-f a-i-c dropdown-select window-click click-expand" data-expand="false">
+								<div class="dropdown-select__arrow dropdown-select__area d-f a-i-c j-c-b">
+									<input type="text" name="managersSearchText" autocomplete="off" [(ngModel)]="selectedWeight"
+										class="input-expand border-0">
+								</div>
+								<i class="icon icon-arrow icon-arrow__bottom d-f a-i-c j-c-c "></i>
+							</div>
+							<ul class="compare-box__sidebar--select-list dropdown-list expand-block d_none scrollbar">
+								<ng-container *ngFor="let weight of weights">
+									<li class="dropdown-list__item" [class.active]="selectedWeight === weight"
+										(click)="weightChange(weight)">
+										<p>{{ weight }} </p>
+									</li>
+								</ng-container>
+
+								<select hidden [(ngModel)]="selectedWeight" notFoundText="Список весов пуст"
+									name="selectListName">
+									<option *ngFor="let weight of weights" [value]="weight">
+										{{weight}}
+									</option>
+								</select>
+							</ul>
+						</div>
+						<div class="delivery-city__box--form-btn btn-global">
+							<button class="btn-global__red" (click)="calculateDeliveryPrice()">отправить</button>
+						</div>
+					</div>
+				</form>
+				<div class="delivery-city__box--img delivery-city__unauthorized--box--img">
+					<img src="../../assets/img/delivery/car.png" alt="car">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

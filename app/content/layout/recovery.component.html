@@ -1,0 +1,58 @@
+<div class="login modal-content__box animate_show_fadeIn">
+   <div class="login-box d-f">
+      <div class="login-box__logo">
+         <div class="login-box__logo--img">
+            <img src="../../../assets/img/login/logo.png" alt="img">
+         </div>
+      </div>
+
+      <div class="login-box__form d-f f-d-c j-c-c">
+         <span class="icon icon-close icon-close__modal" (click)="activeModal.dismiss()"></span>
+
+         <a href="#" class="login-box__back d-f a-i-c" (click)="activeModal.dismiss(); openModalLogin()">
+            <i class="new-icon new-icon-arrow__left"></i> <span>К авторизации</span>
+         </a>
+
+         <div class="login-box__title">
+            <h2>Восстановление пароля</h2>
+            <p *ngIf="firstTime && !isSmsConfirmation">Инструкция по сбросу пароля придет на Вашу электронную почту</p>
+            <p *ngIf="!firstTime && !isSmsConfirmation"><span class="green_color">Инструкция по сбросу пароля отправлена на электронную
+                  почту</span></p>
+            <!-- <p><span class="global_color">Пользователь с такой электронной почтой не найден</span></p> -->
+         </div>
+         <form #recoveryForm="ngForm">
+             <div class="login-box__form--area">
+                 <div class="login-box__form--area-input {{email === '' ? 'required' : ''}}">
+                     <p class="required-tooltip d_none">заполнение обязательно</p>
+                     <input *ngIf="!isSmsConfirmation" class="{{ firstTime ? '' : 'disabled' }}" type="text" #emailRef="ngModel" name="emailInput"
+                            id="emailInput" [(ngModel)]="email" placeholder="Электронная почта или телефон" required
+                            [disabled]="!firstTime || isSmsConfirmation" />
+                      <input *ngIf="isSmsConfirmation" type="text"  prefix="+7" mask="(000) 000 00 00"  disabled [(ngModel)]="phone" name="phoneInput" id="phoneInput" placeholder="8 (926) 873-22-21" required /> 
+                 </div>
+                  <div class="login-box__form--area-input" *ngIf="isSmsConfirmation">
+           <p class="required-tooltip d_none">заполнение обязательно</p>
+           <input type="text" name="sms" [(ngModel)]="code" placeholder="Код из СМС" required />
+        </div> 
+             </div>
+              <div class="login-box__form--area-info" *ngIf="isSmsConfirmation">
+                  <p *ngIf="activeTrySendCodeMesage" class="login-box__form--area-info__title">Повторная отправка кода возможна через {{sendCodeSeconds}} с</p>
+       <a href="#" *ngIf="activeTrySendCode" (click)="sendCodeAgain()" class="login-box__form--area-info__link">Отправить ещё раз</a>
+    </div> 
+              <div class="login-box__btn btn-global" *ngIf="!activeTryAgainButton">
+                  <button *ngIf="!isSmsConfirmation" [disabled]="!firstTime || !email || email == '' " (click)="sendPasswordRecovery()" class="btn-global__red">
+                      восстановить
+                      пароль
+                  </button>
+                  <button *ngIf="isSmsConfirmation" [disabled]="!email || email == '' || !code || code== ''" (click)="sendCode()" class="btn-global__red">
+                      сменить
+                      пароль
+                  </button>
+              </div>
+             <div class="login-box__btn" *ngIf="activeTryAgainButton && !isSmsConfirmation">
+                 <p>Если письмо не пришло, проверьте папку «спам» или отправьте запрос повторно</p>
+                 <a href="#" (mousedown)="sendEmailAgain()">Отправить повторно</a>
+             </div>
+         </form>
+      </div>
+   </div>
+</div>

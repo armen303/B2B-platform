@@ -1,0 +1,71 @@
+<!-- crumb == start -->
+<div class="container animate_show_up">
+   <div class="crumb">
+      <ul class="crumb-list d-f f-w a-i-c">
+         <li class="crumb-list__item">
+            <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">Отложенные корзины</li>
+      </ul>
+   </div>
+
+   <div class="global-title">
+      <h1>Отложенные корзины</h1>
+      <h2 class="global-title__sub">Мы сохранили ваши незавершенные заказы, можете перейти к оформлению в любое удобное
+         время</h2>
+      <h2 class="global-title__sub">Вы можете создать заказ из файла. Мы подготовили для вас <a target="_blank" href="#"
+            (click)="getExcelTemplate()">шаблон</a>, внесите в него необходимые товары
+         и затем <a href="#" (click)="addProductToBasketFromFile()">загрузите его на сайт</a>
+      </h2>
+   </div>
+</div>
+<!-- crumb == end -->
+
+<div class="table" *ngIf="isLoaded">
+   <div class="container">
+      <div class="table-box bg-br">
+
+         <div class="saved-baskets__box--empty d-f a-i-c j-c-c"
+            *ngIf="savedBaskets.length === 0">
+            Отложенные корзины отсутствуют
+         </div>
+
+         <div class="table-box__info" *ngIf="savedBaskets.length > 0">
+            <table>
+               <thead>
+                  <tr>
+                     <th rowspan="2">Название</th>
+                     <th>Дата создания</th>
+                     <th>Общая сумма товаров</th>
+                     <th></th>
+                     <th></th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr *ngFor="let basket of savedBaskets">
+                     <td>
+                        <h3>{{basket.name}}</h3>
+                     </td>
+                     <td>
+                        {{basket.creationDateTime |date: 'dd.MM.yyyy'}}
+                     </td>
+                     <td>
+                         <span *ngIf="isValueInteger(basket.totalCost)">{{basket.totalCost | fractionSizeSpace}} ₽</span>
+                         <span *ngIf="!isValueInteger(basket.totalCost)">{{basket.totalCost.toFixed(2) | fractionSizeSpace}} ₽</span>
+                     </td>
+                     <td>
+                        <a href="#" (click)="checkout(basket.id)">Оформить заказ</a>
+                     </td>
+                     <td>
+                        <div class="table-box__info--icons d-f a-i-c">
+                           <i class="icon icon-trash" (click)="removeSavedBasket(basket.id)" data-title="Удалить"></i>
+                        </div>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,127 @@
+<div class="basket-files modal-container">
+   <span class="icon icon-close icon-close__modal" (click)="close()"></span>
+
+   <div class="modal-title">
+      <h2>Корзина из файла</h2>
+   </div>
+
+   <div class="basket-files__title">
+      <h3 *ngIf="!isOpenInfoWindow">Загрузите эксель-файл, который соответствует <a target="_blank"
+            (click)="getExcelTemplate()">шаблону</a></h3>
+      <p *ngIf="importResult">{{importResult.foundedProductsCount}}
+         товаров добавлено {{selectedType == 4 ? 'в шаблон' : 'в корзину'}} <span
+            *ngIf="selectedType!==1 && selectedType!==2 ">«{{name}}»</span>
+      </p>
+   </div>
+
+   <div class="basket-files__box">
+      <div class="basket-files__box--list scrollbar"
+         *ngIf="filesForUpload.length>0 && !isOpenInfoWindow && !isOpenWarningWindow">
+         <ul>
+            <li class="d-f a-i-c j-c-b" *ngFor="let file of filesForUpload">
+               <span>{{file.fileName}}</span>
+               <i class="icon icon-trash" (click)="deleteFile(file)"></i>
+            </li>
+         </ul>
+      </div>
+
+      <div class="basket-files__box--add" [ngClass]="{'valid': filesForUpload.length>0}"
+         *ngIf="!isOpenInfoWindow && !isOpenWarningWindow">
+         <div class="basket-files__box--add-title" *ngIf="filesForUpload.length==0">
+            <h3>Перетащите файл сюда или выберите на компьютере</h3>
+         </div>
+         <label class="basket-files__box--add-content">
+            <input type="file" #fileInputRef ondrop="drop()" ondragenter="dragEnter()" ondragleave="dragLeave()"
+               accept=".csv,.xls,.xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+                (change)="onFileDropped($event)" />
+            <span *ngIf="filesForUpload.length==0"
+               class="basket-files__box--add-content__get  d-f a-i-c j-c-c">Выбрать
+               файл</span>
+         </label>
+      </div>
+
+      <div class="basket-files__box--select"
+         *ngIf="filesForUpload.length>0 && !isOpenInfoWindow && !isOpenWarningWindow">
+         <div class="dropdown">
+            <div class="d-f a-i-c dropdown-select window-click click-expand" data-expand="false">
+               <div class="dropdown-select__arrow">
+                  <span class="dropdown-select__selected" *ngIf="selectedType">{{selectedTypeName}}</span>
+               </div>
+               <i class="icon icon-arrow icon-arrow__bottom d-f a-i-c j-c-c"></i>
+            </div>
+            <ul class="compare-box__sidebar--select-list dropdown-list expand-block scrollbar d_none">
+               <ng-container *ngFor="let storageType of allStorageType">
+                  <li [class.active]="selectedType === storageType.key" (click)="getCurrentItem(storageType)"
+                     class="compare-box__sidebar--select-list__item dropdown-list__item d-f a-i-c j-c-b">
+                     {{storageType.name}}
+                  </li>
+               </ng-container>
+
+               <select [(ngModel)]="selectedType" notFoundText="Список шаблонов пуст" hidden>
+                  <option *ngFor="let storageType of allStorageType" [value]="storageType.key">{{storageType.name}}
+                  </option>
+               </select>
+            </ul>
+         </div>
+         <div class="basket-files__box--select-area d-f a-i-c j-c-e">
+            <div class="basket-files__box--select-area__input" *ngIf="selectedType==3 || selectedType==4">
+               <input [placeholder]="selectedType==3?'Название корзины':'Название шаблона'" name="templateName"
+                      id="templateNameId" [(ngModel)]="name" />
+            </div>
+            <div class="basket-files__box--select-area__btn">
+               <button [disabled]="!name"  type="button" *ngIf="selectedType==3|| selectedType==4"
+                  (click)="save()">
+                  Сохранить
+               </button>
+               <button  type="button" *ngIf="selectedType==2" (click)="checkout()">
+                  Продолжить
+               </button>
+            </div>
+         </div>
+      </div>
+
+      <div class="basket-files__box--info" *ngIf="isOpenInfoWindow || isOpenWarningWindow">
+         <div class="basket-files__box--info-result"
+            *ngIf="isOpenInfoWindow && (importResult?.notFoundedVendoCodes.length>0 || importResult?.invalidFileNames.length>0)">
+            <h3 *ngIf="importResult?.notFoundedVendoCodes.length>0">
+               {{importResult.notFoundedVendoCodes.length}}
+               артикулов не найдено
+            </h3>
+            <p *ngIf="importResult?.notFoundedVendoCodes?.length>0">{{importResult.notFoundedVendoCodes.join(" ")}}</p>
+            <div *ngIf="importResult?.invalidFileNames.length">
+               <h3>Файлы не соответствуют шаблону, товары из этих файлов не были добавлены</h3>
+               <p>{{importResult.invalidFileNames.concat(",")}}</p>
+            </div>
+         </div>
+
+         <div *ngIf="isOpenInfoWindow" [ngSwitch]="selectedType" class="basket-files__box--info-link">
+            <a href="#" *ngSwitchCase="2" (click)="dialogRef.close()" (click)="goTo('/active-basket')"
+               class=" d-i-f a-i-c j-c-c">Перейти в корзину</a>
+            <a href="#" *ngSwitchCase="3" (click)="dialogRef.close()" (click)="goTo('user/saved-baskets')"
+               class=" d-i-f a-i-c j-c-c">Перейти в отложенные корзины</a>
+            <a href="#" *ngSwitchCase="4" (click)="dialogRef.close()" (click)="goTo('user/order-templates')"
+               class=" d-i-f a-i-c j-c-c">Перейти в шаблоны</a>
+         </div>
+         <div class="basket-files__box--info-modal modal-container" *ngIf="isOpenWarningWindow">
+            <span class="icon icon-close icon-close__modal" (click)="dialogRef.close()"></span>
+            <div class="modal-title">
+               <p>В вашей основной корзине уже есть товары, что с ними сделать?</p>
+            </div>
+
+            <div class="d-f">
+               <div class="modal-box__btn btn-global">
+                  <button type="button" class="btn-global__red" (click)="clearMainBasketThenAdd()">УДАЛИТЬ, ОНИ НЕ
+                     НУЖНЫ
+                  </button>
+               </div>
+               <div class="modal-box__btn btn-global btn-global__green">
+                  <button type="button"  (click)="combine()">
+                     ОБЪЕДИНИТЬ С
+                     ЗАГРУЖАЕМЫМИ
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

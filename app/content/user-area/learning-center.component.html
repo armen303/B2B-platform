@@ -1,0 +1,62 @@
+﻿   <!-- crumb == start -->
+<div class="container animate_show_up">
+    <div class="crumb">
+        <ul class="crumb-list d-f f-w a-i-c">
+            <li class="crumb-list__item">
+                <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+            </li>
+            <li class="crumb-list__item">−</li>
+            <li class="crumb-list__item">Обучение</li>
+        </ul>
+    </div>
+
+    <div class="global-title">
+        <h1>Обучение </h1>
+    </div>
+</div>
+<!-- crumb == end -->
+
+
+<div class="learning animate_show_up">
+     <div class="learning-empty d-f f-d-c a-i-c j-c-c" *ngIf="events == null || events.length == 0">
+        <h2 class="learning-empty__title">Сейчас нет доступных обучений</h2>
+        <a href="#"[routerLink]="['/home']" class="learning-empty__btn">ВЕРНУТЬСЯ НА ГЛАВНУЮ</a>
+    </div> 
+    <div class="container" *ngIf="events.length > 0">
+        <div class="learning-list d-f f-w">
+            <div class="learning-list__item" *ngFor="let event of events">
+                <div class="learning-list__item--box">
+                    <div class="learning-list__item--box-img">
+                        <img src="{{event.image}}" alt="img" />
+                        <div class="learning-list__item--box-img__info d-f a-i-c j-c-b" *ngIf="oneDayEvent(event)">
+                            <p class="learning-list__item--box-img__info--date">{{getDateString(event.startDate)}}</p>
+                            <p class="learning-list__item--box-img__info--date">с {{getTimeString(event.startDate)}} до {{getTimeString(event.endDate)}}</p>
+                        </div>
+                        <div class="learning-list__item--box-img__info d-f a-i-c j-c-b" *ngIf="!oneDayEvent(event)">
+                            <p class="learning-list__item--box-img__info--date">c {{getDateString(event.startDate)}} {{getTimeString(event.startDate)}}</p>
+                            <p class="learning-list__item--box-img__info--date">до {{getDateString(event.endDate)}} {{getTimeString(event.endDate)}}</p>
+                        </div>
+                    </div>
+                    <div class="learning-list__item--box-info">
+                        <p class="learning-list__item--box-info__tag">
+                            {{getTags(event.tags)}}
+                        </p>
+                        <p class="learning-list__item--box-info__title line-clamp line-clamp_3">
+                            {{event.name}}
+                        </p>
+                        <div class="learning-list__item--box-info__description">
+                            <p class="learning-list__item--box-info__description--title">Спикер:</p>
+                            <p class="learning-list__item--box-info__description--text">
+                                {{event.speaker}}, {{event.speakerPosition}}
+                            </p>
+                        </div>
+                        <a href="#" (click)="goToEvent(event.id)"
+                           class="learning-list__item--box-info__btn">ПОДРОБНЕЕ</a>
+                        <p *ngIf="event.isRegistrated" class="learning-list__item--box-info__recorded">Вы записаны</p>
+                        <p *ngIf="!event.isRegistrated" class="learning-list__item--box-info__recorded">Вы не записаны</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

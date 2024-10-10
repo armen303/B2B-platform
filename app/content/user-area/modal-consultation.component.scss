@@ -1,0 +1,74 @@
+﻿@import '../../styles/base/shared';
+
+.consultation-modal {
+    max-width: 400px;
+    width: 100%;
+    margin: auto;
+    padding: 42px 40px;
+    background-color: white;
+    position: relative;
+    background-image: url(../../../assets/img/modal-request/top-border.svg);
+    background-position: top;
+    background-size: 100%;
+    background-repeat: no-repeat;
+
+    @include xs {
+        padding: 32px 24px;
+    }
+
+    &__container {
+        position: relative;
+
+        .icon-close__modal {
+            top: 10px;
+            right: 0;
+        }
+
+        &--title {
+            margin-bottom: 16px;
+
+            h2 {
+                font: 20px/24px $Bold;
+                color: #232C31;
+                text-transform: uppercase;
+            }
+        }
+
+        &--form {
+            &-input {
+                margin-bottom: 16px;
+
+                input {
+                    @include wh(100%, 40px);
+                    padding: 10px 16px;
+                    font: 15px $Regular;
+                    color: #232C31;
+
+                    &::placeholder {
+                        font: 15px $Regular;
+                        color: #828282;
+                    }
+                }
+            }
+
+            &-btn {
+                @include wh(125px, 40px);
+
+                button {
+                    @include wh(100%);
+                    background-color: var(--global_color);
+                    font: 13px $Bold;
+                    color: white;
+                    letter-spacing: 0.08em;
+                    text-transform: uppercase;
+                    transition: $transition;
+
+                    &:hover {
+                        background-color: var(--global_color_hover);
+                    }
+                }
+            }
+        }
+    }
+}
+

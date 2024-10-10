@@ -1,0 +1,73 @@
+﻿<!-- crumb == start -->
+<div class="container animate_show_up" *ngIf="isLoaded">
+	<div class="crumb">
+		<ul class="crumb-list d-f f-w a-i-c">
+			<li class="crumb-list__item">
+				<a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+			</li>
+			<li class="crumb-list__item">−</li>
+			<li class="crumb-list__item">
+				<a href="#" [routerLink]="['/catalog-list']" class="crumb-list__item--link">Каталог</a> 
+			</li>
+			<li class="crumb-list__item">−</li>
+			<li class="crumb-list__item">{{group.name}}</li>
+		</ul>
+	</div>
+
+	<div class="global-title">
+		<h1>{{group.name}}</h1>
+	</div>
+</div>
+<!-- crumb == end -->
+
+
+
+
+<div class="catalog-subcategory" *ngIf="isLoaded">
+	<div class="container">
+		<div class="catalog-subcategory__box" *ngFor="let category of group.categories">
+			<a href="#" [routerLink]="['/catalog', category.id]" class="catalog-subcategory__box--title">{{category.name}}</a>
+			<ul class="catalog-subcategory__box--list d-f f-w">
+				<li class="catalog-subcategory__box--list-item" *ngFor="let subcategory of category.subcategories">
+					<a href="#"  [routerLink]="['/catalog', category.id, subcategory.id]" class="catalog-subcategory__box--list-item__link d-f f-n-w">
+						<span class="catalog-subcategory__box--list-item__link--name">{{subcategory.name}}</span>
+						<span class="catalog-subcategory__box--list-item__link--count">{{subcategory.productsQuantity}}</span></a>
+				</li>
+			</ul>
+		</div>
+
+		<!-- popular -->
+		<div class="catalog-subcategory__popular">
+			<div class="catalog-subcategory__popular--title">
+				<h2>популярные товары в разделе {{group.name}}</h2>
+			</div>
+
+			<div class="product-slider">
+				<div class="product-slider__list">
+					<ngx-slick-carousel class="slick-carousel d_block" [config]="productSlider">
+						<div ngxSlickItem  *ngFor="let product of popularProducts">
+							<div class="product-slider__list--item">
+								<a href="#" class="product-slider__list--item-img" (click)="goToProduct(product.vendorCode)">
+									<img *ngIf="product.imageUrl"
+										 [src]="cloudinaryHelper.getImageUrl(product.imageUrl, 360, 360)"
+										 (error)="setBrokenImage($event)" alt="img">
+									<img *ngIf="!product.imageUrl" src="/assets/img/product-default-image.jpg"
+										 alt="default-image" />
+								</a>
+								<div class="product-slider__list--item-description">
+									<h3 class="d-f a-i-c">
+										<span class="zero">{{product.price.toFixed(2) | fractionSizeSpace }} ₽</span>
+										<i class="new-icon new-icon-basket" (click)="addToBasket(product.id, product.shipmentMultiplicity)"></i>
+									</h3>
+									<a href="#" class="line-clamp line-clamp_3" (click)="goToProduct(product.vendorCode)">
+										{{product.name}}
+									</a>
+								</div>
+							</div>
+						</div>
+					</ngx-slick-carousel>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

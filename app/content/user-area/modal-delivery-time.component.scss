@@ -1,0 +1,109 @@
+﻿@import '../../styles/base/shared';
+
+.delivey-modal {
+   max-width: 850px;
+   width: 100%;
+   margin: auto;
+   padding: 32px 40px;
+   background-color: white;
+
+   @include xs {
+      padding: 32px 24px;
+   }
+
+   &__container {
+      position: relative;
+
+      .icon-close__modal {
+         top: 5px;
+         right: 0;
+      }
+
+      &--title {
+         margin-bottom: 20px;
+         color: #232C31;
+         padding-right: 16px;
+
+         h2 {
+            font: 20px/24px $Bold;
+            text-transform: uppercase;
+         }
+
+         p {
+            font: 15px/18px $Regular;
+            margin-top: 4px;
+         }
+      }
+
+      &--table {
+         margin-bottom: 24px;
+         overflow: auto;
+
+         table {
+            thead {
+               tr {
+                  th {
+                     font: 14px/17px $Regular;
+                     color: #828282;
+                     padding: 11px 21px;
+                  }
+               }
+            }
+
+            tbody {
+               tr {
+                  td {
+                     padding: 0 21px;
+                  }
+               }
+            }
+
+            tr {
+               border: 1px solid #F0F1F2;
+            }
+         }
+
+         &-vendorcode {
+            font: 15px/18px $Semibold;
+            color: #232C31;
+         }
+
+         &-product {
+
+            &__img {
+               @include wh(68px);
+               margin-right: 21px;
+            }
+
+            &__name {
+               width: 205px;
+               font: 15px/18px $Regular;
+               color: #232C31;
+               padding: 5px 0;
+            }
+         }
+
+         &-count {
+            font: 15px/18px $Regular;
+            color: #232C31;
+            text-align: right;
+         }
+
+         &-remove {
+            .new-icon {
+               font-size: 24px;
+               color: #AFB6BD;
+
+               &:hover {
+                  color: var(--global_color_hover);
+               }
+            }
+         }
+      }
+
+      &--btn {
+         width: 150px;
+         margin-left: auto;
+      }
+   }
+}

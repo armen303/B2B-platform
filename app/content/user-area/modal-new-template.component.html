@@ -1,0 +1,25 @@
+﻿<div class="modal-container modal-content__box animate_show_fadeIn">
+    <span class="icon icon-close icon-close__modal" (click)="close()"></span>
+    <div class="new-tamlpate__container">
+        <div class="modal-title">
+            <h2>Создать шаблон</h2>
+        </div>
+        <form #createForm="ngForm">
+            <div class="modal-box__area">
+                <div class="modal-box__area--input">
+                    <h3>Введите название шаблона</h3>
+                    <input type="text" name="nameInput" autocomplete="off" [(ngModel)]="name"/>
+                </div>
+            </div>
+
+            <div class="modal-box__description">
+                <p>Для добавления товаров в шаблон воспользуйтесь <a (click)="goToCatalog()">каталогом</a>.
+                </p>
+            </div>
+
+            <div class="modal-box__btn btn-global">
+                <button class="btn-global__red" type="button" (click)="save()" [disabled]="!createForm.form.valid || isSaving">СОХРАНИТЬ ШАБЛОН</button>
+            </div>
+        </form>
+    </div>
+</div>

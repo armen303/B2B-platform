@@ -1,0 +1,397 @@
+@import '../styles/base/shared';
+
+.compare {
+    margin-top: 28px;
+    margin-bottom: 50px;
+
+    &-box {
+
+        @include lg {
+            display: block;
+            margin: 0 -15px;
+        }
+
+        &__sidebar {
+            max-width: 370px;
+            width: 100%;
+            background-color: white;
+            padding: 55px 20px 0;
+
+            @include lg {
+                max-width: 100%;
+                margin-bottom: 3px;
+                padding: 20px;
+            }
+
+            @include sm {
+                padding: 20px 15px;
+            }
+
+            &--select {
+
+                &-title {
+                    font: 15.5px $Regular;
+                    color: #8fa2a7;
+                    margin-bottom: 6px;
+                }
+
+
+                &-radiobutton {
+                    margin-top: 35px;
+
+                    &__item {
+
+                        &+& {
+                            margin-top: 15px;
+                        }
+                    }
+                }
+            }
+
+            &--list {
+                margin-top: 188px;
+
+                @include lg {
+                    display: none;
+                }
+
+                &-price {
+                    margin-bottom: 80px;
+                }
+
+                &-item {
+                    &__title {
+                        margin-bottom: 12px;
+                    }
+
+                    ul {
+                        margin: 0 -20px;
+
+                        li {
+                            height: 60px;
+                            padding: 5px 35px;
+                            font: 15.5px/1.65 $Regular;
+                            color: $second_color;
+                            position: relative;
+
+                            span {
+                                min-height: 100%;
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                padding: 5px 35px;
+                                background-color: #f9fafa;
+                            }
+
+                            &.active {
+                                background-color: #f9fafa;
+
+                                &:hover {
+                                    overflow: visible;
+                                    z-index: 9;
+
+                                    span {
+                                        display: block;
+                                    }
+
+                                    p {
+                                        display: none;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                &-title {
+                    font: 13.5px $Bold;
+                    letter-spacing: 2.03px;
+                    color: var(--global_color);
+                    text-transform: uppercase;
+                    padding: 0 15px;
+                }
+            }
+        }
+
+        &__content {
+            width: calc(100% - 370px);
+            padding-left: 30px;
+
+            @include lg {
+                width: 100%;
+                padding-left: 0;
+            }
+
+            &--slide {
+                width: 100%;
+                padding: 0 1.5px;
+                margin: auto;
+
+                &-item {
+                    background-color: white;
+
+                    .cards-product__item {
+                        position: relative;
+
+                        &--img {
+                            @include wh(165px);
+
+                            @include sm {
+                                @include wh(115px);
+                            }
+                        }
+
+                        @include sm {
+                            &--name {
+                                height: 80px;
+                                overflow: hidden;
+                            }
+
+                            &--price {
+                                p {
+                                    font-size: 22px;
+                                }
+                            }
+
+                            &--counter {
+                                display: block;
+
+                                &-increment {
+                                    margin-right: 0;
+                                    margin-bottom: 10px;
+
+                                    .px-counter {
+                                        width: 100%;
+                                    }
+                                }
+                            }
+
+
+                        }
+
+
+
+                        &--remove {
+                            @include wh(13px, 16px);
+                            position: absolute;
+                            top: 15px;
+                            right: 15px;
+                            z-index: 999;
+
+                            .icon-trash {
+                                font-size: 16px;
+                                color: #8fa2a7;
+                                transition: $transition;
+                                cursor: pointer;
+
+                                &:hover {
+                                    color: var(--global_color);
+                                }
+                            }
+                        }
+                    }
+
+                    &__list {
+
+
+                        @include sm {
+                            &--specifications {
+                                display: block;
+                                font: 11.5px $Bold;
+                                letter-spacing: 2.03px;
+                                color: var(--global_color);
+                                text-transform: uppercase;
+                                padding: 0 15px;
+                                margin-top: 20px;
+                            }
+                        }
+
+
+                        ul {
+                            margin-top: 45px;
+
+                            @include sm {
+                                margin-top: 20px;
+                            }
+
+                            li {
+                                height: 60px;
+                                padding: 5px 20px;
+                                font: 15.5px/1.65 $Regular;
+                                color: $second_color;
+                                position: relative;
+
+                                @include sm {
+                                    padding: 5px 15px;
+                                }
+
+                                span {
+                                    min-height: 100%;
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    width: 100%;
+                                    padding: 5px 20px;
+                                    background-color: #f9fafa;
+
+                                    @include sm {
+                                        padding: 5px 15px;
+                                    }
+                                }
+
+                                @include lg {
+                                    display: block;
+                                    font-size: 13px;
+
+                                    h3 {
+                                        display: block;
+                                        font: 13px $Semibold;
+                                        word-break: break-word;
+                                    }
+                                }
+
+
+
+                                &.active {
+                                    background-color: #f9fafa;
+
+                                    &:hover {
+                                        overflow: visible;
+                                        z-index: 9;
+
+                                        span {
+                                            display: block;
+                                        }
+
+                                        p {
+                                            display: none;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .slick-carousel {
+                margin: 0 -0.5px;
+
+                .slick-arrow {
+                    @include wh (46px);
+                    top: 155px;
+
+                    @include sm {
+                        top: 100px;
+                    }
+                }
+
+                .slick-prev {
+                    border-top-right-radius: 4px;
+                    border-bottom-right-radius: 4px;
+                }
+
+                .slick-next {
+                    border-top-left-radius: 4px;
+                    border-bottom-left-radius: 4px;
+                }
+            }
+        }
+    }
+}
+
+// fixed compare
+.compare-fixed__top {
+    position: fixed;
+    top: -3px;
+    left: 0;
+    right: 0;
+    transform: translateY(-100%);
+    transition: all .4s ease-in-out;
+    background-color: white;
+    z-index: 999999999999999999999;
+
+    .compare {
+        margin-bottom: 0;
+
+        &-box__sidebar {
+            padding: 10px 18px 10px;
+
+            @include lg {
+                display: none;
+            }
+        }
+    }
+
+    &--cards {
+
+        margin-bottom: 5px;
+
+        &-name {
+            .cards-product__item--name {
+                width: calc(100% - 75px);
+                min-height: 35px;
+                margin-bottom: 0;
+                padding-right: 5px;
+
+                a {
+                    font-size: 14px;
+                }
+
+                @include sm {
+                    display: none;
+                }
+            }
+
+            .cards-product__item--img {
+                @include wh(75px);
+                margin: 0 auto;
+            }
+        }
+
+        &-price {
+
+            @include sm {
+                display: none;
+            }
+
+            .cards-product__item--price {
+                margin-bottom: 6px;
+                padding-right: 5px;
+
+                p {
+                    font-size: 19.5px;
+                }
+            }
+
+        }
+
+        .cards-product__item--counter {
+            @include sm {
+                display: none;
+            }
+        }
+
+
+
+        .cards-product__item--remove {
+            top: 4px;
+        }
+    }
+
+    .compare-box__content {
+        .slick-arrow {
+            @include wh (39px);
+            top: 70px;
+        }
+    }
+
+
+    &--visible {
+        transform: translateY(0);
+        box-shadow: 0px 9px 9px 0 rgba(0, 0, 0, 0.07);
+
+    }
+
+}

@@ -1,0 +1,168 @@
+.modal-container {
+    max-width: 450px;
+    width: 100%;
+    margin: auto;
+    padding: 48px 16px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    position: relative;
+    z-index: 999999;
+
+    @include sm {
+        padding: 35px 15px;
+    }
+}
+
+.icon-close__modal {
+    @include wh(14px, 14px);
+    top: 19px;
+    right: 21px;
+    color: var(--grey_color);
+    font-size: 13px;
+}
+
+.modal-title {
+    margin-bottom: 36px;
+    text-align: center;
+
+    h2 {
+        font: 30px $Regular;
+        letter-spacing: -0.3px;
+        color: $third_color;
+    }
+
+    p {
+        font: 18px $Regular;
+        letter-spacing: -0.18px;
+        color: $second_color;
+        margin-top: 20px;
+
+        a {
+            color: var(--global_color);
+            text-decoration: underline;
+        }
+    }
+}
+
+
+
+.modal-box {
+
+    @include xs {
+        &__buttons {
+            flex-wrap: wrap;
+        }
+    }
+
+
+
+    &__area {
+        margin-bottom: 30px;
+
+        &--input {
+
+            h3 {
+                font: 13px $Regular;
+                color: rgba(47, 64, 69, 0.5);
+                margin-bottom: 12px;
+            }
+
+            &+& {
+                margin-top: 20px;
+            }
+
+            input {
+                @include wh(100%, 45px);
+                font: 15.5px $Regular;
+                color: $second_color;
+                padding: 10px 15px;
+
+                &::placeholder {
+                    font: 15.5px $Regular;
+                    color: rgba(47, 64, 69, 0.5);
+                }
+
+                &.disabled {
+                    background: #EBEBE4;
+                }
+            }
+        }
+    }
+
+    &__captcha {
+        margin-bottom: 10px;
+
+        &-expiration {
+            font: 15.5px $Regular;
+
+            &--expiring-text {
+                color: #2F4045;
+            }
+
+            &--expired-text {
+                color: #FF0000;
+            }
+        }
+    }
+
+    &__forgot {
+        margin-bottom: 20px;
+
+        a {
+            font: 15.5px $Regular;
+            color: var(--global_color);
+            text-decoration: underline;
+        }
+
+        &--repeat {
+            text-align: center;
+            margin-bottom: 36px;
+
+            button {
+                font: 15.5px $Regular;
+                color: var(--global_color);
+                text-decoration: underline;
+                background-color: transparent;
+                padding: 0;
+                border: 0;
+            }
+        }
+    }
+
+    &__description {
+        margin-bottom: 25px;
+
+        p {
+            font: 14px/1.14 $Regular;
+            color: $second_color;
+
+            a {
+                color: var(--global_color);
+                text-decoration: underline;
+                transition: $transition;
+
+                &:hover {
+                    color: $green_color;
+                }
+            }
+        }
+    }
+
+    &__btn {
+        @include wh(100%, 55px);
+        margin: 0 auto;
+        padding: 5px;
+    }
+
+    &__info {
+        text-align: center;
+        font: 13px/1.58 $Regular;
+        color: $second_color;
+        margin-top: 18px;
+
+        a {
+            color: var(--global_color);
+            text-decoration: underline;
+        }
+    }
+}

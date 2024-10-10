@@ -1,0 +1,255 @@
+<!-- crumb == start -->
+<div class="container animate_show_up">
+   <div class="crumb">
+      <ul class="crumb-list d-f f-w a-i-c">
+         <li class="crumb-list__item">
+            <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">
+            <a href="#" class="crumb-list__item--link" [routerLink]="['/user/company-profile']">Компания</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">
+            <a href="#" class="crumb-list__item--link" [routerLink]="['/user/employees']">Сотрудники</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">
+            <ng-container *ngIf="isEditing && isLoaded">Редактировать профиль
+               {{lastName}}
+               {{firstName}}</ng-container>
+            <ng-container *ngIf="!isEditing">Добавление сотрудника</ng-container>
+         </li>
+      </ul>
+   </div>
+
+   <div class="global-title">
+      <h1 *ngIf="!isEditing" class="main-title">Добавление сотрудника</h1>
+      <h1 *ngIf="isEditing && isLoaded" class="main-title">Редактировать профиль {{lastName}} {{firstName}}</h1>
+   </div>
+</div>
+<!-- crumb == end -->
+
+<div class="container" *ngIf="isLoaded">
+   <div class="employee-create bg-br">
+      <div class="employee-create__title">
+         <h3>ВВЕДИТЕ ДАННЫЕ О СОТРУДНИКЕ</h3>
+      </div>
+      <form #myForm="ngForm">
+         <div class="employee-create__box d-f">
+            <div class="employee-create__box--list">
+               <div class="employee-create__box--list-item" [class.required]="fieldIsEmpty(lastNameRef)">
+                  <div class="employee-create__box--list-item__name d-f a-i-c">
+                     <p class="employee-create__box--list-item__name__text">Фамилия*</p>
+                     <p class="required-tooltip d_none" style="margin: 0;">заполнение обязательно
+                     </p>
+                  </div>
+                  <div class="employee-create__box--list-item__input">
+                     <input type="text" #lastNameRef="ngModel" name="lastName" id="lastNameInput" [(ngModel)]="lastName"
+                        required />
+                  </div>
+               </div>
+               <div class="employee-create__box--list-item" [class.required]="fieldIsEmpty(firstNameRef)">
+                  <div class="employee-create__box--list-item__name d-f a-i-c">
+                     <p class="employee-create__box--list-item__name__text">Имя*</p>
+                     <p class="required-tooltip d_none" style="margin: 0;">заполнение обязательно
+                     </p>
+                  </div>
+                  <div class="employee-create__box--list-item__input">
+                     <input type="text" #firstNameRef="ngModel" id="firstNameInput" [(ngModel)]="firstName"
+                        name="firstName" required />
+                  </div>
+               </div>
+               <div class="employee-create__box--list-item">
+                  <div class="employee-create__box--list-item__name d-f a-i-c">
+                     <p>Отчество</p>
+                  </div>
+                  <div class="employee-create__box--list-item__input">
+                     <input type="text" required name="patronymic" id="patronymicInput" [(ngModel)]="patronymic" />
+                  </div>
+               </div>
+            </div>
+
+            <div class="employee-create__box--list">
+                <div class="employee-create__box--list-item" [class.required]="(email && !checkEmailIsValid(email))&& fieldTouchedOrDirty(emailRef)">
+                    <div class="employee-create__box--list-item__name d-f a-i-c">
+                        <p>Еmail*</p>
+                        <p class="required-tooltip d_none" style="margin: 0;">
+                            {{emailValidationText}}
+                        </p>
+                    </div>
+                    <div class="employee-create__box--list-item__input">
+                        <input type="text" #emailRef="ngModel" name="email" id="emailInput" [(ngModel)]="email"
+                               (input)="checkEmailIsValid(email)" required />
+                    </div>
+                </div>
+                <div class="employee-create__box--list-item" [class.required]="fieldIsEmpty(positionRef)">
+                    <div class="employee-create__box--list-item__name d-f a-i-c">
+                        <p class="employee-create__box--list-item__name__text">Должность*</p>
+                        <p class="required-tooltip d_none" style="margin: 0;">
+                            заполнение обязательно
+                        </p>
+                    </div>
+                    <div class="employee-create__box--list-item__input">
+                        <input type="text" #positionRef="ngModel" name="position" id="positionInput" [(ngModel)]="position"
+                               required />
+                    </div>
+                </div>
+
+                <div *ngIf="phoneNumberIsCorrect" class="employee-create__box--list-item" [class.required]="(phone && !checkPhoneNumberIsValid(phone)) && phoneNumberRef.touched">
+                    <div class="employee-create__box--list-item__name d-f a-i-c">
+                        <p class="employee-create__box--list-item__name__text">Телефон*</p>
+                        <p class="required-tooltip d_none" style="margin: 0;">
+                            {{phoneNumberValidationText}}
+                        </p>
+                    </div>
+                    <div class="employee-create__box--list-item__input">
+                        <input prefix="+7" mask="(000) 000 00 00" type="text" #phoneNumberRef="ngModel" [(ngModel)]="phone" name="phone" id="phone" required/>
+                    </div>
+                </div>
+
+                <div *ngIf="!phoneNumberIsCorrect" class="employee-create__box--list-item"  [class.required]="phone && !checkPhoneNumberIsValidOld(phone)">
+                    <div class="employee-create__box--list-item__name d-f a-i-c">
+                        <p class="employee-create__box--list-item__name__text">Телефон*</p>
+                        <p class="required-tooltip d_none" style="margin: 0;">
+                            {{phoneNumberValidationText}}
+                        </p>
+                    </div>
+                    <div class="employee-create__box--list-item__input">
+                        <input type="text" #phoneNumberRef="ngModel" [(ngModel)]="phone" name="phone" id="phone"
+                               (input)="setCorrectPhoneNumber($event.target, phoneNumberRef)" required/>
+                    </div>
+                </div>
+            </div>
+         </div>
+         
+         <div class="employee-create__box--list-access" *ngIf="!isCurrentUser">
+            <div class="employee-create__box--list-access__title">
+               <p>НАСТРОЙТЕ ПРАВА ДОСТУПА К ВОЗМОЖНОСТЯМ ПОРТАЛА ДЛЯ ВАШИХ СОТРУДНИКОВ:</p>
+            </div>
+
+            <div class="employee-create__box--list-access__tab d-f">
+               <label class="checkbox">
+                  <input class="d_none" type="radio" name="employee-data" id="employee-data-manager"
+                     [checked]="isNotHead" (click)="isHeadChangeValue(false, true)">
+                  <i class="checkbox-radio d-f a-i-c j-c-c"></i>
+               </label>
+               <h3>
+                  <span>Менеджер</span>
+                  <p>Имеет доступ ко всем основным возможностям портала</p>
+               </h3>
+            </div>
+            <div class="employee-create__box--list-access__tab d-f">
+               <label class="checkbox ">
+                  <input class="d_none" type="radio" name="employee-data" id="employee-data-head" [checked]="isHead"
+                     (click)="isHeadChangeValue(true, false)">
+                  <i class="checkbox-radio d-f a-i-c j-c-c"></i>
+               </label>
+               <h3>
+                  <span>Руководитель</span>
+                  <p>Имеет дополнительные возможности по управлению сотрудниками, настройке внешнего вида портала,
+                     просмотру статистики.
+                  </p>
+               </h3>
+            </div>
+             <div class="employee-create__box--list-access__tab" *ngIf="isHead">
+               <label class="checkbox d-i-f a-i-c">
+                  <input id="riseToFloorCheckbox" class="d_none" type="checkbox" name="аgreedToReceiveNotificationOfNewOrders" [(ngModel)]="agreedToReceiveNotificationOfNewOrders"/>
+                  <i class="icon icon-checkmark checkbox-checkmark d-f a-i-c j-c-c"></i>
+                  <span class="checkbox-name">Согласен получать уведомления о заказах сотрудников</span>
+               </label>
+            </div> 
+         </div>
+
+         <div class="employee-opportunity d-f" *ngIf="!isCurrentUser && isEditing && !isHead">
+            <div class="employee-opportunity__categories">
+               <div class="employee-create__box--list-access__title">
+                  <p>доступ к категориям</p>
+               </div>
+               <div class="employee-opportunity__categories--checkbox">
+                  <ul>
+                     <li *ngFor="let group of checkingGroups">
+                        <label class="checkbox d-f a-i-c">
+                           <input class="d_none" type="checkbox" name="groupCheckbox" [checked]="group.isChecked"
+                              (change)="group.isChecked = !group.isChecked" />
+                           <i class="icon icon-checkmark checkbox-checkmark d-f a-i-c j-c-c"></i>
+                           <span class="checkbox-name">{{ group.name }} </span>
+                        </label>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+            <div class="employee-opportunity__building">
+               <div class="employee-create__box--list-access__title">
+                  <p>ограничение Доступ к объектам строительства</p>
+                  <span>Выбранные объекты будут доступны сотруднику.
+                     <br />Если объекты не выбраны, сотруднику будут доступны все объекты</span>
+               </div>
+               <div class="employee-opportunity__building--select d-f a-i-c">
+                  <div class="employee-opportunity__building--select-dropdown">
+                     <div class="dropdown">
+                        <div class="d-f a-i-c dropdown-select window-click click-expand"
+                           data-expand="false">
+                           <div
+                              class="dropdown-select__arrow dropdown-select__area d-f a-i-c j-c-b">
+                              <input type="text" name="constructionObjectSearchText" #constructionObjectSearchText
+                                 placeholder="Выберите объект строительства"
+                                 (keyup)="filterConstructionObjects(constructionObjectSearchText.value.toLowerCase())"
+                                 autocomplete="off" class="input-expand border-0">
+                           </div>
+                           <i class="icon icon-arrow icon-arrow__bottom d-f a-i-c j-c-c"></i>
+                        </div>
+                        <ul class="compare-box__sidebar--select-list dropdown-list expand-block d_none scrollbar">
+                           <ng-container *ngFor="let object of filteredConstructionObjects">
+                              <li [class.active]="selectedConstructionObject === object"
+                                 (click)="selectedConstructionObject = object; constructionObjectSearchText.value = object.name"
+                                 class="compare-box__sidebar--select-list__item dropdown-list__item d-f a-i-c j-c-b">
+                                 {{ object.name }}
+                              </li>
+                           </ng-container>
+
+                           <select name="constructionObjectSelect" [(ngModel)]="selectedConstructionObject"
+                              notFoundText="Список объектов строительства пуст" hidden>
+                              <option *ngFor="let object of filteredConstructionObjects" [value]="object">
+                                 {{ object.name }}
+                              </option>
+                           </select>
+                        </ul>
+                     </div>
+                  </div>
+                  <div class="employee-opportunity__building--select-btn"
+                     (click)="addConstructionObject(); constructionObjectSearchText.value = ''">
+                     <p>Добавить</p>
+                  </div>
+               </div>
+
+               <div class="employee-opportunity__building--selected">
+                  <ul>
+                     <li *ngFor="let object of userConstructionObjects">
+                        <p class="d-f a-i-c j-c-b">
+                           <span>{{ object.name }}</span>
+                           <i class="icon icon-trash" (click)="removeConstructionObject(object)"></i>
+                        </p>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+
+         <div class="employee-create__btn d-f a_center j-c-c">
+            <div class="employee-create__btn--item btn-global">
+               <button class="btn-global__red" id="updateButton" *ngIf="isEditing"
+                  [disabled]="!isAllDataAdded || !isChanged || (phone && phoneNumberValidationText) ||(email && emailValidationText)" type="button"
+                  (click)="update()">СОХРАНИТЬ
+               </button>
+               <button class="btn-global__red" id="createButton" *ngIf="!isEditing"
+                  [disabled]="!isAllDataAdded || (phone && phoneNumberValidationText) ||  (email && emailValidationText)" type="button" (click)="save()">СОХРАНИТЬ
+               </button>
+            </div>
+            <div class="employee-create__btn--item btn-global btn-global__gray">
+               <button id="cancelButton" (click)="cancel()" type="button">ОТМЕНА</button>
+            </div>
+         </div>
+      </form>
+   </div>
+</div>

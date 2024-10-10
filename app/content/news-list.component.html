@@ -1,0 +1,41 @@
+   <!-- crumb == start -->
+   <div class="container animate_show_up">
+      <div class="crumb">
+         <ul class="crumb-list d-f f-w a-i-c">
+            <li class="crumb-list__item">
+               <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+            </li>
+            <li class="crumb-list__item">−</li>
+            <li class="crumb-list__item">Новости</li>
+         </ul>
+      </div>
+
+      <div class="global-title">
+         <h1>Новости </h1>
+      </div>
+   </div>
+   <!-- crumb == end -->
+   <div class="news animate_show_up">
+      <div class="container">
+         <div class="news-list d-f f-w">
+            <div class="news-list__item" *ngFor="let newsItem of news">
+               <a href="#" [routerLink]="['/news', newsItem.id]" class="news-list__item--box">
+                  <div class="news-list__item--box-img">
+                     <img [src]="getFileUrl(newsItem.imageId)" alt="img" />
+                  </div>
+                  <div class="news-list__item--box-text">
+                     <div class="news-list__item--box-text__time">
+                         <time>{{ newsItem.creationDateTime | date: "d MMMM yyyy - HH:mm" }}</time>
+                     </div>
+                     <div class="news-list__item--box-text__title">
+                        <p>{{newsItem.title}}</p>
+                     </div>
+                     <div class="news-list__item--box-text__description">
+                        <p>{{newsItem.shortText | words : 13 : " ..."}}</p>
+                     </div>
+                  </div>
+               </a>
+            </div>
+         </div>
+      </div>
+   </div>

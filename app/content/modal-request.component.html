@@ -1,0 +1,35 @@
+﻿<div class="home-modal modal-content__box animate_show_fadeIn">
+    <input hidden>
+    <div class="home-modal__container">
+        <span class="icon icon-close icon-close__modal" (click)="activeModal.dismiss()"></span>
+        <div class="home-modal__container--title">
+            <h2>Заявка</h2>
+            <p>Введите имя и номер телефона, и наш менеджер вам перезвонит</p>
+        </div>
+        <form #requestForm="ngForm" class="home-modal__container--form" (ngSubmit)="sendRequest()">
+            <div class="home-modal__container--form-input" [class.required]="fieldIsEmpty(nameRef)">
+                <input #nameRef="ngModel" type="text" [(ngModel)]="requestModel.requesterName" name="nameInput"
+                    placeholder="Имя*" autocomplete="off" required />
+                <p class="required-tooltip d_none">заполнение обязательно</p>
+            </div>
+            <div class="home-modal__container--form-input"
+                [class.required]="fieldTouchedOrDirty(phoneRef) && !checkPhoneNumberIsValidOld(requestModel.phoneNumber)">
+                <input #phoneRef="ngModel" type="text" [(ngModel)]="requestModel.phoneNumber"
+                    (input)="setCorrectPhoneNumber($event.target, phoneRef)" name="phoneNumberInput"
+                    placeholder="Телефон*" autocomplete="off" required />
+                <p class="required-tooltip d_none">{{ phoneNumberValidationText }}</p>
+            </div>
+            <div class="home-modal__container--form-btn">
+                <button [disabled]="requestForm.invalid">Отправить</button>
+            </div>
+        </form>
+        <div class="home-modal__container--rules">
+            <p>При отправке заявки, я соглашаюсь<br> с
+                <a href="/assets/files/pravila-obrabotki-personalnyh-dannyh-maxipro-v1.pdf" class="website-info"
+                    target="_blank">
+                    Правилами обработки персональных данных
+                </a>
+            </p>
+        </div>
+    </div>
+</div>

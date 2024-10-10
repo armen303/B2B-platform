@@ -1,0 +1,57 @@
+﻿@import '../../styles/base/shared';
+
+
+.objects {
+
+    &-box {
+        padding-top: 28px;
+        padding-bottom: 13px;
+
+        &__link {
+            margin-bottom: 37px;
+
+            @include sm {
+                display: block;
+            }
+
+            &--text {
+                color: var(--global_color);
+
+                @include sm {
+                    margin-bottom: 10px;
+                }
+
+                .icon {
+                    margin-right: 8px;
+                    transition: $transition;
+                }
+
+                .icon-createPlus {
+                    font-size: 18px;
+                }
+
+                .icon-mark {
+                    font-size: 21px;
+                    font-weight: bold;
+                }
+
+                span {
+                    font: 12px/1.2 $Bold;
+                    border-bottom: .5px solid var(--global_color);
+                    letter-spacing: 1.8px;
+                    text-transform: uppercase;
+                    transition: $transition;
+                }
+
+                &:hover {
+                    color: $green_color;
+                }
+
+                &:hover span {
+                    border-bottom: .5px solid $green_color;
+
+                }
+            }
+        }
+    }
+}

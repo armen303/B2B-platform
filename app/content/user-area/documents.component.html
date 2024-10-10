@@ -1,0 +1,133 @@
+<!-- crumb == start -->
+<div class="container animate_show_up">
+   <div class="crumb">
+      <ul class="crumb-list d-f f-w a-i-c">
+         <li class="crumb-list__item">
+            <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">
+            <a href="#" class="crumb-list__item--link" [routerLink]="['/user/documents']">Документы</a>
+         </li>
+         <li class="crumb-list__item">−</li>
+         <li class="crumb-list__item">Акты сверки</li>
+      </ul>
+   </div>
+
+   <div class="global-title  d-f a-i-c j-c-b">
+      <h1>Поиск актов сверки взаимных расчетов</h1>
+      <div class="act-btn btn-global">
+         <button class="btn-global__red" *ngIf="isHeadUser && canCreateDocument" (click)="goToAdding()">сформировать новый акт</button>
+      </div>
+   </div>
+</div>
+<!-- crumb == end -->
+
+<div class="table act" *ngIf="isLoaded">
+   <div class="container">
+      <div class="table-box bg-br">
+         <div class="act-info">
+            <table>
+               <thead>
+                  <tr>
+                     <th style="width:400px">
+                        <div class="act-info__date">
+                           <div class="act-info__date--area d-f a-i-c">
+                              <p>Найти акт по дате</p>
+                              <input name="dateCreation" autocomplete="off" [(ngModel)]="selectedCreatedDate"
+                                 ngbDatepicker #d="ngbDatepicker" (focus)="d.toggle()"
+                                 (dateSelect)="createdateSelected(selectedCreatedDate)"
+                                 (change)="createdDateRangeChanged(selectedCreatedDate)" [dayTemplate]="t"
+                                 outsideDays="hidden" [startDate]="selectedCreatedDate" [maxDate]="maxDate"
+                                 placeholder="дд.мм.гггг" class="border-0">
+                              <i class="icon-reset-calendar"
+                                 *ngIf="filter.createdDateTime && filter.createdDateTime.getDate()"
+                                 (click)="createdDateRangeChanged(null)">×</i>
+                              <i class="icon icon-calendar"></i>
+                           </div>
+                        </div>
+                     </th>
+                     <th style="width:200px" class="act-info__date--number">
+                        <div class="act-info__date--area d-f a-i-c">
+                           <input type="text" [(ngModel)]="searchedNumber" (input)="getFilteredActs()"
+                              placeholder="Найти акт по номеру" name="actNumber" autocomplete="off" class="border-0" />
+                        </div>
+                     </th>
+                     <th>
+                        <div class="act-info__date ngb-datepicker-range d-f">
+                           <div class="act-info__date--area d-f a-i-c">
+                              <p>Найти акты за период от</p>
+                              <input #dpStartDate placeholder="дд.мм.гггг" name="dpStartDate"
+                                 [value]="formatter.format(fromDate)"
+                                 (input)="fromDate = validateInput(fromDate, dpStartDate.value)"
+                                 (change)="fromDateRangeChanged(fromDate)" (focus)="datepicker.toggle()"
+                                 autocomplete="off" class="border-0">
+                              <p>до</p>
+                              <input #dpEndDate placeholder="дд.мм.гггг" name="dpEndDate"
+                                 [value]="formatter.format(toDate)"
+                                 (input)="toDate = validateInput(toDate, dpEndDate.value)"
+                                 (change)="toDateRangeChanged(toDate)" (focus)="datepicker.toggle()" autocomplete="off"
+                                 class="border-0">
+                              <i class="icon-reset-calendar" *ngIf="toDate || fromDate" (click)="resetRange()">×</i>
+                              <i class="icon icon-calendar"></i>
+                           </div>
+                           <input class="act-info__date--fromto border-0" name="datepicker" ngbDatepicker
+                              #datepicker="ngbDatepicker" [autoClose]="'outside'" (dateSelect)="onDateSelection($event)"
+                              [displayMonths]="2" [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!"
+                              [maxDate]="maxDate" autocomplete="off">
+                           <ng-template #t let-date let-focused="focused">
+                              <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                                 [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                                 (mouseleave)="hoveredDate = null">
+                                 {{ date.day }}
+                              </span>
+                           </ng-template>
+                        </div>
+                     </th>
+                     <th ></th>
+                     <th></th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr *ngFor="let act of acts">
+                     <td>
+                        <p>{{act.createdDateTime |date:"dd.MM.yyyy"}} г.</p>
+                     </td>
+                     <td>
+                        <p>{{act.actNumber}}</p>
+                     </td>
+                     <td>{{act.startDateTime |date:"dd.MM.yyyy"}} - {{act.endDateTime |date:"dd.MM.yyyy"}}</td>
+                     <td>
+                        <a href="#" download class="act-info__download d-f a-i-c j-c-c"
+                           (click)="download(act.id)">
+                           <i class="icon icon-download" id="download"></i>
+                           <span>скачать</span>
+                        </a>
+                     </td>
+                     <td>
+                        <div class="table-box__info--icons d-f a-i-c j-c-c">
+                           <i class="icon icon-trash" (click)="remove(act.id)" data-title="Удалить"></i>
+                        </div>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+            <p *ngIf="!acts.length" class="act-info__null">Актов не найдено</p>
+         </div>
+
+         <!---Пейджирование -->
+         <div class="table-pagination d-f a-i-c j-c-b">
+            <div class="d-f a-i-c j-c-b">
+               <pagination (pageChanged)="goToPage($event)" [totalItems]="totalNumberOfActs" previousText="&lsaquo;"
+                  [itemsPerPage]="pageSize" nextText="&rsaquo;"></pagination>
+            </div>
+
+            <div class="table-pagination__text">
+               <p>{{ acts.length ? skipNumberOfActs + 1 : 0 }} - {{skipNumberOfActs + acts.length}} из
+                  {{totalNumberOfActs}}</p>
+            </div>
+         </div>
+         <!-- Пейджирование -->
+      </div>
+   </div>
+</div>

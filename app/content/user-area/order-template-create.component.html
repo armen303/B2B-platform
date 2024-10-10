@@ -1,0 +1,18 @@
+<div class="modal-container">
+   <span class="icon icon-close icon-close__modal" (click)="dialogRef.close()"></span>
+   <div class="modal-title">
+      <h2>Добавление шаблона</h2>
+   </div>
+   <div class="modal-box">
+      <form #createForm="ngForm" (keydown.enter)="save()">
+         <div class="modal-box__area">
+            <div class="modal-box__area--input">
+               <input [(ngModel)]="name" placeholder="Название шаблона" name="nameInput" type="text" required>
+            </div>
+         </div>
+         <div class="modal-box__btn btn-global" id="ButtonAddTemplate">
+            <button class="btn-global__red" [disabled]="!createForm.form.valid || isSaving" type="button" (click)="save()">ДОБАВИТЬ</button>
+         </div>
+      </form>
+   </div>
+</div>

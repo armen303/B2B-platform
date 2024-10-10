@@ -1,0 +1,1304 @@
+<!-- crumb == start -->
+<div class="container animate_show_up">
+    <div class="crumb">
+        <ul class="crumb-list d-f f-w a-i-c">
+            <li class="crumb-list__item">
+                <a href="#" [routerLink]="['/home']" class="crumb-list__item--link">Главная</a>
+            </li>
+            <li class="crumb-list__item">−</li>
+            <li class="crumb-list__item">Заказы</li>
+            <li class="crumb-list__item">−</li>
+            <li class="crumb-list__item">Текущие заказы</li>
+        </ul>
+    </div>
+
+    <div class="global-title">
+        <h1>Текущие заказы </h1>
+    </div>
+</div>
+<!-- crumb == end -->
+<div class="ordered-page" *ngIf="isLoaded">
+    <div class="container">
+        <div class="order-info__all bg-br">
+            <div class="order-top__block d-f j-c-b">
+                <div class="order-top__block--link">
+                    <ul class="d-f a-i-c">
+                        <li class="d-f a-i-c ">
+                            <a href="#" class="d-f a-i-c j-c-c active" [routerLink]="['/user/current-orders']"
+                                routerLinkActive="">Текущие заказы</a>
+                        </li>
+                        <li class="d-f a-i-c ">
+                            <a href="#" class="d-f a-i-c j-c-c" [routerLink]="['/user/orders-history']"
+                                routerLinkActive="">История заказов</a>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <div class="sort-block d-f a-i-c">
+                    <div class="select-filter_name sort-select__filter--name">
+                        <span>Сортировать по</span>
+                    </div>
+                    <div class="select-filter sort-select__filter sort-select__order">
+                        <ng-select [searchable]="false" [(ngModel)]="sortBy" (change)="resetPage()"
+                            id="currentOrderSortsFilter">
+                            <ng-option *ngFor="let sortItem of orderSorts" [value]="sortItem.key">
+                                {{sortItem.name}}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ordered-filter -->
+            <div class="order-filter">
+                <div class="order-filter__list d-f ">
+                    <div class="order-filter__list--item  select-filter__input select-filter__number">
+                        <input #orderNumberFilter class="order-number border-0" [(ngModel)]="orderNumber"
+                            (input)="resetPage()" placeholder="Номер заказа" name="оrderNumber" autocomplete="off" />
+                        <i class="icon icon-order-number"></i>
+                        <i class="new-icon new-icon-search"></i>
+                    </div>
+
+                    <div class="order-filter__list--info d-f">
+                        <div class="order-filter__list--item select-filter">
+                            <ng-select placeholder="Вид доставки" class="order-status" [searchable]="false"
+                                [(ngModel)]="selectedTypeId" (change)="changeDeliveryTypeOrDepot()">
+                                <ng-option [value]="1">Доставка</ng-option>
+                                <ng-option *ngFor="let depot of depots" [value]="depot.id">Самовывоз {{depot.name}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="order-filter__list--item select-filter">
+                            <ng-select placeholder="Статус заказа" class="order-status" [searchable]="false"
+                                [(ngModel)]="orderState" (change)="resetPage()">
+                                <ng-option [value]="-1">Все</ng-option>
+                                <ng-option *ngFor="let state of orderStates" [value]="state.key">
+                                    {{getOrderStateName(state.key)}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="order-filter__list--item select-filter__input select-filter__date">
+                            <input name="dateCreation" [(ngModel)]="selectedDate" ngbDatepicker #d="ngbDatepicker"
+                                (focus)="d.toggle()" (dblclick)="d.open()" (dateSelect)="dateRangeChanged(selectedDate)"
+                                placeholder="Дата создания" autocomplete="off" [readonly]="true" class="border-0">
+                            <i class="icon-reset-calendar" *ngIf="selectedDate" (click)="dateRangeChanged(null)">×</i>
+                            <i class="icon icon-calendar"></i>
+                        </div>
+
+                        <div class="order-filter__list--item select-filter">
+                            <ng-select placeholder="Статус оплаты" [(ngModel)]="selectedPaymentState"
+                                [searchable]="false" (change)="resetPage()">
+                                <ng-option *ngFor="let paymentState of paymentStates" [value]="paymentState">
+                                    {{paymentState.label}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+
+                        <div class="order-filter__list--item select-filter"
+                            *ngIf="infoIsLoaded && companyEmployeesInformation.isCurrentUserHead">
+                            <ng-select [placeholder]="!selectedEmployeeId?'Сотрудник':''" [searchable]="false"
+                                [(ngModel)]="selectedEmployeeId" (change)="resetPage()">
+                                <ng-option *ngFor="let employee of companyEmployeesInformation.employees"
+                                    [value]="employee">
+                                    {{employee.fullName}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+
+                        <div class="order-filter__list--item select-filter__input">
+                            <input type="number" class="order-totalPrice border-0" [(ngModel)]="totalPrice"
+                                (input)="resetPage()" (keypress)="validateTotalPrice($event)" #totalAmountFilter
+                                name="totalAmount" placeholder="Итоговая сумма" autocomplete="off" />
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- ordered-filter -->
+            <div *ngFor="let order of orders">
+                <div class="order-info__child d-f a-i-c">
+                    <div class="order-info__item">
+                        <div class="order-info__child--title d-f a-i-c">
+                            <span>Заказ</span>
+                            <a href="#" [routerLink]="['/user/order-info/'+order.id]" id="NumbersOrder2">
+                                №
+                                {{order.numberInMaxiProAPI}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-info__all--box d-f">
+
+                    <div class="order-info__all--address" *ngIf="order.constructionObject" id="address">
+                        <div class="order-info__all--address-name">
+                            <span>{{order.constructionObject.name}}</span>
+                        </div>
+                        <div class="order-info__all--address-full">
+                            <span> {{order.constructionObject.fullAddress}}</span>
+                        </div>
+                        <!-- <div class="order-info__all--address-made">
+                            <p class="order-info__all--address-title">Сделан от: <span class="order-info__all--address-made__name">ООО Главстрой</span></p>
+                            
+                        </div>
+                        <div class="order-info__all--address-info">
+                            <p class="order-info__all--address-title">Для объекта:  <span class="order-info__all--address-info__main">123472, Москва,
+                                800-летия Москвы, дом 11</span></p>
+                        </div> -->
+                    </div>
+                    <div class="order-info__all--info d-f">
+                        <div class="order-info__all--info-item">
+                            <div class="order-info__all--info-item__name" *ngIf="order.deliveryNeeded">
+                                <span>Доставка</span>
+                            </div>
+                            <div class="order-info__all--info-item__name">
+                                <ng-container *ngIf="order.deliveryNeeded">
+                                    <span
+                                        *ngIf="order.deliveryService">{{order.deliveryService.deliveryDate | date: "mediumDate"}}</span>
+                                    <span *ngIf="getOrderDeliveryType(order.deliveryService.type) == 'ExactTime'">
+                                        <span>
+                                            {{order.deliveryService.deliveryTime | date: "shortTime"}}
+                                        </span>
+                                    </span>
+                                    <br />
+                                    <span
+                                        *ngIf="getOrderDeliveryType(order.deliveryService.type)!='ExactTime' && getOrderDeliveryType(order.deliveryService.type)!= 'Express'">
+                                        <span *ngIf="order.deliveryService.deliveryInterval">
+                                            с
+                                            {{order.deliveryService.deliveryInterval.from | date: "shortTime"}}
+                                        </span>
+                                        <span *ngIf="order.deliveryService.deliveryInterval">
+                                            до
+                                            {{order.deliveryService.deliveryInterval.to | date: "shortTime"}}
+                                        </span>
+                                    </span>
+                                </ng-container>
+                                <span class="d-f a-i-c" *ngIf="!order.deliveryNeeded">
+                                    {{order.depotName}}
+                                    <i class="new-icon new-icon-info tooltip">
+                                        <ul class="tooltip-content tooltip-content__list triangle triangle-down">
+                                            <li>{{order.depotAddress}}</li>
+                                        </ul>
+                                    </i>
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="order-info__all--info-item" id="OrderStatus">
+                            <!-- <div class="order-info__all--info-item__name">
+                                <span>Статус заказа</span>
+                            </div> -->
+                            <div class="order-info__all--info-item__position">
+                                <span class="green_color">{{getOrderStateName(order.state)}}</span>
+                            </div>
+                        </div>
+                        <div class="order-info__all--info-item" id="CreationDate">
+                            <!-- <div class="order-info__all--info-item__name">
+                                <span>Дата создания</span>
+                            </div> -->
+                            <div class="order-info__all--info-item__position">
+                                <span>{{order.creationDateAndTime|date:"dd.MM.yy HH:mm"}}</span>
+                            </div>
+                        </div>
+                        <div class="order-info__all--info-item" id="PaymentStatus">
+                            <!-- <div class="order-info__all--info-item__name">
+                                <span>Статус оплаты</span>
+                            </div> -->
+                            <div class="order-info__all--info-item__position">
+                                <span *ngIf="order.isPaid" class="green_color">Оплачен</span>
+                                <span *ngIf="!order.isPaid" class="global_color">Не оплачен</span>
+                            </div>
+                        </div>
+                        <div class="order-info__all--info-item" id="People">
+                            <!-- <div class="order-info__all--info-item__name">
+                                <span>Сотрудник</span>
+                            </div> -->
+                            <div class="order-info__all--info-item__position">
+                                {{order.createdByName}}
+                            </div>
+                        </div>
+
+                        <div class="order-info__all--info-item d-f j-c-b" id="FinalAmount">
+                            <div class="order-info__all--info-item__repeat">
+                                <!-- <div class="order-info__all--info-item__name">
+                                    <span>Итоговая сумма</span>
+                                </div> -->
+                                <div class="d-f a-i-c">
+                                    <div class="order-info__all--info-item__total">
+                                        <span>
+                                            {{order.totalCost | number}}
+                                        </span>
+                                        <span *ngIf="order.totalCostWithDiscount!==null">
+                                            {{"/" + order.totalCostWithDiscount}}
+                                        </span>
+                                        <span> ₽</span>
+                                    </div>
+                                    <div class="tooltip-icon icon icon-exclamatory tooltip">
+                                        <div class="tooltip-content">
+                                            <ul class="tooltip-content__list triangle triangle-down">
+                                                <li class="d-f a-i-c j-c-b">
+                                                    <p>
+                                                        Стоимость
+                                                        товаров
+                                                    </p>
+                                                    <span
+                                                        *ngIf="isValueInteger(order.orderItemsPrice)">{{order.orderItemsPrice | fractionSizeSpace}}
+                                                        ₽</span>
+                                                    <span
+                                                        *ngIf="!isValueInteger(order.orderItemsPrice)">{{order.orderItemsPrice.toFixed(2) | fractionSizeSpace}}
+                                                        ₽</span>
+                                                </li>
+                                                <li class="d-f a-i-c j-c-b">
+                                                    <p>Стоимость доставки</p>
+                                                    <span
+                                                        *ngIf="isValueInteger(order.deliveryPrice)">{{order.deliveryPrice | fractionSizeSpace}}
+                                                        ₽</span>
+                                                    <span
+                                                        *ngIf="!isValueInteger(order.deliveryPrice)">{{order.deliveryPrice.toFixed(2) | fractionSizeSpace}}
+                                                        ₽</span>
+                                                </li>
+                                                <li class="d-f a-i-c j-c-b">
+                                                    <p>Стоимость подъема</p>
+                                                    <span
+                                                        *ngIf="isValueInteger(order.liftingPrice)">{{order.liftingPrice | fractionSizeSpace}}
+                                                        ₽</span>
+                                                    <span
+                                                        *ngIf="!isValueInteger(order.liftingPrice)">{{order.liftingPrice.toFixed(2) | fractionSizeSpace}}
+                                                        ₽</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="order-info__repeat" *ngIf="!order.anyNullProduct">
+                                <a href="#" class="icon icon-repeat icon-repeat__order tooltip"
+                                    (click)="recreateOrder(order.id)">
+                                    <ul class="tooltip-content tooltip-content__list triangle triangle-down">
+                                        <li>Повторить заказ</li>
+                                    </ul>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-info__item order-info__repeat d-f a-i-c j-c-e d_none"
+                        *ngIf="!order.anyNullProduct">
+                        <a href="#" class="d-f a-i-c " (click)="recreateOrder(order.id)">
+                            <i class="icon icon-repeat icon-repeat__order"></i>
+                            <span>Повторить заказ </span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="order-documents">
+                    <a href="#" class="order-documents__expand click-expand d-i-f a-i-c" data-expand="false">
+                        <span class="order-documents__expand--title">Счета и закрывающие документы</span>
+                        <i class="new-icon new-icon-arrow__bottom"></i>
+                    </a>
+                    <div class="expand-block d_none">
+                        <div class="order-documents__box order-documents__box--grey d-i-f f-w a-i-c">
+                            <a href="#" class="order-documents__box--link d-f a-i-c"
+                                (click)="downloadInvoiceDocuments(order.id, order.invoiceDocumentsQunatity)"
+                                *ngIf="order.invoiceDocumentsQunatity>0">
+                                <i class="icon icon icon-download"></i>
+                                <span class="order-documents__box--link-name">Счет на оплату</span>
+                            </a>
+                            <a href="#" class="order-documents__box--link d-f a-i-c"
+                                (click)="downloadCertificates(order.id)" *ngIf="order.hasCertificates">
+                                <i class="icon icon icon-download"></i>
+                                <span class="order-documents__box--link-name">Сертификаты на товары</span>
+                            </a>
+                            <a href="#" class="order-documents__box--link d-f a-i-c"
+                                (click)="downloadDocuments(order.id, order.genericDocumentsQunatity)"
+                                *ngIf="order.genericDocumentsQunatity>0">
+                                <i class="icon icon icon-download"></i>
+                                <span class="order-documents__box--link-name">Закрывающие документы</span>
+                            </a>
+                            <a href="#" class="order-documents__box--link d-f a-i-c"
+                                (click)="printPdf(pdfMarketPrice, order.id)" id="PrintOutMarketPrice">
+                                <i class="icon icon icon-download"></i>
+                                <span class="order-documents__box--link-name">КП <span class="global_color">в рыночных
+                                        ценах</span></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-info__sub">
+                    <div class="click-expand" data-expand="false">
+                        <div class="order-info__sub--click-text d-f a-i-c"
+                            *ngIf="order.childOrders && order.childOrders.length>0">
+                            <i class="icon icon-unlink icon-unlink__suborder"></i>
+                            <span>
+                                Оформлен{{order.childOrders.length == 1 ? '' : 'о'}} {{order.childOrders.length}}
+                                подзаказ{{order.childOrders.length == 1 ? '' : order.childOrders.length >= 2 && order.childOrders.length <= 4 ? 'а' : 'ов'}}
+                            </span>
+                            <i class="icon icon-arrow icon-arrow__suborder icon-arrow__bottom"></i>
+                        </div>
+                    </div>
+                    <div class="expand-block d_none order-info__child--block ">
+
+                        <div class="order-info__childrens " *ngFor="let childOrder of order.childOrders">
+
+                            <div class="order-info__child d-f a-i-c">
+
+                                <div class="order-info__item order-info__child--title d-f a-i-c">
+                                    <i class="icon icon-subarrow icon-subarrow__name d_none"></i>
+                                    <span>Подзаказ</span>
+                                    <a href="#"
+                                        [routerLink]="['/user/order-info/'+childOrder.id]">№{{childOrder.numberInMaxiProAPI}}</a>
+                                </div>
+
+                                <div class="order-info__item order-info__delivery" id="HomeDelivery">
+
+                                    <div class="d-f a-i-c j-c-c" *ngIf="childOrder.deliveryServiceModel">
+                                        <i class="icon icon-time icon-time__delivery"></i>
+                                        <div class="order-info__delivery--text">
+                                            Доставка:
+                                            {{childOrder.deliveryServiceModel.deliveryDate | date: "mediumDate"}}
+                                            <span
+                                                *ngIf="getOrderDeliveryType(childOrder.deliveryServiceModel.type) == 'ExactTime'">
+                                                <span>
+                                                    {{childOrder.deliveryServiceModel.deliveryTime | date: "shortTime"}}
+                                                </span>
+                                            </span>
+                                            <span
+                                                *ngIf="getOrderDeliveryType(childOrder.deliveryServiceModel.type)!='ExactTime' && getOrderDeliveryType(childOrder.deliveryServiceModel.type)!= 'Express'">
+                                                <span *ngIf="childOrder.deliveryServiceModel.deliveryInterval">
+                                                    с
+                                                    {{childOrder.deliveryServiceModel.deliveryInterval.from | date: "shortTime"}}
+                                                </span>
+                                                <span *ngIf="childOrder.deliveryServiceModel.deliveryInterval">
+                                                    до
+                                                    {{childOrder.deliveryServiceModel.deliveryInterval.to | date: "shortTime"}}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+
+
+                                    <div *ngIf="!childOrder.deliveryNeeded && childOrder.depotName!=null"
+                                        class="ordered-info__value-normal ordered-info__value-normal--self-calling">
+                                        Пункт самовывоза: {{childOrder.depotName}}
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="order-info__all--box d-f">
+                                <div class="order-info__all--address" *ngIf="childOrder.constructionObject">
+                                    <div class="order-info__all--address-name">
+                                        <i class="icon icon-subarrow icon-subarrow__name"></i>
+                                        <span>{{childOrder.constructionObject.name}}</span>
+                                    </div>
+                                    <div class="order-info__all--address-full">
+                                        <span>{{childOrder.constructionObject.fullAddress}}</span>
+                                    </div>
+                                </div>
+                                <div class="order-info__all--info d-f">
+                                    <div class="order-info__all--info-item">
+                                        <div class="order-info__all--info-item__name">
+                                            <span>Статус заказа</span>
+                                        </div>
+                                        <div class="order-info__all--info-item__position">
+                                            <span class="green_color">{{getOrderStateName(childOrder.state)}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="order-info__all--info-item">
+                                        <div class="order-info__all--info-item__name">
+                                            <span>Дата создания</span>
+                                        </div>
+                                        <div class="order-info__all--info-item__position">
+                                            <span>{{childOrder.creationDateAndTime | date:"short"}}</span>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="!order.deliveryNeeded && order.depotName!=null">
+                                        Пункт самовывоза: {{order.depotName}}
+                                    </div>
+                                    <div class="order-info__all--info-item">
+                                        <div class="order-info__all--info-item__name">
+                                            <span>Статус оплаты</span>
+                                        </div>
+                                        <div class="order-info__all--info-item__position">
+                                            <span class=" {{childOrder.isPaid ? 'green_color': 'global_color'}}">
+                                                {{childOrder.isPaid ? 'Оплачен' : 'Не оплачен'}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="order-info__all--info-item">
+                                        <div class="order-info__all--info-item__name">
+                                            <span>Итоговая сумма</span>
+                                        </div>
+                                        <div class="d-f a-i-c" *ngIf="order.totalCost">
+                                            <div class="order-info__all--info-item__total">
+                                                <span>{{childOrder.totalCost}} ₽</span>
+                                            </div>
+                                            <div class="tooltip-icon icon icon-exclamatory tooltip">
+                                                <div class="tooltip-content">
+                                                    <ul class="tooltip-content__list triangle triangle-down">
+                                                        <li class="d-f a-i-c j-c-b">
+                                                            <p>Стоимость товаров</p>
+                                                            <span>{{childOrder.orderItemsPrice | number}} ₽</span>
+                                                        </li>
+                                                        <li class="d-f a-i-c j-c-b">
+                                                            <p>Стоимость доставки</p>
+                                                            <span>{{childOrder.deliveryPrice | number}} ₽</span>
+                                                        </li>
+                                                        <li class="d-f a-i-c j-c-b">
+                                                            <p>Стоимость подъема</p>
+                                                            <span>{{childOrder.liftingPrice | number}} ₽</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="order-info__item order-info__repeat d-f a-i-c j-c-e d_none"
+                                    *ngIf="!order.anyNullProduct">
+                                    <a href="#" class="d-f a-i-c " (click)="recreateOrder(order.id)">
+                                        <i class="icon icon-repeat icon-repeat__order"></i>
+                                        <span>Повторить заказ </span>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!orders.length">
+                <div class="order-info__child d-f a-i-c">
+                    Заказов не найдено
+                </div>
+            </div>
+        </div>
+
+        <!---Пейджирование -->
+        <div class="order-info__all--pagination d-f a-i-c j-c-b">
+            <div class="d-f a-i-c j-c-b">
+                <pagination #paginationComponent (pageChanged)="goToPage($event)" [totalItems]="totalNumberOfOrders"
+                    previousText="&lsaquo;" [itemsPerPage]="pageSize" nextText="&rsaquo;"></pagination>
+            </div>
+
+            <div class="table-pagination__text">
+                <p>
+                    {{ orders.length ? skipNumberOfOrders + 1 : 0 }} - {{skipNumberOfOrders + orders.length}} из
+                    {{totalNumberOfOrders}}
+                </p>
+            </div>
+        </div>
+        <!---Пейджирование -->
+    </div>
+</div>
+
+
+<div style="position: absolute; left: -1500px; top: 0;">
+    <kendo-pdf-export #pdfMarketPrice paperSize="A4" margin="2,8cm" multiPage="true" [repeatHeaders]="false"
+        [scale]="0.8">
+        <table
+            style="width:95%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0; background-color: #fff; margin-left: auto; margin-right: auto;"
+            cellpadding="0" cellspacing="0" *ngIf="isLoaded && showPdf">
+            <tbody>
+                <tr>
+                    <td style="padding: 15px 30px;  background-color: #fff;">
+                        <table
+                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                            cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 0;">
+                                        <table
+                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                            cellpadding="0" cellspacing="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="width:170px; height: 93px;">
+                                                        <img src="../../assets/img/pdf/new-logo.png"
+                                                            style="width: 170px; height: 93px;" width="170px"
+                                                            height="93px" alt="logo" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                    <td style="padding: 0;" width="100%"></td>
+                                    <td style="padding: 0;">
+                                        <table
+                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                            cellpadding="0" cellspacing="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="width:227px; height: 104px;">
+                                                        <img src="../../assets/img/pdf/info.png"
+                                                            style="width: 227px; height: 104px;" width="227px"
+                                                            height="104px" alt="logo" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding: 25px 30px; background-color: rgb(230, 230, 230);">
+                        <table
+                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                            cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 0;">
+                                        <table
+                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                            cellpadding="0" cellspacing="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding: 0;">
+                                                        <table
+                                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td
+                                                                        style="font-size: 10px; color: #000; padding: 0;">
+                                                                        Наш
+                                                                        сайт:
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                    <td style="padding: 0;">
+                                                        <table
+                                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="padding: 0;">
+                                                                        <a href="https://b2b.maxipro.ru/"
+                                                                            target="_blank"
+                                                                            style="font-size: 10px; color: #0000ff; text-decoration: underline; padding: 0;"><span>b2b.maxipro.ru</span></a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding: 0;">
+                                                        <table
+                                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td
+                                                                        style="font-size: 10px; color: #000; padding: 0;">
+                                                                        Связаться с нами:
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                    <td style="padding: 0;">
+                                                        <table
+                                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="padding: 0;">
+                                                                        <a href="#" target="_blank"
+                                                                            style="font-size: 10px;  color: #000; padding: 0;">
+                                                                            +7
+                                                                            (499) 391-40-40
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding: 0;">
+                                                        <table
+                                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td
+                                                                        style="font-size: 10px; color: #000; padding: 0;">
+                                                                        Адрес:
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                    <td style="padding: 0;">
+                                                        <table
+                                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="padding: 0;">
+                                                                        <span style="font-size: 10px; color: #000;">
+                                                                            115162, г. Москва, ул. Шаболовка,
+                                                                            31А
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                    <td style="padding: 0;">
+                                        <table
+                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                            cellpadding="0" cellspacing="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding: 0;">
+                                                        <table
+                                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style=" padding: 0;">
+                                                                        <span
+                                                                            style="font-size: 10px; color: #000; border-bottom: 1px solid transparent;">
+                                                                            Ваш
+                                                                            персональный менеджер:
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                    <td style="padding: 0;">
+                                                        <table
+                                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="padding: 0;">
+                                                                        <span style="font-size: 10px; color: #000; ">
+                                                                            {{managerNameForPDF}}
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding: 0;">
+                                                        <table
+                                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="padding: 0;">
+                                                                        <a href="#" target="_blank"
+                                                                            style="font-size: 10px;  color: #000; padding: 0;">{{managerPhoneNumberForPdf}}</a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding: 0;">
+                                                        <table
+                                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="padding: 0;">
+                                                                        <a [attr.href]="'mailto:' + managerEmailForPdf"
+                                                                            target="_blank"
+                                                                            style="font-size: 10px; color: #0000ff; text-decoration: underline; padding: 0;">{{managerEmailForPdf}}</a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding: 15px 25px 45px 25px; background-color: rgb(230, 230, 230);">
+                        <table
+                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                            cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 0;">
+                                        <table
+                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                            cellpadding="0" cellspacing="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding: 0;">
+                                                        <table
+                                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="padding: 0;">
+                                                                        <span style="font-size: 17px; color: #a6093d;">
+                                                                            Коммерческое предложение в рыночных ценах от
+                                                                            {{currentDateForPdf | date: shortDate}} для
+                                                                            {{companyNameForPdf}}
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding: 0;">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table
+            style="width:95%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0; margin-left: auto; margin-right: auto;"
+            cellpadding="0" cellspacing="0" *ngIf="isLoaded && showPdf">
+            <thead>
+                <tr>
+                    <th
+                        style="padding: 15px 5px; width: 115px; text-align: center; background-color: #3f3f3f; border: 1px solid #010101;">
+                        <span style="font-size: 10px; text-transform: uppercase; color: #ffff;">ФОТО</span>
+                    </th>
+                    <th
+                        style="padding: 15px 5px;  text-align: center; background-color: #3f3f3f; border: 1px solid #010101;">
+                        <span
+                            style="width: 80px; display: block; font-size: 10px; text-transform: uppercase; color: #ffff;">
+                            НАИМЕНОВАНИЕ
+                            <br />
+                            ТОВАРА
+                        </span>
+                    </th>
+                    <th
+                        style="padding: 15px 5px; text-align: center; background-color: #3f3f3f; border: 1px solid #010101;">
+                        <span style="font-size: 10px; text-transform: uppercase; color: #ffff;">АРТИКУЛ</span>
+                    </th>
+                    <th
+                        style="padding: 15px 5px; text-align: center; background-color: #3f3f3f; border: 1px solid #010101;">
+                        <span style="font-size: 10px; text-transform: uppercase; color: #ffff;">ЦЕНА</span>
+                    </th>
+                    <th
+                        style="padding: 15px 5px; text-align: center; background-color: #3f3f3f; border: 1px solid #010101;">
+                        <span style="font-size: 10px; text-transform: uppercase; color: #ffff;">КОЛ-ВО</span>
+                    </th>
+                    <th
+                        style="padding: 15px 5px; text-align: center; background-color: #3f3f3f; border: 1px solid #010101;">
+                        <span style="font-size: 10px; text-transform: uppercase; color: #ffff;">
+                            ЕДИНИЦА
+                            <br />
+                            ИЗМЕРЕНИЯ
+                        </span>
+                    </th>
+                    <th
+                        style="padding: 15px 5px;  text-align: center; background-color: #a6093d; border: 1px solid #010101;">
+                        <span style="font-size: 10px; text-transform: uppercase; color: #ffff;">СУММА</span>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <ng-container *ngFor="let item of order.items">
+                    <tr [style.background-color]="isGrey() ? 'white' : '#F5F5F5'">
+                        <td style="padding: 15px 5px; width: 115px; height: 115px; border: 1px solid #bcbcbc;">
+                            <img *ngIf="item.productImageUrl; else defaultImgTemplate"
+                                [src]="cloudinaryHelper.getImageUrl(item.productImageUrl, 150, 150)" alt="img" />
+                            <ng-template #defaultImgTemplate>
+                                <img *ngIf="item.productImageUrl==null" src="/assets/img/product-default-image.jpg"
+                                    width="150" height="150" alt="default image" />
+                            </ng-template>
+                        </td>
+                        <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">
+                            <span *ngIf="item.productName"
+                                style="width: 80px; display: block; font-size: 10px; color: #000; line-height: 12px;">
+                                {{item.productName}}
+                            </span>
+                            <span *ngIf="!item.productName"
+                                style="width: 80px; display: block; font-size: 10px; color: #000; line-height: 12px;">
+                                {{item.outOfCatalogProductName}}
+                            </span>
+                        </td>
+                        <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">
+                            <span style="font-size: 10px; color: #000;"> {{item.vendorCode}}</span>
+                        </td>
+                        <td style="padding: 5px; text-align: center; border: 1px solid #bcbcbc;">
+                            <table
+                                style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                cellpadding="0" cellspacing="0">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 0 3px 0 0; text-align: right;">
+                                            <span>
+                                                <span
+                                                    *ngIf="isValueInteger(item.marketPrice)">{{item.marketPrice | fractionSizeSpace}}
+                                                    </span>
+                                                <span
+                                                    *ngIf="!isValueInteger(item.marketPrice)">{{item.marketPrice.toFixed(2) | fractionSizeSpace}}
+                                                    </span>
+                                            </span>
+                                        </td>
+                                        <td style="padding: 0; width: 9px; height: 9px; text-align: left;">
+                                            <img src="../../assets/img/pdf/ruble.svg" style="width: 9; height: 9px;"
+                                                width="9px" height="9px" alt="rub">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">
+                            <span style="font-size: 10px; color: #000;">{{item.quantity}}</span>
+                        </td>
+                        <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">
+                            <span style="font-size: 10px; color: #000;"> {{item.unitOfMeasurementName}}</span>
+                        </td>
+                        <td style="padding: 10px; text-align: center; border: 1px solid #bcbcbc;">
+                            <table
+                                style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                cellpadding="0" cellspacing="0">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 0 3px 0 0; text-align: right;">
+                                            <span style="font-size: 10px; color: #000; white-space: nowrap;">
+                                                <span
+                                                    *ngIf="isValueInteger(item.quantity * item.marketPrice)">{{item.quantity * item.marketPrice | fractionSizeSpace}}
+                                                    </span>
+                                                <span
+                                                    *ngIf="!isValueInteger(item.quantity * item.marketPrice)">{{(item.quantity * item.marketPrice).toFixed(2) | fractionSizeSpace}}
+                                                    </span>
+                                            </span>
+                                        </td>
+                                        <td style="padding: 0; width: 9px; height: 9px; text-align: left;">
+                                            <img src="../../assets/img/pdf/ruble.svg" style="width: 9; height: 9px;"
+                                                width="9px" height="9px" alt="rub">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr *ngIf="item.tintColor!=null" style="font-size:11px">
+                        <td style="padding: 15px 5px; width: 115px; border: 1px solid #bcbcbc;">Дополнительные услуги
+                        </td>
+                        <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">КОЛЕРОВКА</td>
+                        <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">{{item.tintColor}}
+                        </td>
+                        <td style="padding: 5px; text-align: center; border: 1px solid #bcbcbc;">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 0 5px 0 0;  text-align: right;">
+                                            <span style="color: #000;">
+                                                <span
+                                                    *ngIf="isValueInteger(item.tintPriceForUnit)">{{item.tintPriceForUnit | fractionSizeSpace}}
+                                                    </span>
+                                                <span
+                                                    *ngIf="!isValueInteger(item.tintPriceForUnit)">{{item.tintPriceForUnit.toFixed(2) | fractionSizeSpace}}
+                                                    </span>
+                                            </span>
+                                        </td>
+                                        <td style="padding: 0; width: 9px; height: 9px; text-align: left;">
+                                            <img src="../../assets/img/pdf/ruble.svg" style="width: 9; height: 9px;"
+                                                width="9px" height="9px" alt="rub">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">
+                            {{item.volumeLitre}}</td>
+                        <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">литр</td>
+                        <td style="padding: 15px 5px; text-align: center; border: 1px solid #bcbcbc;">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 0 5px 0 0;  text-align: right;">
+                                            <span style="color: #000;">
+                                                <span
+                                                    *ngIf="isValueInteger(item.tintPrice)">{{item.tintPrice | fractionSizeSpace}}
+                                                    </span>
+                                                <span
+                                                    *ngIf="!isValueInteger(item.tintPrice)">{{item.tintPrice.toFixed(2) | fractionSizeSpace}}
+                                                    </span>
+                                            </span>
+                                        </td>
+                                        <td style="padding: 0; width: 9px; height: 9px; text-align: left;">
+                                            <img src="../../assets/img/pdf/ruble.svg" style="width: 9; height: 9px;"
+                                                width="9px" height="9px" alt="rub">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+
+        <table
+            style="width:95%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0; margin-left: auto; margin-right: auto;"
+            cellpadding="0" cellspacing="0" *ngIf="isLoaded && showPdf">
+            <tbody>
+                <tr>
+                    <td style="padding: 0; border: 1px solid #010101;">
+                        <table
+                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 5px 5px 5px 25px;">
+                                        <span style="font-size: 12px; color: #000; ">ВСЕГО ПОЗИЦИИ</span>
+                                        {{ order.items.length | fractionSizeSpace}}
+                                    </td>
+                                    <td style="padding: 5px;">
+                                        <span style="font-size: 12px; color: #000;" *ngIf="!order.anyNullProduct">
+                                            ОБЩИЙ ВЕС {{ order.totalWeight.toFixed(2) | fractionSizeSpace }} кг
+                                        </span>
+                                    </td>
+                                    <td style="padding: 5px;">
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding: 0 5px 0 0;  text-align: right;">
+                                                        <span style="font-size: 12px; color: #000;  font-weight: bold;">
+                                                            <span
+                                                                *ngIf="isValueInteger(order.totalMarketPrice)">{{order.totalMarketPrice | fractionSizeSpace}}
+                                                                </span>
+                                                            <span
+                                                                *ngIf="!isValueInteger(order.totalMarketPrice)">{{order.totalMarketPrice.toFixed(2) | fractionSizeSpace}}
+                                                                </span>
+                                                        </span>
+                                                    </td>
+                                                    <td style="padding: 0; width: 9px; height: 9px; text-align: left;">
+                                                        <img src="../../assets/img/pdf/ruble.svg"
+                                                            style="width: 9; height: 9px;" width="9px" height="9px"
+                                                            alt="rub">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table
+            style="width:95%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0; background-color: #fff; margin-left: auto; margin-right: auto;"
+            cellpadding="0" cellspacing="0" *ngIf="isLoaded && showPdf">
+            <tbody>
+
+                <tr>
+                    <td style="padding: 35px 25px 35px 25px; background-color: rgb(255, 255, 255);">
+                        <table
+                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                            cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 0;">
+                                        <table
+                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                            cellpadding="0" cellspacing="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding: 0;">
+                                                        <table
+                                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="padding: 0;">
+                                                                        <span style="font-size: 12px; color: #000;">
+                                                                            Коммерческое
+                                                                            предложение
+                                                                            действительно в течение 3-х календарных
+                                                                            дней (до
+                                                                            {{afterDateForPdf | date: shortDate}})
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding: 0 0 25px 25px; background-color: rgb(255, 255, 255);">
+                        <table
+                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                            cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 0;">
+                                        <table
+                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                            cellpadding="0" cellspacing="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding: 0;">
+                                                        <table
+                                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="padding: 0;">
+                                                                        <span style="font-size: 10px; color: #000;">
+                                                                            ООО
+                                                                            «ПРО ВОСТОК»
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding: 5px 0 0 0;">
+                                                                        <span style="font-size: 10px; color: #000;">
+                                                                            тел.:
+                                                                            8 (495)
+                                                                            961-01-60
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding: 5px 0 0 0;">
+                                                                        <span style="font-size: 10px; color: #000;">
+                                                                            Юридический
+                                                                            адрес:
+                                                                            115162, г. Москва, ул. Шаболовка, д. 31,
+                                                                            стр. 23, эт. 2, пом.
+                                                                            2
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding: 5px 0 0 0;">
+                                                                        <span style="font-size: 10px; color: #000;">
+                                                                            Фактический
+                                                                            адрес:
+                                                                            115162, г. Москва, ул. Шаболовка, д. 31,
+                                                                            стр. 23, эт. 2, пом.
+                                                                            2
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 0 0 25px 25px; background-color: rgb(255, 255, 255);">
+                        <table
+                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                            cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 0;">
+                                        <table
+                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                            cellpadding="0" cellspacing="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding: 0;">
+                                                        <table
+                                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="padding: 0;">
+                                                                        <span style="font-size: 10px; color: #000;">
+                                                                            ИНН:
+                                                                            7725498851 / КПП:
+                                                                            772501001
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding: 5px 0 0 0;">
+                                                                        <span style="font-size: 10px; color: #000;">
+                                                                            ОГРН
+                                                                            1187746914959
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding: 5px 0 0 0;">
+                                                                        <span style="font-size: 10px; color: #000;">
+                                                                            ОКПО
+                                                                            34082920
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 0 0 0 25px; background-color: rgb(255, 255, 255);">
+                        <table
+                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                            cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 0;">
+                                        <table
+                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                            cellpadding="0" cellspacing="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding: 0;">
+                                                        <table
+                                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="padding: 0;">
+                                                                        <span style="font-size: 10px; color: #000;">
+                                                                            Банковские
+                                                                            реквизиты:
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding: 5px 0 0 0;">
+                                                                        <span style="font-size: 10px; color: #000;">
+                                                                            P/с
+                                                                            №40702810300000097055
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding: 5px 0 0 0;">
+                                                                        <span style="font-size: 10px; color: #000;">
+                                                                            Банк:
+                                                                            «Райффайзенбанк»
+                                                                            (АО «Райффайзенбанк»)
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding: 5px 0 0 0;">
+                                                                        <span style="font-size: 10px; color: #000;">
+                                                                            к/c
+                                                                            №
+                                                                            30101810200000000700
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding: 5px 0 0 0;">
+                                                                        <span style="font-size: 10px; color: #000;">
+                                                                            БИК
+                                                                            044525700
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding: 15px 30px;  background-color: #fff;">
+                        <table
+                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                            cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 0;">
+                                        <table
+                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                            cellpadding="0" cellspacing="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding: 0; width: 29px; height: 40px;">
+                                                        <img src="../../assets/img/pdf/mini-logo.png"
+                                                            style="width: 29px; height: 40px;" width="29px"
+                                                            height="40px" alt="logo" />
+                                                    </td>
+                                                    <td style="padding: 0 0 0 5px; vertical-align: bottom;">
+                                                        <span
+                                                            style="font-size: 11px; color: rgb(147, 147, 147); white-space: nowrap;">
+                                                            МаксиПРО – проект Леруа Мерлен
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                    <td style="padding: 0;" width="100%"></td>
+                                    <td style="padding: 0;">
+                                        <table
+                                            style="width:100%; border-collapse:collapse; border-spacing:0; padding:0; margin:0; border:0;"
+                                            cellpadding="0" cellspacing="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="width:106px; height: 53px;">
+                                                        <img src="../../assets/img/pdf/LM-Base.png"
+                                                            style="width: 106px; height: 53px;" width="106px"
+                                                            height="53px" alt="logo" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </kendo-pdf-export>
+
+</div>

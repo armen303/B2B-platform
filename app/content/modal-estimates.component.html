@@ -1,0 +1,189 @@
+﻿<div class="estimates animate_show_fadeIn modal-content__box">
+   <!-- после загрузки Excel файла, надо скрыть этот блок -- start -->
+   <div class="estimates-upload d-f" *ngIf="filesForUpload.length==0">
+      <div class="estimates-upload__download estimates-upload__box d-f f-d-c j-c-c">
+         <h2 class="estimates-title">Загрузка сметы</h2>
+         <a href="#" class="d-f a-i-c" (click)="getExcelTemplate()">
+            <i class="new-icon new-icon-fileDownload"></i>
+            <span>Cкачайте Excel шаблон</span>
+         </a>
+         <p>Внесите в шаблон необходимые артикулы товаров МаксиПРО и их количество</p>
+      </div>
+      <div class="estimates-upload__file estimates-upload__box">
+         <div class="estimates-upload__file--img">
+            <img src="../../assets/img/modal-estimates/upload/1.png" alt="img">
+         </div>
+         <div class="estimates-upload__file--link">
+             <label>
+                 <input type="file" id="clickUploadEstimates" #fileInputRef ondrop="drop()" onclick="clickUploadEstimates()" ondragenter="dragEnter()" ondragleave="dragLeave()"
+                        accept=".csv,.xls,.xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+                        multiple (change)="onFileDropped($event)" />
+                 <span>Выберите Excel файл сметы</span>
+             </label>
+            <p>или перетащите его сюда</p>
+         </div>
+         <div class="estimates-upload__file--btn d-f j-c-c">
+            <button class="estimates-btn estimates-btn__close" (click)="cancel()">Отмена</button>
+         </div>
+      </div>
+   </div>
+   <!-- после загрузки Excel файла, надо скрыть этот блок -- end -->
+
+   <!-- после загрузки Excel файла, надо показать этот блок -- start -->
+   <div class="estimates-situation d-f" *ngIf="filesForUpload.length>0">
+      <!-- left part start -->
+       <div class="estimates-situation__info">
+         <div class="estimates-situation__info--box estimates-situation__info--icons" *ngIf="!continue || (importResult?.invalidFileNames.length==0 &&  importResult.foundedProductsCount>0)">
+            <i *ngIf="!continue && selectedType==2" class="new-icon new-icon-basket"></i>
+            <i *ngIf="!continue && selectedType==3" class="new-icon new-icon-saveBasket"></i>
+            <i *ngIf="!continue && selectedType==4" class="new-icon new-icon-patterns"></i>
+            <i *ngIf="continue && (importResult?.invalidFileNames.length==0 && importResult.foundedProductsCount!=0)" class="new-icon new-icon-added"></i>
+         </div>
+         <div class="estimates-situation__info--box estimates-situation__info--notfound notfound-bg" *ngIf="continue && (importResult.isIncorrectFormat || importResult?.notFoundedVendoCodes.length>0 || importResult?.invalidFileNames.length>0)">
+            <i class="new-icon new-icon-notFound"></i>
+            <ng-container *ngIf="!importResult.isIncorrectFormat && importResult.notFoundedVendoCodes.length>0">
+               <h3>не Найдены</h3>
+               <span>или сняты с продажи</span>
+               <a href="#" (click)="downloadNotFoundVendorCodes()">{{importResult.notFoundedVendoCodes.length}} {{declensionMaker.getDeclension(importResult.notFoundedVendoCodes.length, "артикул", "артикула", "артикулов")}}</a>
+            </ng-container>
+
+            <ng-container *ngIf="!importResult.isIncorrectFormat && importResult.foundedProductsCount==0 && importResult?.invalidFileNames.length==0">
+               <h3 class="notfound-text">не найдены</h3>
+               <span class="notfound-text">или сняты с продажи</span>
+               <p>Ни один артикул <br>из вашего файла <br>не найден или <br>не продается</p>
+            </ng-container>
+            <ng-container *ngIf="!importResult.isIncorrectFormat && importResult?.invalidFileNames.length>0">
+                <h3 class="notfound-text">не найдено</h3>
+                <p>Ни один артикул из вашего файла не найден</p>
+            </ng-container>
+            <ng-container *ngIf="importResult.isIncorrectFormat">
+               <h3 class="notfound-text">не распознан</h3>
+               <p>Формат файла, который вы загрузили не распознан или таблица не соответствует шаблону</p>
+            </ng-container>
+         </div>
+      </div> 
+      <!-- left part end -->
+
+
+      <div class="estimates-situation__box">
+          <div class="estimates-situation__box--title">
+            <h2 class="estimates-title">
+               <ng-container *ngIf="!continue">ВЫберите, что сделать с товарами из сметы</ng-container>
+               <span *ngIf="continue && (importResult.foundedProductsCount>0 && importResult?.invalidFileNames.length==0)">
+                   <ng-container *ngIf="continue && selectedType==2">{{this.importResult.foundedProductsCount}} {{declensionMaker.getDeclension(this.importResult.foundedProductsCount, "позиция добавлена", "позиции добавлены", "позиций добавлено")}} в корзину</ng-container>
+                   <ng-container *ngIf="continue && selectedType==3">{{this.importResult.foundedProductsCount}} {{declensionMaker.getDeclension(this.importResult.foundedProductsCount, "позиция сохранена", "позиции сохранены", "позиций сохранено")}} в отложенную корзину</ng-container>
+                   <ng-container *ngIf="continue && selectedType==4">{{this.importResult.foundedProductsCount}} {{declensionMaker.getDeclension(this.importResult.foundedProductsCount, "позиция добавлена", "позиции добавлены", "позиций добавлено")}} в шаблон</ng-container>
+               </span>
+             
+               <ng-container *ngIf="continue && (importResult.foundedProductsCount==0 ||importResult?.invalidFileNames.length>0)">Возникли сложности при заполнении сметы?</ng-container>
+            </h2>
+         </div> 
+          <div class="estimates-situation__box--main d-f f-d-c">
+              <!-- после нажатие "button" продолжить, надо скрыть этот блок -- start -->
+              <ng-container *ngIf="!continue">
+                  <div class="dropdown">
+                      <div class="d-f a-i-c dropdown-select window-click click-expand" data-expand="false">
+                          <div class="dropdown-select__arrow">
+                              <span class="dropdown-select__selected" *ngIf="selectedType">{{selectedTypeName}}</span>
+                          </div>
+                          <i class="icon icon-arrow icon-arrow__bottom d-f a-i-c j-c-c"></i>
+                      </div>
+                      <ul class="compare-box__sidebar--select-list dropdown-list expand-block scrollbar d_none">
+                          <ng-container *ngFor="let storageType of allStorageType">
+                              <li [class.active]="selectedType === storageType.key" (click)="getCurrentItem(storageType)"
+                                  class="compare-box__sidebar--select-list__item dropdown-list__item d-f a-i-c j-c-b">
+                                  {{storageType.name}}
+                              </li>
+                          </ng-container>
+
+                          <select [(ngModel)]="selectedType" notFoundText="Список шаблонов пуст" hidden>
+                              <option *ngFor="let storageType of allStorageType" [value]="storageType.key">
+                                  {{storageType.name}}
+                              </option>
+                          </select>
+                      </ul>
+                  </div>
+                  <div class="estimates-situation__box--main-info" *ngIf="selectedType">
+                      <div class="estimates-situation__box--main-info__add" *ngIf="selectedType==2 && this.activeBasket && this.activeBasket.groups.length > 0">
+                          <h3>В корзине уже есть товары</h3>
+                          <label class="checkbox d-f a-i-c">
+                              <input type="radio" class="radio" hidden name="itemsBasket" [checked]="!deleteItemsFromBasket" (click)="deleteItemsFromBasketChanged(false)"/>
+                              <i class="checkbox-radio d-f a-i-c j-c-c"></i>
+                              <span class="checkbox-name">Объединить с товарами в корзине</span>
+                          </label>
+                          <label class="checkbox d-f a-i-c">
+                              <input type="radio" class="radio" hidden name="itemsBasket" [checked]="deleteItemsFromBasket" (click)="deleteItemsFromBasketChanged(true)"/>
+                              <i class="checkbox-radio d-f a-i-c j-c-c"></i>
+                              <span class="checkbox-name">Удалить товары из корзины</span>
+                          </label>
+                      </div>
+
+                      <div class="estimates-situation__box--main-info__area">
+                          <ng-container>
+                              <p *ngIf="selectedType==3">Название корзины</p>
+                              <p *ngIf="selectedType==4">Название шаблона</p>
+                              <input id="basketOrTemplateName" *ngIf="selectedType==3 || selectedType==4" type="text" [(ngModel)]="name">
+                          </ng-container>
+                      </div>
+                  </div>
+
+                  <div class="estimates-situation__box--main-btn d-f">
+                      <button class="estimates-btn"  [disabled]="!name"  (click)="save()" *ngIf="selectedType==3|| selectedType==4">продолжить</button>
+                      <button class="estimates-btn" *ngIf="selectedType==2" (click)="checkout()" id="ResumeEstimate">продолжить</button>
+                      <button class="estimates-btn estimates-btn__close" (click)="cancel()" id="CancelEstimate">Отмена</button>
+                  </div>
+              </ng-container>
+              <!-- после нажатие "button" продолжить, надо скрыть этот блок -- end -->
+              <!-- после нажатие "button" продолжить, надо показать этот блок -- start -->
+               <ng-container *ngIf="continue && importResult.foundedProductsCount>0 && importResult.invalidFileNames.length==0">
+       <div class="dashboard-currentoreders__list--item-sum__img d-f">
+           <ul class="d-f">
+               <li *ngFor="let imageUrl of importResult.foundedProductsImages">
+                   <img *ngIf="imageUrl"
+                        [src]="cloudinaryHelper.getImageUrl(imageUrl, 360, 360)"
+                        (error)="setBrokenImage($event)" alt="img" />
+                   <img *ngIf="!imageUrl || imageUrl.length <= 0" src="/assets/img/product-default-image.jpg" alt="default-image" />
+               </li>
+           </ul>
+          <div *ngIf="this.importResult.foundedProductsCount>4"
+             class="dashboard-currentoreders__list--item-sum__img--count d-f f-d-c a-i-c j-c-c">
+              <p>{{this.importResult.foundedProductsCount}}</p>
+              <p> {{declensionMaker.getDeclension(this.importResult.foundedProductsCount, "позиция", "позиции", "позиций")}}</p>
+          </div>
+       </div>
+
+       <div class="estimates-situation__box--main-text">
+          <p *ngIf="selectedType==3">{{name}}</p>
+          <p *ngIf="selectedType==4"><span class="new_global_color">{{name}}</span></p>
+       </div>
+
+       <div class="estimates-situation__box--main-btn d-f">
+           <button class="estimates-btn" *ngIf="selectedType==2" (click)="goToBasket()" id="AddBasketEstimate">в корзину</button>
+           <button class="estimates-btn" *ngIf="selectedType==3" (click)="goToBaskets()" id="GoToBasket">Перейти в корзины</button>
+           <button class="estimates-btn" *ngIf="selectedType==4" (click)="goToTemplates()" id="GoToTheTemplates">Перейти в шаблоны</button>
+           <button class="estimates-btn estimates-btn__close" (click)="cancel()" id="CloseEstimate">закрыть</button>
+       </div>
+    </ng-container> 
+              <!-- после нажатие "button" продолжить, надо показать этот блок -- end -->
+              <!-- Если формат файла не тот, надо показать этот блок -- start -->
+               <ng-container *ngIf="continue && (importResult.foundedProductsCount==0 ||importResult?.invalidFileNames.length>0)">
+       <div class="estimates-situation__box--main-notfound">
+          <h3>Портал распознает только файлы Excel (.xls, .xlsx), составленные по шаблону</h3>
+          <a href="#" class="d-f a-i-c"  (click)="getExcelTemplate()">
+             <i class="new-icon new-icon-fileDownload"></i>
+             <span>Cкачайте Excel шаблон</span>
+          </a>
+          <p>Внесите в шаблон необходимые артикулы товаров МаксиПРО и их количество</p>
+       </div>
+
+       <div class="estimates-situation__box--main-btn d-f">
+          <button class="estimates-btn" (click)="goToTechSupportTicket()">помощь</button>
+          <button class="estimates-btn estimates-btn__close" (click)="cancel()">закрыть</button>
+       </div>
+    </ng-container> 
+              <!-- Если формат файла не тот, надо показать этот блок -- end -->
+          </div>
+      </div>
+   </div>
+   <!-- после загрузки Excel файла, надо показать этот блок -- end -->
+</div>

@@ -1,0 +1,76 @@
+<div class="precheckout modal-content__box animate_show_fadeIn" id ="precheckoutId">
+   <div class="precheckout-title">
+      <h2>Внимание</h2>
+      <p>Следующие товары отсутствуют на складе в необходимом количестве! <span class="green_color d_block">Все товары,
+            которых
+            нет в наличии, будут
+            оформлены под заказ (менеджер свяжется с Вами для уточнения деталей
+            заказа)</span></p>
+   </div>
+
+   <div class="precheckout-btn btn-global">
+      <button class="btn-global__red" (click)="setMaxAmountForAllItems()">Оставить только то, что есть в наличии</button>
+   </div>
+
+   <div class="precheckout-box">
+      <div class="precheckout-box__content">
+         <ul class="precheckout-box__names d-f a-i-c">
+            <li style="width: 360px;">НАИМЕНОВАНИЕ</li>
+            <li style="width: 145px;">В НАЛИЧИИ</li>
+            <li style="width: 137px;"></li>
+            <li>В ЗАКАЗЕ</li>
+         </ul>
+         <ul class="precheckout-box__list">
+            <li *ngFor="let group of discrepantItemsGroups  | orderBy : 'subcategoryName' | discrepantGroupsFilter">
+               <div class="precheckout-box__list--title">
+                  <p>{{group.subcategoryName}}</p>
+               </div>
+               <div class="precheckout-box__list--info d-f a-i-c j-c-b"
+                  *ngFor="let item of group.items  | orderBy : 'productName' | discrepantItemFilter">
+                  <div class="precheckout-box__list--info-item precheckout-box__list--info-name d-f a-i-c">
+                      <div class="precheckout-box__list--info-name__img">
+                          <img *ngIf="item.productMainImageUrl"
+                               [src]="cloudinaryHelper.getImageUrl(item.productMainImageUrl, 45, 45)" alt="img" />
+                          <img *ngIf="item.productMainImageUrl == null" src="/assets/img/product-default-image.jpg"
+                               width="45" height="45" />
+                      </div>
+                     <div class="precheckout-box__list--info-name__text">
+                        <p>{{ item.productName }}</p>
+                     </div>
+                  </div>
+                  <div class="precheckout-box__list--info-item precheckout-box__list--info-count">
+                     <span>{{ item.amountInStock.toFixed(2) }}</span>
+                  </div>
+                  <div class="precheckout-box__list--info-item precheckout-box__list--info-btn btn-global">
+                     <button class="btn-global__red" *ngIf="item.amountInStock < item.amountInBasket && item.amountInStock>0"
+                        (click)="setInBasketAmount(item,item.amountInStock)" >››</button>
+                  </div>
+                  <div
+                     class="precheckout-box__list--info-item precheckout-box__list--info-counter cards-product__item--counter">
+                     <div class="cards-product__item--counter-increment">
+                        <app-product-counter *ngIf="item.amountInStock < item.amountInBasket" productCounterMin="{{1}}"
+                           productCounterMax="{{10}}" productCounterStep="{{1}}"
+                           productCounterQuantity="{{item.amountInBasket}}"
+                           productCounterClassName="px-counter--precheckout" (decrement)="decrementamountInBasket(item)"
+                           (increment)="incrementamountInBasket(item)" (error)="errorMethod()" (changeNumber)="changeNumber($event, item)">
+                        </app-product-counter>
+                     </div>
+                  </div>
+                  <div class="precheckout-box__list--info-item precheckout-box__list--info-trash">
+                     <i class="icon icon-trash" (click)="removeOrderItem(item)"></i>
+                  </div>
+               </div>
+            </li>
+         </ul>
+      </div>
+   </div>
+   <div class="precheckout-save d-f a-i-c j-c-c">
+      <div class="precheckout-save__btn btn-global">
+         <button class="btn-global__red" type="button" (click)="closeWithCorrection()" id="ButtonOK">{{confirmButtonText}}</button>
+      </div>
+      <div class="precheckout-save__btn btn-global">
+         <button class="btn-global__red" disabled="{{ hasChanges ? '' : 'disabled' }}" type="button" id="ButtonCancel"
+            (click)="closeWithoutCorrection()">ОТМЕНА</button>
+      </div>
+   </div>
+</div>
